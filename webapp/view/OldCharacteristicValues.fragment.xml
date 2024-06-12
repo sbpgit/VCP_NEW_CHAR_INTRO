@@ -1,0 +1,6 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog id="idCharOldSelect" title="Characteristic Values" search="handleCharSearch" liveChange="handleCharSearch" rememberSelections="true"
+		confirm="handleOldCharSelection" cancel="handleClose" items="{/setOldCharacteristics}" multiSelect="true">
+		<StandardListItem title="{CHAR_VALUE}" description="{CHAR_NAME}" info="{CHAR_DESC}" type="Active"/>
+	</SelectDialog>
+</core:FragmentDefinition>

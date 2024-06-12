@@ -1,0 +1,48 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+<Dialog title="Reference Characteristic Value" contentWidth="40vw" contentHeight="auto" afterClose="closeBatchFragment" titleAlignment="Center">
+<f:SimpleForm id="idRefChar" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+						singleContainerFullSize="false" ariaLabelledBy="Title1">
+						<f:content>
+                        <VBox>
+                            <VBox>
+                            <Label text="Reference Characteristic Value"/>
+                            <Input value="" id="idRefText" enabled="false"/>
+                            </VBox>
+                             <VBox visible="false">
+                            <Label text="Reference Characteristic Value Name"/>
+                            <Input value="" id="idRefDesc" enabled="false"/>
+                            </VBox>
+                            <VBox>
+							<Label text="Weight in %" required="true"/>
+							<Input id="idWeight" value="100" placeholder="" showValueHelp="false" />
+                            </VBox>
+                            <VBox>
+							<Label text="Valid From" required="true"/>
+							<DatePicker id="idValidFrom" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange"/>
+                            </VBox>
+                            <VBox>
+							<Label text="Valid To" required="true"/>
+							<DatePicker id="idValidTo" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" enabled="false"/>
+                            </VBox>
+                            <VBox>
+							<Label text="Offset of Days in the Past" required="true"/>
+							<Input id="idOffser" value="" placeholder="Number of days in the past that the system does not use when reading historical values" showValueHelp="false" liveChange="onInputChange" />
+                            </VBox>
+                            <VBox>
+							<Label text="Status" required="true"/>
+							<Switch id="idSwitchBtn" state="true" customTextOn="Yes" customTextOff="No">
+				            <layoutData>
+					        <FlexItemData growFactor="1" />
+				            </layoutData>
+			                </Switch>
+                            </VBox>
+                            </VBox>
+                        </f:content>
+                        </f:SimpleForm>
+                        <buttons>
+                        <Button id="idSaveBtn" text="Ok" press="onOkPress" type="Emphasized"/>
+                        <Button id="empClosebtn" text="Cancel"  press="onRefCancel" />
+                        </buttons>
+ </Dialog>
+</core:FragmentDefinition>

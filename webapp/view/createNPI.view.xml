@@ -1,0 +1,250 @@
+<mvc:View
+    controllerName="vcpapp.vcpnpicharvalue.controller.createNPI"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:m="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:ux="sap.uxap"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:u="sap.ui.unified">
+    <Page id="page" title="Characteristic Value Introduction" showNavButton="true" navButtonPress="onBack" showFooter="true">
+    <content>
+    <Wizard id="CreateWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" renderMode="Page" showNextButton="false" complete="wizardCompletedHandler">
+    <!-- /Step 1 in Wizard/ -->
+    <WizardStep id="idCharSelection" title="Characteristic Value Selection" validated="true" activate="">
+    <f:SimpleForm id="idNewCharSelection" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+						singleContainerFullSize="false" ariaLabelledBy="Title1">
+						<f:content>
+                            <Label text="Configurable Product"/>
+                            <Text text="" id="idConfigText"/>
+							<Label text="New Characteristic Value" required="true"/>
+                            <HBox>
+							<Input id="idCharValue" value="" placeholder="Characteristic Value" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp"
+								width="300px"/>
+                                <Text text="" id="idCharValText" class="newClass"/>
+                                </HBox>
+						</f:content>
+					</f:SimpleForm>
+    </WizardStep>
+    <!-- /Step 2 in Wizard/ -->
+    <WizardStep id="idRefAssign" title="Reference Assignments" validated="true" activate="onStep2Press">
+    <f:SimpleForm id="idRefNewAssign" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+						singleContainerFullSize="false" ariaLabelledBy="Title1">
+						<f:content>
+                            <Label text="Configurable Product"/>
+                            <Text text="" id="idConfigText1"/>
+							<Label text="New Characteristic Value" required="true"/>
+                            <HBox>
+							<Input id="idCharValue1" editable="false" value="" placeholder="Characteristic Value" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp"
+								width="300px"/>
+                                <Text text="" id="idCharValText1" class="newClass"/>
+                                </HBox>
+							<Label text="Old Characteristic Value" required="true"/>
+							<MultiInput id="idOldCharValue" editable="false" value="" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
+						</f:content>
+					</f:SimpleForm>
+    </WizardStep>
+    <!-- /Step 3 in Wizard/ -->
+    <WizardStep id="idRefDetails" title="Reference Details" validated="true" activate="onStep3Press">
+     <MessageStrip class="" text="If you want to add or delete values for the reference assignments, return to previous step." showIcon="true"/>
+    <f:SimpleForm id="idRefNewDetails" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+						singleContainerFullSize="false" ariaLabelledBy="Title1">
+						<f:content>
+							<Label text="New Characteristic Value" required="false"/>
+                            <HBox>
+							<Input id="idNewValue" value="" placeholder="Characteristic Value" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp"
+								width="300px" editable="false"/>
+                                <Text text="" id="idste3Text" class="newClass"/>
+                                </HBox>
+							<Label text="Old Characteristic Value" required="false"/>
+							<MultiInput id="idOldChar" value="" editable="false" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
+						</f:content>
+					</f:SimpleForm>
+    <MessageStrip class="sapUiSmallMaginBottom" text="The total weight of selected reference characteristic values should be equal to 100." showIcon="true"/>
+					<Table id="idOldCharList" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
+                              updateFinished="onTableUpdateFinish" items="{path: '/charList'}"  itemPress="onCharPressTable"  
+                              mode="None"   selectionChange="onhandlePress" rememberSelections="false"> 
+                              <headerToolbar>
+			                    <OverflowToolbar>
+				                    <ToolbarSpacer/>
+				                    <!-- <Button id="idEditButton" text="Edit" press="onEditPressed" tooltip="Edit" enabled="false"> -->
+                                    <!-- </Button> -->
+			                    </OverflowToolbar>
+		                      </headerToolbar>                             
+                                <columns>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Ref Char Value " />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Ref Char Name " />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Ref Char Name Desc " />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Weight in %" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Valid From" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Valid To" />
+                                    </Column>
+                                    <!-- <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Offset of Days in the Past" />
+                                    </Column> -->
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Status" />
+                                    </Column>                                
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{CHAR_VALUE}" />    
+                                            <Text text="{CHAR_NAME}" />
+                                             <Text text="{CHAR_DESC}" />
+                                            <Input value="{WEIGHT}" liveChange="onInputChange" />
+                                            <!-- <Text text= "{VALIDFROM}" /> -->
+                                            <!-- <Text text= "{VALIDTO}" /> -->
+                                            <DatePicker  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange"/>
+                                            <DatePicker  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" enabled="false"/>
+                                            <!-- <Text text= "{OFFSETDAYS}"/> -->
+                                            <!-- <Input value="" liveChange="onInputChange"/> -->
+                                            <Switch state="false" customTextOn="Yes" customTextOff="No" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                              </Table>
+
+    </WizardStep>
+    <!-- /Step 4 in Wizard/ -->
+    <WizardStep id="idLaunchDet" title="Launch Dimension" validated="true" activate="onStep4Press">
+    <f:SimpleForm id="idDimensions" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+						singleContainerFullSize="false" ariaLabelledBy="Title1">
+						<f:content>
+							<Label text="New Characteristic Value" required="false"/>
+                            <HBox class="newClass">
+							<Input id="idNewDimen" value="" placeholder="Characteristic Value" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp"
+								width="300px" editable="false"/>
+                                <Text text="" id="idLaunchText" class="newClass"/>
+                                </HBox>
+							<Label text="Old Characteristic Value" required="false"/>
+							<MultiInput id="idOldDimen" value="" editable="false" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
+                            <!-- <Label text="Launch Dimension Old Characteristc" required="false"/>
+							<Input id="idOldLaunchDimen" value="" editable="false" type="Text" placeholder="" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" /> -->
+                        </f:content>
+					</f:SimpleForm>
+                    <MessageStrip class="" text="The system automatically takes over the launch dimensions that has been selected for the old Characteristic." showIcon="true"/>
+                    <Table id="idDimenTable" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
+                              updateFinished="onDimeTabFinish" 
+                              mode="None"    rememberSelections="false" items="{path:'/dimenList'}"  >
+                              <!-- <headerToolbar>
+			                    <OverflowToolbar>
+				                    <ToolbarSpacer/>
+				                    <Button id="idAddBtn" text="Add" press="onAddPressed" tooltip="Add" enabled="true">
+                                    </Button>
+			                    </OverflowToolbar>
+		                      </headerToolbar>                              -->
+                                <columns>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Launch Dimension" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Dimension Values" />
+                                    </Column>                            
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            	
+                                                <Text text="{DIMENSIONS}"/>
+                                            <MultiInput id="" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelpTable" value="{VALUE}"/>
+                                           
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                              </Table>
+    </WizardStep>
+    <!-- /Step 5 in Wizard/ -->
+    <WizardStep id="idPhaseIn" title="Phase-In Details New Characteristic Value" validated="true" activate="onStep5Press">
+    <f:SimpleForm id="idPhasein" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+						singleContainerFullSize="false" ariaLabelledBy="Title1">
+                        <Text text="If yout want to add or delete dimension values, return to the previous step." id="textId"/>
+						<f:content>
+							<Label text="New Characteristic Value" required="false"/>
+                            <HBox>
+							<Input id="idPhaseInChar" value="" placeholder="Characteristic Value" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp"
+								width="300px" editable="false"/>
+                                <Text text="" id="idPhaseInText" class="newClass"/>
+                                </HBox>
+							<Label text="Old Characteristic Value" required="false"/>
+							<MultiInput id="idPhaseinOldChar" value="" editable="false" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
+                        </f:content>
+					</f:SimpleForm>
+                    <MessageStrip class="" text="Add phase-in start dates for all entries." showIcon="true"/>
+                    <Table id="idPhaseInTab" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
+                              updateFinished="onDimeTabFinish" items="{path: '/PhaseInList'}"  
+                              mode="None" rememberSelections="false" selectionChange="onPhaseInChange">
+                                                       <headerToolbar>
+			                    <OverflowToolbar>
+				                    <ToolbarSpacer/>
+				                    <!-- <Button id="idEditBtn" text="Edit" press="onEditPhasePressed" tooltip="Edit" enabled="false">
+                                    </Button> -->
+			                    </OverflowToolbar>
+		                      </headerToolbar>                             
+                                <columns>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Location Id" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Location Desc" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Product Id" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Product Desc" />
+                                    </Column>
+                                     <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="History Consideration Date" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Phase-In Start" />
+                                    </Column>                          
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{LOCATION_ID}"/>
+                                            <Text text="{LOCATION_DESC}" />
+                                            <Text text="{PROD_ID}"/>
+                                            <Text text="{PROD_DESC}" />
+                                            <DatePicker displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" maxDate="{HISTORY_CONSIDERATION}" />
+                                           <DatePicker displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                              </Table>
+    </WizardStep>
+    </Wizard>
+    </content>
+    <footer>
+            <OverflowToolbar>
+					<ToolbarSpacer/>
+					<Button text="Previous Step" visible="{/backButtonVisible}" press="onDialogBackButton" />
+					<Button text="Next Step" type="Emphasized" enabled="{/nextButtonEnabled}" visible="{/nextButtonVisible}" press="onDialogNextButton" />
+					<!-- <Button text="Review" type="Emphasized" visible="{/reviewButtonVisible}" press="onDialogNextButton" /> -->
+					<Button text="Finish" type="Emphasized" visible="{/finishButtonVisible}" press="handleWizardSubmit" />
+					<Button	text="Cancel" type="Transparent" press="handleWizardCancel"/>
+				</OverflowToolbar>
+    </footer>
+    </Page>
+</mvc:View>

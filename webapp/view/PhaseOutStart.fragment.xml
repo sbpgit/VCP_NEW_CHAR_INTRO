@@ -1,0 +1,40 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+<Dialog id="idPhaseOutPhase" title="" contentWidth="40vw" contentHeight="auto" afterClose="closeBatchFragment" titleAlignment="Center">
+<f:SimpleForm id="idPhaseStart1" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+						singleContainerFullSize="false" ariaLabelledBy="Title1">
+						<f:content>
+                        <VBox>
+                            <VBox>
+                            <Label text="Location Id"/>
+                            <Input value="" id="idLAunchText1" enabled="false"/>
+                            </VBox>
+                            <VBox>
+                            <Label text="Location Description"/>
+                            <Input value="" id="idLocDesc1" enabled="false"/>
+                            </VBox>
+                            <VBox>
+                            <Label text="Product Id"/>
+                            <Input value="" id="idProdId1" enabled="false"/>
+                            </VBox>
+                            <VBox>
+                            <Label text="Product Description"/>
+                            <Input value="" id="idProdDesc1" enabled="false"/>
+                            </VBox>
+                            <VBox id="idVBoxPhaseOut" visible="true">
+							<Label text="Phase-Out Start" required="true"/>
+							<DatePicker id="idPhaseOutFrom" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onPhaseOutDate"/>
+                            </VBox>
+                             <VBox id="idVBoxPhaseOutEnd" visible="true">
+							<Label text="Phase-Out End" required="true"/>
+							<DatePicker id="idPhaseOutTo" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" enabled="false"/>
+                            </VBox>
+                            </VBox>
+                        </f:content>
+                        </f:SimpleForm>
+                        <buttons>
+                        <Button id="idSaveBtnPhase1" text="Ok" press="onPhaseOutPress" type="Emphasized" />
+                        <Button id="empClosebtn1" text="Cancel"  press="onPhaseOutCancel" />
+                        </buttons>
+ </Dialog>
+</core:FragmentDefinition>

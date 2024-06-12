@@ -1,0 +1,18 @@
+<mvc:View
+    controllerName="vcpapp.vcpnpicharvalue.controller.MultiProjDet"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:m="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:ux="sap.uxap"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:u="sap.ui.unified">
+    <Page id="idMultiProjDet" title="Maintain Project Details" showNavButton="true" navButtonPress="onBackMultiProjDet" showFooter="true">
+    <content>
+    
+    </content>
+     </Page>
+</mvc:View>

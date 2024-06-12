@@ -1,0 +1,137 @@
+<mvc:View
+    controllerName="vcpapp.vcpnpicharvalue.controller.PhaseOut"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:m="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:ux="sap.uxap"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:u="sap.ui.unified">
+    <Page id="pagePhase" title="Characteristic Phase-Out" showNavButton="true" navButtonPress="onBackPhase" showFooter="true">
+    <content>
+    </content>
+    <Wizard id="PhaseOutWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" renderMode="Page" showNextButton="false" complete="">
+    <!-- /Step 1 in Wizard/ -->
+    <WizardStep id="idWizardStep1" title="Characteristic Value Selection" validated="true" activate="" >
+    <f:SimpleForm id="idCharSelectionPhase" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+						singleContainerFullSize="false" ariaLabelledBy="Title1">
+						<f:content>
+                            <Label text="Configurable Product"/>
+                            <Text text="" id="idConfigTextPhase"/>
+							<Label text="Characteristic Value" required="true"/>
+							<MultiInput id="idCharValuePhase" value="" placeholder="Characteristic Value" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelpPhase"
+								width="300px"/>
+						</f:content>
+					</f:SimpleForm>
+    </WizardStep>
+    <!-- /Step2 in Wizard-->
+     <WizardStep id="idLaunchDetPhase" title="Launch Dimension" validated="true" activate="onStep2Phase">
+    <f:SimpleForm id="idDimensionsPhase" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+						singleContainerFullSize="false" ariaLabelledBy="Title1">
+						<f:content>
+							<Label text="Configurable Product" required="false"/>
+                            <Text text="" id="idConfigPhase"/>
+							<Label text="Characteristic Value" required="false"/>
+							<MultiInput id="idOldDimenPhase" value="" editable="false" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
+                        </f:content>
+					</f:SimpleForm>
+                    <!-- <MessageStrip class="" text="The system automatically takes over the launch dimensions that has been selected for the old Characteristic." showIcon="true"/> -->
+                    <Table id="idDimenTablePhase" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
+                              updateFinished="onDimeTabFinish" 
+                              mode="None"    rememberSelections="false" items="{path:'/dimenListPhase'}" >
+                                                         
+                                <columns>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Launch Dimension" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Dimension Values" />
+                                    </Column>                            
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>                                            	
+                                                <Text text="{DIMENSIONS}"/>
+                                            <MultiInput id="" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelpTable" value="{VALUE}"/>
+                                           
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                              </Table>
+    </WizardStep>
+    <!-- /Step 3 in WIzard/ -->
+    <WizardStep id="idPhaseOut3" title="Phase-Out Details Characteristic Value" validated="true" activate="onStep3Phase">
+    <f:SimpleForm id="idPhaseOut" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+						singleContainerFullSize="false" ariaLabelledBy="Title1">
+                        <!-- <Text text="If yout want to add or delete dimension values, return to the previous step." id="textId"/> -->
+						<f:content>
+							<Label text="Configurable Product" required="false"/>
+							<Input id="idPhaseOutProd" value="" placeholder="" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp"
+								width="300px" editable="false"/>                                
+							<Label text="Characteristic Value" required="false"/>
+							<MultiInput id="idPhaseOutNew" value="" editable="false" type="Text" placeholder="" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
+                        </f:content>
+					</f:SimpleForm>
+                    <Table id="idPhaseOutTab" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
+                              updateFinished="onDimeTabFinish" items="{path: '/PhaseOutList'}"  
+                              mode="None" rememberSelections="false" selectionChange="onPhaseOutChange">
+                            <headerToolbar>
+			                    <OverflowToolbar>
+				                    <ToolbarSpacer/>
+				                    <!-- <Button id="idEditBtn" text="Edit" press="onEditPhaseOutPressed" tooltip="Edit" enabled="false">
+                                    </Button> -->
+			                    </OverflowToolbar>
+		                      </headerToolbar>                             
+                                <columns>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Location Id" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Location Desc" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Product Id" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Product Desc" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Phase-Out Start" />
+                                    </Column> 
+                                     <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Phase-Out End" />
+                                    </Column>                          
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{LOCATION_ID}"/>
+                                            <Text text="{LOCATION_DESC}" />
+                                            <Text text="{PROD_ID}"/>
+                                            <Text text="{PROD_DESC}" />
+                                           <DatePicker displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" />
+                                           <DatePicker displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                              </Table>
+    </WizardStep>
+    </Wizard>
+    <footer>
+            <OverflowToolbar>
+					<ToolbarSpacer/>
+					<Button text="Previous Step" visible="{/backButtonVisible}" press="onDialogBackButton1" />
+					<Button text="Next Step" type="Emphasized" enabled="{/nextButtonEnabled}" visible="{/nextButtonVisible}" press="onDialogNextButton1" />
+					<!-- <Button text="Review" type="Emphasized" visible="{/reviewButtonVisible}" press="onDialogNextButton" /> -->
+					<Button text="Finish" type="Emphasized" visible="{/finishButtonVisible}" press="handleWizardSubmit1" />
+					<Button	text="Cancel" type="Transparent" press="handleWizardCancel1"/>
+				</OverflowToolbar>
+    </footer>
+    </Page>
+</mvc:View>
