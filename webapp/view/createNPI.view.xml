@@ -73,8 +73,6 @@
                               <headerToolbar>
 			                    <OverflowToolbar>
 				                    <ToolbarSpacer/>
-				                    <!-- <Button id="idEditButton" text="Edit" press="onEditPressed" tooltip="Edit" enabled="false"> -->
-                                    <!-- </Button> -->
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
@@ -97,11 +95,8 @@
                                         <Text text="Valid To" />
                                     </Column>
                                     <!-- <Column hAlign="Center" width="auto" vAlign="Middle">
-                                        <Text text="Offset of Days in the Past" />
-                                    </Column> -->
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Status" />
-                                    </Column>                                
+                                    </Column>                                 -->
                                 </columns>
                                 <items>
                                     <ColumnListItem>
@@ -110,13 +105,9 @@
                                             <Text text="{CHAR_NAME}" />
                                              <Text text="{CHAR_DESC}" />
                                             <Input value="{WEIGHT}" liveChange="onInputChange" />
-                                            <!-- <Text text= "{VALIDFROM}" /> -->
-                                            <!-- <Text text= "{VALIDTO}" /> -->
                                             <DatePicker  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange"/>
                                             <DatePicker  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" enabled="false"/>
-                                            <!-- <Text text= "{OFFSETDAYS}"/> -->
-                                            <!-- <Input value="" liveChange="onInputChange"/> -->
-                                            <Switch state="false" customTextOn="Yes" customTextOff="No" />
+                                            <!-- <Switch state="false" customTextOn="Yes" customTextOff="No" /> -->
                                         </cells>
                                     </ColumnListItem>
                                 </items>
@@ -137,21 +128,13 @@
                                 </HBox>
 							<Label text="Old Characteristic Value" required="false"/>
 							<MultiInput id="idOldDimen" value="" editable="false" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
-                            <!-- <Label text="Launch Dimension Old Characteristc" required="false"/>
-							<Input id="idOldLaunchDimen" value="" editable="false" type="Text" placeholder="" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" /> -->
+                            
                         </f:content>
 					</f:SimpleForm>
                     <MessageStrip class="" text="The system automatically takes over the launch dimensions that has been selected for the old Characteristic." showIcon="true"/>
                     <Table id="idDimenTable" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
                               updateFinished="onDimeTabFinish" 
                               mode="None"    rememberSelections="false" items="{path:'/dimenList'}"  >
-                              <!-- <headerToolbar>
-			                    <OverflowToolbar>
-				                    <ToolbarSpacer/>
-				                    <Button id="idAddBtn" text="Add" press="onAddPressed" tooltip="Add" enabled="true">
-                                    </Button>
-			                    </OverflowToolbar>
-		                      </headerToolbar>                              -->
                                 <columns>
                                     <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Launch Dimension" />
@@ -196,8 +179,6 @@
                                                        <headerToolbar>
 			                    <OverflowToolbar>
 				                    <ToolbarSpacer/>
-				                    <!-- <Button id="idEditBtn" text="Edit" press="onEditPhasePressed" tooltip="Edit" enabled="false">
-                                    </Button> -->
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
@@ -241,7 +222,6 @@
 					<ToolbarSpacer/>
 					<Button text="Previous Step" visible="{/backButtonVisible}" press="onDialogBackButton" />
 					<Button text="Next Step" type="Emphasized" enabled="{/nextButtonEnabled}" visible="{/nextButtonVisible}" press="onDialogNextButton" />
-					<!-- <Button text="Review" type="Emphasized" visible="{/reviewButtonVisible}" press="onDialogNextButton" /> -->
 					<Button text="Finish" type="Emphasized" visible="{/finishButtonVisible}" press="handleWizardSubmit" />
 					<Button	text="Cancel" type="Transparent" press="handleWizardCancel"/>
 				</OverflowToolbar>

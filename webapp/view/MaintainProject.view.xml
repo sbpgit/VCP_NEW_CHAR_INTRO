@@ -1,0 +1,55 @@
+<mvc:View controllerName="vcpapp.vcpnpicharvalue.controller.MaintainProject"
+   xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core"
+	displayBlock="true" xmlns="sap.m" xmlns:m="sap.m" xmlns:l="sap.ui.layout" xmlns:ux="sap.uxap" xmlns:f="sap.ui.layout.form"
+	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:u="sap.ui.unified">
+    <Page >
+     <customHeader>
+            <Bar>
+                <contentMiddle>
+                    <Title text="Project Details" class="boldText" />
+                </contentMiddle>
+                <contentRight>
+                    <Button class="hdrBtnMarginHdr" icon="sap-icon://sys-help" id="idNav" press="onNavPress" type="Emphasized" tooltip="Help Document" />
+                </contentRight>
+            </Bar>
+        </customHeader>
+     <Table id="idMPD" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
+                              updateFinished="onTableUpdate" items="{path: '/projDetails', sorter:{path:'PROJECT_ID'}}"  itemPress="onhandlePressMPD"  
+                              mode="SingleSelectLeft"   selectionChange="onhandlePressMPD" rememberSelections="false"> 
+                              <headerToolbar>
+			                    <OverflowToolbar>
+                                <SearchField id="newProjSearch" search="oHomesearch" liveChange="oHomesearch" width="150vh" placeholder="Project ID/Project Details" />
+				                    <ToolbarSpacer/>
+                                    <Button text="New Char Intro" press="onNPIPress" enabled="true"/>
+                                    <Button text = "Create Project" press="onPressCreate" enabled="true"/>
+                                    <Button text="Edit" id="idEdit" press="onEditPress" enabled="true"/>
+                                    
+			                    </OverflowToolbar>
+		                      </headerToolbar>                             
+                                <columns>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Project ID" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Project Details" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Status" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Release Date" />
+                                    </Column>                                                               
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{PROJECT_ID}" />    
+                                            <Text text="{PROJECT_DET}" />
+                                            <Text text= "{PROJ_STATUS}" />
+                                            <Text text= "{path:'RELEASE_DATE', type:'sap.ui.model.type.Date', formatOptions : { pattern:'MM/dd/yyyy',style:'medium', UTC: true}}" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                              </Table>	
+</Page>
+    </mvc:View>

@@ -9,14 +9,18 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "sap/ui/core/util/File",
     'sap/ui/export/library',
+    "sap/m/Dialog",
     'sap/ui/export/Spreadsheet',
+    "sap/m/Button"
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, Device, Fragment, File, library, Spreadsheet) {
+    function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, Device, Fragment, File, mobileLibrary, Dialog,Spreadsheet, Button) {
         "use strict";
-        var that, oGModel;
+        var that, oGModel;               
+        var ButtonType = mobileLibrary.ButtonType;
+        var DialogType = mobileLibrary.DialogType;
         return Controller.extend("vcpapp.vcpnpicharvalue.controller.Home", {
             onInit: function () {
                 that = this;
@@ -29,7 +33,8 @@ sap.ui.define([
                 that.custModel = new JSONModel();
                 that.oNewModel = new JSONModel();
                 that.phaseOutModel = new JSONModel();
-                that.projModel = new JSONModel();
+                that.projModel1 = new JSONModel();
+                that.projModel1.setSizeLimit(1000);
                 that.partModel.setSizeLimit(1000);
                 that.locModel.setSizeLimit(1000);
                 that.prodModel1.setSizeLimit(1000);
@@ -37,18 +42,19 @@ sap.ui.define([
                 that.custModel.setSizeLimit(1000);
                 that.oNewModel.setSizeLimit(1000);
                 that.phaseOutModel.setSizeLimit(1000);
-                that.projModel.setSizeLimit(1000);
                 this._oCore = sap.ui.getCore();
 
 
             },
-            onAfterRendering: function () {
+            onAfterRendering: function () { 
                 sap.ui.core.BusyIndicator.show()
                 that.byId("idConfigProd").setValue();
                 that.byId("idProjDet").setValue();
                 that.byId("idToggleButton").setPressed(false);
                 that.byId("idToggleButton1").setPressed(false);
-                that.byId("idToggleButton2").setPressed(false);
+                var selectedProject = that.oGModel.getProperty("/selectedProject");
+               
+                // that.byId("idToggleButton2").setPressed(false);
                 if (!this._popOver) {
                     this._popOver = sap.ui.xmlfragment(
                         "vcpapp.vcpnpicharvalue.view.PopOver",
@@ -56,13 +62,7 @@ sap.ui.define([
                     );
                     this.getView().addDependent(this._popOver);
                 }
-                if (!this._valueHelpDialogProjectDet) {
-                    this._valueHelpDialogProjectDet = sap.ui.xmlfragment(
-                        "vcpapp.vcpnpicharvalue.view.MultiProjectDetails",
-                        this
-                    );
-                    this.getView().addDependent(this._valueHelpDialogProjectDet);
-                }
+                
                 if (!this._valueHelpDialogProd) {
                     this._valueHelpDialogProd = sap.ui.xmlfragment(
                         "vcpapp.vcpnpicharvalue.view.ProdDialog",
@@ -84,10 +84,10 @@ sap.ui.define([
 
                         that.prodModel1.setData({ configProdRes: oData.results });
                         sap.ui.getCore().byId("prodSlctListOD").setModel(that.prodModel1);
-                        sap.ui.core.BusyIndicator.hide()
+                        // sap.ui.core.BusyIndicator.hide()
                     },
                     error: function () {
-                        sap.ui.core.BusyIndicator.hide();
+                        // sap.ui.core.BusyIndicator.hide();
                         MessageToast.show("Failed to get configurable products");
                     },
                 });
@@ -106,13 +106,14 @@ sap.ui.define([
                                 }
 
                             });
+                            // that.oGModel.setProperty("/charvalData",that.tabData);
                             that.custModel.setData({ configProdResults: that.tabData });
                             that.byId("idOrderList").setModel(that.custModel);
                         }
-                        sap.ui.core.BusyIndicator.hide()
+                        // sap.ui.core.BusyIndicator.hide()
                     },
                     error: function () {
-                        sap.ui.core.BusyIndicator.hide();
+                        // sap.ui.core.BusyIndicator.hide();
                         MessageToast.show("Failed to get new characteristic value data");
                     },
                 });
@@ -132,36 +133,11 @@ sap.ui.define([
                         MessageToast.show("Failed to get phaseout details");
                     },
                 });
-
-                this.getOwnerComponent().getModel("BModel").read("/getProjDetails", {
-                    method: "GET",
-                    success: function (oData) {
-                        if (oData.results.length > 0) {
-                            that.tabProjDe = [];
-                            that.tabProjDe = oData.results;
-                            that.tabProjDe.forEach(function (oItem) {
-                                if (oItem.PROJ_STATUS === true) {
-                                    oItem.PROJ_STATUS = "Active";
-                                }
-                                else {
-                                    oItem.PROJ_STATUS = "InActive";
-                                }
-
-                            });
-                            that.projModel.setData({ projDetails: that.tabProjDe });
-                            that.byId("idMPD").setModel(that.projModel);
-                            sap.ui.getCore().byId("idProjDetailsFrag").setModel(that.projModel);
-                        }
-                        else{
-                            MessageToast.show("No Projects available");
-                        }
-                        sap.ui.core.BusyIndicator.hide()
-                    },
-                    error: function () {
-                        sap.ui.core.BusyIndicator.hide();
-                        MessageToast.show("Failed to get project details");
-                    },
-                });
+                that.byId("idProjDet").setValue(selectedProject);
+                var project = that.oGModel.getProperty("/ProjDetails");
+                that.projModel1.setData({projDetails:project});
+                sap.ui.getCore().byId("idProjDetailsFrag").setModel(that.projModel1);
+               
             },
 
             handleValueHelp: function (oEvent) {
@@ -192,10 +168,12 @@ sap.ui.define([
                 sap.ui.getCore().byId("idList").removeSelections();
                 that.byId("idToggleButton").setPressed(false);
                 that.byId("idToggleButton1").setPressed(false);
-                that.byId("idToggleButton2").setPressed(false);
+                // that.byId("idToggleButton2").setPressed(false);
                 if (selectedProduct && selectedProject) {
-                    // sap.ui.core.BusyIndicator.show();
-                    if (selectedTitle === "Characteristic Value Replacement") {
+                    if (selectedTitle === "Characteristic Value Replacement") {                        
+                    sap.ui.core.BusyIndicator.show();
+                        var tableProjectData = that.tabData.filter(item =>item.REF_PRODID === selectedProduct && item.PROJECT_ID === selectedProject);
+                        that.oGModel.setProperty("/charvalData",tableProjectData);
                         that.oGModel.setProperty("/configProduct", selectedProduct);
                         that.oGModel.setProperty("/projectDetails", selectedProject);
                         var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
@@ -218,28 +196,6 @@ sap.ui.define([
                         }
                     }
                 }
-                else if (selectedTitle === "Maintain Project Details") {
-                    
-                    that.oGModel.setProperty("/configProduct", selectedProduct);
-                    that.oGModel.setProperty("/projectDetails", selectedProject);
-                    var projDetTable = that.byId("idMPD").getItems();
-                    that.projArray = [];
-                    if (projDetTable.length === 0) {
-                        var projectID = "PROJ" + "000001";
-                        sap.ui.getCore().byId("idProjID").setValue(projectID);
-                    }
-                    else {
-                        projDetTable.forEach(function (oItem) {
-                            var item = oItem.getCells()[0].getText().slice(4)
-                            that.projArray.push(item)
-                        });
-                        var maxNumber = that.maxNumber(that.projArray);
-                        var incrementedNumber = that.incrmntNum(maxNumber);
-                        var projectID = "PROJ" + incrementedNumber;
-                        sap.ui.getCore().byId("idProjID").setValue(projectID);
-                    }
-                    this._valueHelpDialogProjectDet.open();
-                }
                 else {
                     MessageToast.show("Please select a Configurable Product/Project");
                 }
@@ -258,12 +214,15 @@ sap.ui.define([
             onResetData: function () {
                 that.byId("idConfigProd").setValue("");
                 that.byId("idProjDet").setValue("");
-                that.byId("newProjSearch").setValue("");
+                // that.byId("newProjSearch").setValue("");
                 that.byId("newCharSearch").setValue("");
                 that.byId("newPhaseSearch").setValue("");
                 that.byId("idOrderList").getBinding("items").filter([]);
                 that.custModel.setData({ configProdResults: that.tabData });
                 that.byId("idOrderList").setModel(that.custModel);
+                that.byId("idPhaseOutList").getBinding("items").filter([]);
+                that.phaseOutModel.setData({ phaseOutDet: that.tabPhaseData });
+                that.byId("idPhaseOutList").setModel(that.phaseOutModel);
             },
             /**Handle Search  */
             oHomesearch: function (oEvent) {
@@ -324,133 +283,21 @@ sap.ui.define([
             /**On Press of Go on home screem */
             onGetData: function () {
                 var selectedProd = that.byId("idConfigProd").getValue();
-                that.proDetails = [];
+                var selectedProject = that.byId("idProjDet").getValue();
+                that.proDetails = [], that.phaseOutData=[];
                 that.proDetails = that.tabData;
+                that.phaseOutData = that.tabPhaseData;
                 if (that.proDetails && that.proDetails.length > 0) {
-                    that.proDetails = that.proDetails.filter(item => item.REF_PRODID === selectedProd);
+                    that.proDetails = that.proDetails.filter(item => item.REF_PRODID === selectedProd && item.PROJECT_ID === selectedProject);
                     that.custModel.setData({ configProdResults: that.proDetails });
                     that.byId("idOrderList").setModel(that.custModel);
+                    that.phaseOutData = that.phaseOutData.filter(item => item.REF_PRODID === selectedProd && item.PROJECT_ID === selectedProject);
+                    that.phaseOutModel.setData({ phaseOutDet: that.phaseOutData });
+                            that.byId("idPhaseOutList").setModel(that.phaseOutModel);
                 }
                 else {
                     MessageToast.show("No new characteristics for the selected product");
                 }
-            },/**On change of switch button in MultiProjDetails fragment */
-            onSwitchChange: function (oEvent) {
-                var switchState = oEvent.getSource().getState();
-                if (switchState === true) {
-                    sap.ui.getCore().byId("idRelDate").setDateValue(new Date());
-                }
-                else {
-                    sap.ui.getCore().byId("idRelDate").setDateValue();
-                }
-            },
-            /**On press of Cancle in MultiProjDetails */
-            onProjCancel: function () {
-                this._valueHelpDialogProjectDet.close();
-                if (this._valueHelpDialogProjectDet) {
-                    this._valueHelpDialogProjectDet.destroy(true);
-                    this._valueHelpDialogProjectDet = "";
-                }
-            },
-            /**On click of save in MultiProjdetails */
-            onProjSave: function () {
-                var object = {}, finalArray = [];
-                var projID = sap.ui.getCore().byId("idProjID").getValue();
-                var projDetails = sap.ui.getCore().byId("idProjDesc").getValue();
-                var projStatus = sap.ui.getCore().byId("idSwitchState").getState();
-                if (projStatus === true) {
-                    var releaseDate = sap.ui.getCore().byId("idRelDate").getDateValue();
-                }
-                else {
-                    var releaseDate = null;
-                }
-
-                object = {
-                    PROJECT_ID: projID,
-                    PROJECT_DET: projDetails,
-                    PROJ_STATUS: projStatus,
-                    RELEASE_DATE: releaseDate,
-                }
-                finalArray.push(object);
-                this.getOwnerComponent().getModel("BModel").callFunction("/saveProjDetails", {
-                    method: "GET",
-                    urlParameters: {
-                        NEWPROJDET: JSON.stringify(finalArray)
-                    },
-                    success: function (oData) {
-                        MessageToast.show(oData.saveProjDetails);
-                        that.onProjCancel();
-                        that.onAfterRendering();
-                    },
-                    error: function () {
-                        sap.ui.core.BusyIndicator.hide();
-                        MessageToast.show("Failed to save project details");
-                    },
-                });
-            },
-            /**On Press of Edit in Maintain project Details tab */
-            onEditPress: function () {
-                var tabItemSelected = that.byId("idMPD").getSelectedItem();
-                if (tabItemSelected === null) {
-                    MessageToast.show("Please select an item to edit");
-                }
-                else {
-                    if (!this._valueHelpDialogProjectDet) {
-                        this._valueHelpDialogProjectDet = sap.ui.xmlfragment(
-                            "vcpapp.vcpnpicharvalue.view.MultiProjectDetails",
-                            this
-                        );
-                        this.getView().addDependent(this._valueHelpDialogProjectDet);
-                        this._valueHelpDialogProjectDet.open();
-                    }
-                    else {
-                        this._valueHelpDialogProjectDet.open();
-                    }
-                    var objectItems = tabItemSelected.getBindingContext().getObject();
-                    sap.ui.getCore().byId("idProjID").setValue(objectItems.PROJECT_ID);
-                    sap.ui.getCore().byId("idProjDesc").setValue(objectItems.PROJECT_DET);
-
-                    if (objectItems.PROJ_STATUS === "Active") {
-                        sap.ui.getCore().byId("idSwitchState").setState(true);
-                    }
-                    else {
-                        sap.ui.getCore().byId("idSwitchState").setState(false);
-                    }
-                    if (objectItems.RELEASE_DATE) {
-                        sap.ui.getCore().byId("idRelDate").setValue(objectItems.RELEASE_DATE.toLocaleDateString());
-                    }
-
-                }
-            },
-            /**Finding out Max number in Array */
-            maxNumber: function (oEvent) {
-                // Convert each element to a number
-                let numArray = oEvent.map(function (str) {
-                    return parseInt(str, 10);
-                });
-                // Find the maximum number
-                let maxNum = Math.max(...numArray);
-
-                // Convert the maximum number back to a string with leading zeros
-                // Determine the length of the original strings
-                let length = oEvent[0].length;
-
-                // Convert the max number to a string and pad with leading zeros
-                let maxString = maxNum.toString().padStart(length, '0');
-                return maxString;
-            },
-            /**Incremental Number */
-            incrmntNum: function (oEvent) {
-                // Convert the string to a number and increment it
-                let num = parseInt(oEvent, 10) + 1;
-
-                // Determine the number of leading zeros in the original string
-                let leadingZeros = oEvent.length - num.toString().length;
-
-                // Create a string with the incremented number and add leading zeros
-                let incrementedStr = '0'.repeat(leadingZeros) + num;
-
-                return incrementedStr;
             },
             handleProjSelection:function(oEvent){
                 var selectedItemz = oEvent.getParameters().selectedItem.getTitle();
@@ -494,6 +341,178 @@ sap.ui.define([
                 }
                 sap.ui.getCore().byId("prodSlctListOD").getBinding("items").filter(oFilters);
             }
+            },
+            /**On Press of back navigation button */
+            onBackToMPD:function(){
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+            oRouter.navTo("RouteHome", {}, true);
+            },
+            /**On press of Generate unique ids */
+            onGenerateUniqueIds:function(){                
+                that.selectProject=that.byId("idProjDet").getValue() ;
+                that.selectProduct= that.byId("idConfigProd").getValue();
+                if(that.selectProject && that.selectProduct){
+
+                    this.getOwnerComponent().getModel("BModel").read("/getTmpUIDHeader", {
+                        filters: [
+                            new Filter(
+                                "PRODUCT_ID",
+                                FilterOperator.EQ,
+                                that.selectProduct
+                            ),
+                            new Filter(
+                                "PROJECT_ID",
+                                FilterOperator.EQ,
+                                that.selectProject
+                            ),
+                        ],
+                        success: function (oData1) {
+                            if (oData1.results.length > 0) {
+                                // if (!that.oApproveDialog) {
+                                //     that.oApproveDialog = new Dialog({
+                                //         type: DialogType.Message,
+                                //         title: "Confirm",
+                                //         content: new Text({ text: "Temporary Unique IDs already exists for this combination. Old temporary unique id's will be deleted on press of 'Yes'. Do you want to still generate temporary unique ids?" }),
+                                        
+                                //         beginButton: new Button({
+                                //             type: ButtonType.Emphasized,
+                                //             text: "Yes",
+                                //             press: function () {
+                                //                 that.flag="X"
+                                //                 that.generateUniqueIds();
+                                //                 this.oApproveDialog.close();
+                                //             }.bind(this)
+                                //         }),
+                                //         endButton: new Button({
+                                //             text: "No",
+                                //             press: function () {
+                                //                 that.oApproveDialog.close();
+                                //             }.bind(this)
+                                //         })
+                                //     });
+                                // }
+                
+                                // that.oApproveDialog.open();
+                                MessageBox.information("Temporary Unique IDs already exists for this combination. Old temporary unique id's will be deleted on press of 'Yes'. Do you want to still generate temporary unique ids?", {
+                                    actions: ["Yes", MessageBox.Action.CLOSE],
+                                    emphasizedAction: "Yes",
+                                    onClose: function (sAction) {
+                                        // MessageToast.show("Action selected: " + sAction);.
+                                        if(sAction ==="Yes"){
+                                            that.flag="X"
+                                            that.generateUniqueIds();
+                                        }
+                                        else{
+
+                                        }
+                                    },
+                                    dependentOn: that.getView()
+                                });
+                            }
+                            else {
+                                // that.flag="";
+                                // that.generateUniqueIds();
+                                MessageToast.show("No new characteristics values for the selected product & project.")
+                            }
+                        },
+                        error: function () {
+                            MessageToast.show("Failed to get temporary unique details");
+                        }
+                    });
+                
+                }
+                else{
+                    MessageToast.show("Please select configurable product/project");
+                }
+            },
+            generateUniqueIds:function(){
+                // Define the URL and request body
+                const data = {
+                    PRODUCT_ID: that.selectProduct,
+                    PROJECT_ID: that.selectProject,
+                    DELFLAG: that.flag
+                };
+                var aScheduleSEDT = {};
+                // Get Job Schedule Start/End Date/Time
+                aScheduleSEDT = that.getScheduleSEDT();
+                var dCurrDateTime = new Date().getTime();
+                var actionText = "/v2/catalog/generateTempUID";
+                var JobName = "Temporary Unique ID generation" + dCurrDateTime;
+                sap.ui.core.BusyIndicator.show();
+                var finalList = {
+                    name: JobName,
+                    description: "Temporary Unique ID generation",
+                    action: encodeURIComponent(actionText),
+                    active: true,
+                    httpMethod: "POST",
+                    startTime: aScheduleSEDT.djSdate,
+                    endTime: aScheduleSEDT.djEdate,
+                    createdAt: aScheduleSEDT.djSdate,
+                    schedules: [{
+                        data: data,
+                        cron: "",
+                        time: aScheduleSEDT.oneTime,
+                        active: true,
+                        startTime: aScheduleSEDT.dsSDate,
+                        endTime: aScheduleSEDT.dsEDate,
+                    }]
+                };
+                this.getOwnerComponent().getModel("JModel").callFunction("/addMLJob", {
+                    method: "GET",
+                    urlParameters: {
+                        jobDetails: JSON.stringify(finalList),
+                    },
+                    success: function (oData) {
+                        // that.byId("idGenSeedOrder").setEnabled(false);
+                        sap.m.MessageToast.show(oData.addMLJob + ": Job Created");
+                       
+                            sap.ui.core.BusyIndicator.hide();
+                            that.onResetData();
+                        
+                    },
+                    error: function (error) {
+                        sap.ui.core.BusyIndicator.hide();
+                        sap.m.MessageToast.show("Service Connectivity Issue!");
+                    },
+                });
+            },
+            getScheduleSEDT: function () {
+                var aScheduleSEDT = {};
+                var dDate = new Date();
+                // 07-09-2022-1                
+                var idSchTime = dDate.setSeconds(dDate.getSeconds() + 20);
+                // 07-09-2022-1
+                var idSETime = dDate.setHours(dDate.getHours() + 2);
+                idSchTime = new Date(idSchTime);
+                idSETime = new Date(idSETime);
+                //var onetime = idSchTime;
+                var djSdate = new Date(),
+                    djEdate = idSETime,
+                    dsSDate = new Date(),
+                    dsEDate = idSETime,
+                    tjStime,
+                    tjEtime,
+                    tsStime,
+                    tsEtime;
+
+                djSdate = djSdate.toISOString().split("T");
+                tjStime = djSdate[1].split(":");
+                djEdate = djEdate.toISOString().split("T");
+                tjEtime = djEdate[1].split(":");
+                dsSDate = dsSDate.toISOString().split("T");
+                tsStime = dsSDate[1].split(":");
+                dsEDate = dsEDate.toISOString().split("T");
+                tsEtime = dsEDate[1].split(":");
+
+                var dDate = new Date().toLocaleString().split(" ");
+                aScheduleSEDT.djSdate = djSdate[0] + " " + tjStime[0] + ":" + tjStime[1] + " " + "+0000";
+                aScheduleSEDT.djEdate = djEdate[0] + " " + tjEtime[0] + ":" + tjEtime[1] + " " + "+0000";
+                aScheduleSEDT.dsSDate = dsSDate[0] + " " + tsStime[0] + ":" + tsStime[1] + " " + "+0000";
+                aScheduleSEDT.dsEDate = dsEDate[0] + " " + tsEtime[0] + ":" + tsEtime[1] + " " + "+0000";
+                aScheduleSEDT.oneTime = idSchTime;
+
+                return aScheduleSEDT;
+
             }
         });
     });

@@ -2,6 +2,7 @@
    xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core"
 	displayBlock="true" xmlns="sap.m" xmlns:m="sap.m" xmlns:l="sap.ui.layout" xmlns:ux="sap.uxap" xmlns:f="sap.ui.layout.form"
 	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:u="sap.ui.unified">
+    <Page showNavButton="true" navButtonPress="onBackToMPD">
 	<ux:ObjectPageLayout id="ObjectPageLayout">
 		<ux:headerTitle>
 			<ux:ObjectPageDynamicHeaderTitle>
@@ -54,46 +55,6 @@
 						<ux:blocks>
                         	<IconTabBar id="idIconTabBarInlineMode"	headerMode="Inline" class="sapUiResponsiveContentPadding" >
 		<items>
-        <IconTabFilter	text="Mantain Project Details" key="MPD">
-                 <Table id="idMPD" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
-                              updateFinished="onTableUpdate" items="{path: '/projDetails', sorter:{path:'PROJECT_ID'}}"  itemPress="onhandlePress"  
-                              mode="SingleSelectLeft"   selectionChange="onhandlePress" rememberSelections="false"> 
-                              <headerToolbar>
-			                    <OverflowToolbar>
-                                <!-- <Title  text="Project Details"></Title> -->
-                                <SearchField id="newProjSearch" search="oHomesearch" liveChange="oHomesearch" width="135vh" placeholder="Project ID/Project Details" />
-				                    <ToolbarSpacer/>
-				                    <ToggleButton id="idToggleButton2" text="Add" press="onAddPressed" tooltip="OnAdd" icon="sap-icon://slim-arrow-down">
-                                    </ToggleButton>
-                                    <Button text="Edit" id="idEdit" press="onEditPress" enabled="true"/>
-			                    </OverflowToolbar>
-		                      </headerToolbar>                             
-                                <columns>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
-                                        <Text text="Project ID" />
-                                    </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
-                                        <Text text="Project Details" />
-                                    </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
-                                        <Text text="Status" />
-                                    </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
-                                        <Text text="Release Date" />
-                                    </Column>                                                               
-                                </columns>
-                                <items>
-                                    <ColumnListItem>
-                                        <cells>
-                                            <Text text="{PROJECT_ID}" />    
-                                            <Text text="{PROJECT_DET}" />
-                                            <Text text= "{PROJ_STATUS}" />
-                                            <Text text= "{path:'RELEASE_DATE', type:'sap.ui.model.type.Date', formatOptions : { pattern:'MM/dd/yyyy',style:'medium', UTC: true}}" />
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-                              </Table>	
-			</IconTabFilter>
 		<IconTabFilter	text="Characteristic Value Replacement"	key="CVP">
 				<Table id="idOrderList" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
                               updateFinished="onTableUpdate" items="{path: '/configProdResults'}"  itemPress="onhandlePress"  
@@ -101,8 +62,9 @@
                               <headerToolbar>
 			                    <OverflowToolbar>
                                 <!-- <Title  text="Characteristic Value Replacement"></Title> -->
-                                <SearchField id="newCharSearch" search="oHomesearch" liveChange="oHomesearch" width="135vh" placeholder="New Char Value/Product/Ref Char Value" />
+                                <SearchField id="newCharSearch" search="oHomesearch" liveChange="oHomesearch" width="100vh" placeholder="New Char Value/Product/Ref Char Value" />
 				                    <ToolbarSpacer/>
+                                    <Button text="Generate Unique Ids" press="onGenerateUniqueIds" tooltip="Generate Unique Ids" />
 				                    <ToggleButton id="idToggleButton" text="Add" press="onAddPressed" tooltip="OnAdd" icon="sap-icon://slim-arrow-down">
                                     </ToggleButton>
 			                    </OverflowToolbar>
@@ -132,9 +94,9 @@
                                       <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Weight in %" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <!-- <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Status" />
-                                    </Column>                                
+                                    </Column>                                 -->
                                 </columns>
                                 <items>
                                     <ColumnListItem>
@@ -147,7 +109,7 @@
                                             <Text text= "{REF_CHAR_DESC}" />
                                             <Text text= "{REF_CHAR_NAME}" />                                            
                                             <Text text= "{WEIGHT}" />
-                                            <Text text= "{ACTIVE}" />
+                                            <!-- <Text text= "{ACTIVE}" /> -->
                                         </cells>
                                     </ColumnListItem>
                                 </items>
@@ -161,7 +123,7 @@
                               <headerToolbar>
 			                    <OverflowToolbar>
                                 <!-- <Title  text="Phase Out Details"></Title> -->
-                                <SearchField id="newPhaseSearch" search="oHomesearch" liveChange="oHomesearch" width="135vh" placeholder="Ref Product ID/Char Num/Location/Product ID" />
+                                <SearchField id="newPhaseSearch" search="oHomesearch" liveChange="oHomesearch" width="100vh" placeholder="Ref Product ID/Char Num/Location/Product ID" />
 				                    <ToolbarSpacer/>
 				                    <ToggleButton id="idToggleButton1" text="Add" press="onAddPressed" tooltip="OnAdd" icon="sap-icon://slim-arrow-down">
                                     </ToggleButton>
@@ -220,4 +182,5 @@
 			</ux:ObjectPageSection>
 		</ux:sections>
 	</ux:ObjectPageLayout>
+    </Page>
 </mvc:View>

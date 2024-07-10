@@ -45,3 +45,21 @@ margin-left:50px !important;
 .IconClass{
     margin-left:450px !important;
 }
+
+/* .sapMSplitContainerHideMode>.sapMSplitContainerDetail .sapMITB.sapUiResponsiveContentPadding > .sapMITBContainerContent > .sapMITBContent, .sapMITB.sapUiResponsiveContentPadding > .sapMITBContainerContent > .sapMITBContent {
+    padding: 0rem !important;
+    box-sizing: border-box;
+}
+
+.sapMTB-Transparent-CTX.sapMTB.sapMListHdrTBar, .sapMIBar.sapMTB-Info-CTX.sapMTB {
+    padding: 0rem !important;
+} */
+
+.sapMSplitContainerHideMode>.sapMSplitContainerDetail .sapMITB.sapUiResponsiveContentPadding > .sapMITBContainerContent > .sapMITBContent, .sapMITB.sapUiResponsiveContentPadding > .sapMITBContainerContent > .sapMITBContent {
+    padding: 0rem !important;
+    box-sizing: border-box;
+}
+
+.sapFDynamicPage-Std-Desktop-XL .sapUiResponsiveContentPadding .sapMITBContent {
+    padding: 0rem !important;
+}

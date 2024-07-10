@@ -107,7 +107,7 @@ sap.ui.define([
                 that.clearAllData();
                 that.getView().getModel().setData(Object.assign({}, oData));
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-                oRouter.navTo("RouteHome", {}, true);
+                oRouter.navTo("MaintainProject", {}, true);
                 if (this._valueHelpDialogCharacter) {
                     that._valueHelpDialogCharacter.destroy(true);
                     that._valueHelpDialogCharacter = "";
@@ -128,6 +128,7 @@ sap.ui.define([
             },
             handleOldCharSelection: function (oEvent) {
                 that.selectedItemsPhase = [], that.intChars = {};
+                that.oldCharVal1 = that.byId("idCharValuePhase");
                 that.oldCharVal1.removeAllTokens();
                 sap.ui.getCore().byId("idCharOldSelect").getBinding("items").filter([]);
                 that.selectedItemsPhase = oEvent.getParameters().selectedItems;
