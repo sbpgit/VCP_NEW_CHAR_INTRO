@@ -63,3 +63,9 @@ margin-left:50px !important;
 .sapFDynamicPage-Std-Desktop-XL .sapUiResponsiveContentPadding .sapMITBContent {
     padding: 0rem !important;
 }
+
+.boldText{
+    font-size:24px !important;
+    font:bold !important;
+    padding-left: 700px !important;
+}

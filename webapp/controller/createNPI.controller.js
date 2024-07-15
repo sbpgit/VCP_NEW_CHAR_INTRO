@@ -44,6 +44,8 @@ sap.ui.define([
                 that.listMode.setSizeLimit(1000);
                 that.step5Model.setSizeLimit(1000);
                 that.step6Model.setSizeLimit(1000);
+                that.charModel = new JSONModel();
+                that.charModel.setSizeLimit(1000);
                 // Declaring Value Help Dialogs and Template Dialog
                 if (!this._valueHelpDialogPhaseInOut) {
                     this._valueHelpDialogPhaseInOut = sap.ui.xmlfragment(
@@ -78,14 +80,17 @@ sap.ui.define([
                         ),
                     ],
                     success: function (oData1) {
+                        if (oData1.results.length > 0) {
+                            that.newChars = [];
+                            that.newChars = oData1.results;
+                            var charNames = that.removeDuplicate(oData1.results, 'CHAR_NAME');
+                            that.charModel.setData({ setCharacteristicNames: charNames });
+                            sap.ui.getCore().byId("idCharNameSelect").setModel(that.charModel);
+                        }
+                        else {
+                            MessageToast.show("No Characteristcs available for this product.")
+                        }
                         sap.ui.core.BusyIndicator.hide();
-                        that.allCharacterstics = [], that.aDistinct = [];
-                        that.allCharacterstics = oData1.results;
-                        // that.aDistinct = that.removeDuplicate(that.allCharacterstics, 'CHAR_NAME');
-                        that.aDistinct = that.totalTabData;
-                        that.aDistinct = that.getUnqiueChars(oData1.results, that.aDistinct, "CHAR_NUM", "CHAR_VALUE", "CHAR_NUM", "REF_CHAR_VALUE");
-                        that.prodModel.setData({ setCharacteristics: that.aDistinct })
-                        sap.ui.getCore().byId("idCharSelect").setModel(that.prodModel);
                     },
                     error: function () {
                         sap.ui.core.BusyIndicator.hide();
@@ -128,6 +133,13 @@ sap.ui.define([
                     );
                     this.getView().addDependent(this._valueHelpDialogProdLoc);
                 }
+                if (!this._valueHelpCharName) {
+                    this._valueHelpCharName = sap.ui.xmlfragment(
+                        "vcpapp.vcpnpicharvalue.view.CharacteristicName",
+                        this
+                    );
+                    this.getView().addDependent(this._valueHelpCharName);
+                }
                 var oModel = new JSONModel(),
                     oInitialModelState = Object.assign({}, oData);
                 oModel.setData(oInitialModelState);
@@ -138,7 +150,7 @@ sap.ui.define([
                 that._iNewSelectedIndex = 0;
                 that.oGModel.setProperty("/setStep", "X");
                 that.handleButtonsVisibility();
-                
+
             },
             getUnqiueChars: function (arr1, arr2, prop1Arr1, prop2Arr1, prop1Arr2, prop2Arr2) {
                 const valuesInArr2 = new Set(arr2.map(item => `${item[prop1Arr2]}_${item[prop2Arr2]}`));
@@ -155,7 +167,7 @@ sap.ui.define([
                 that.clearAllData();
                 this.getView().getModel().setData(Object.assign({}, oData));
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-                oRouter.navTo("MaintanProject", {}, true);
+                oRouter.navTo("MaintainProject", {}, true);
                 if (this._valueHelpDialogCharacter) {
                     that._valueHelpDialogCharacter.destroy(true);
                     that._valueHelpDialogCharacter = "";
@@ -182,6 +194,9 @@ sap.ui.define([
             /**On click of Value Helps */
             handleValueHelp: function (oEvent) {
                 var sId = oEvent.getParameter("id");
+                if (sId.includes("idCharName")) {
+                    that._valueHelpCharName.open();
+                }
                 if (sId.includes("idCharValue")) {
                     that._valueHelpDialogCharacter.open();
                 }
@@ -205,14 +220,30 @@ sap.ui.define([
                 that.byId("idCharValText").setText(that.mewCharDescp);
                 that.oldCharVal.setEditable(true);
                 // var selectedItemsCount = that.totalTabData.filter(item=>item.CHAR_VALUE === selectedItem);
-                var selectedItemsCount = that.totalTabData.filter(item=>item.CHAR_NUM=== that.newCharNumSelected);
-                if(selectedItemsCount.length>0){
-                   var filteredItems = that.getUnqiueChars(that.allCharacterstics, selectedItemsCount, "CHAR_NUM", "CHAR_VALUE", "CHAR_NUM", "CHAR_VALUE");
-                filteredItems = filteredItems.filter(item => item.CHAR_VALUE !== selectedItem && item.CHAR_NUM === that.newCharNumSelected && item.CLASS_NUM === that.selectedClassNum);
-                // filteredItems = that.getUnqiueChars(filteredItems, that.totalTabData, "CHAR_NUM", "CHAR_VALUE", "CHAR_NUM", "REF_CHAR_VALUE");
-            }
-                else{
-                var filteredItems = that.allCharacterstics.filter(item => item.CHAR_VALUE !== selectedItem && item.CHAR_NUM === that.newCharNumSelected && item.CLASS_NUM === that.selectedClassNum);
+                var selectedItemsCount = that.totalTabData.filter(item => item.CHAR_NUM === that.newCharNumSelected);
+                if (selectedItemsCount.length > 0) {
+                    var filteredItems1 = that.getUnqiueChars(that.allCharacterstics, selectedItemsCount, "CHAR_NUM", "CHAR_VALUE", "CHAR_NUM", "CHAR_VALUE");
+                    filteredItems1 = filteredItems1.filter(item => item.CHAR_VALUE !== selectedItem && item.CHAR_NUM === that.newCharNumSelected && item.CLASS_NUM === that.selectedClassNum);
+                    // filteredItems = that.getUnqiueChars(filteredItems, that.totalTabData, "CHAR_NUM", "CHAR_VALUE", "CHAR_NUM", "REF_CHAR_VALUE");
+                    // function  removeObjects(array1, array2, prop1Array1, prop1Array2, prop2Array1, prop2Array2){
+                    //     return array1.filter(obj1 => {
+                    //         return !array2.some(obj2 => obj1[prop1Array1] === obj2[prop1Array2] && obj1[prop2Array1] === obj2[prop2Array2]);
+                    //     });
+                    // };
+
+                    // // Remove objects from array1 where both name and age match any object in array2
+                    // var filteredItems = removeObjects(filteredItems1, that.totalTabData, "CHAR_NUM", "CHAR_NUM", "CHAR_VALUE", "REF_CHAR_VALUE");
+                    for (var i = 0; i < selectedItemsCount.length; i++) {
+                        for (var k = 0; k < filteredItems1.length; k++) {
+                            if (selectedItemsCount[i].CHAR_VALUE === selectedItem && selectedItemsCount[i].REF_CHAR_VALUE === filteredItems1[k].CHAR_VALUE) {
+                                delete filteredItems1[k];
+                            }
+                        }
+                    }
+                    var filteredItems = filteredItems1;
+                }
+                else {
+                    var filteredItems = that.allCharacterstics.filter(item => item.CHAR_VALUE !== selectedItem && item.CHAR_NUM === that.newCharNumSelected && item.CLASS_NUM === that.selectedClassNum);
                 }
                 that.TemplateModel.setData({ setOldCharacteristics: filteredItems });
                 sap.ui.getCore().byId("idCharOldSelect").setModel(that.TemplateModel);
@@ -287,6 +318,7 @@ sap.ui.define([
                 that.byId("idNewValue").setValue(that.newcharSelected);
                 that.byId("idste3Text").setText(that.mewCharDescp);
                 that.tokens = that.byId("idOldCharValue").getTokens();
+                that.byId("idOldChar").removeAllTokens();
                 that.tokens.forEach(function (oItem) {
                     that.byId("idOldChar").addToken(
                         new sap.m.Token({
@@ -410,6 +442,7 @@ sap.ui.define([
                 that.byId("idNewDimen").setValue(that.newcharSelected);
                 that.byId("idLaunchText").setText(that.mewCharDescp);
                 that.tokens = that.byId("idOldCharValue").getTokens();
+                that.byId("idOldDimen").removeAllTokens();
                 that.tokens.forEach(function (oItem) {
                     that.byId("idOldDimen").addToken(
                         new sap.m.Token({
@@ -551,6 +584,7 @@ sap.ui.define([
                 that.byId("idPhaseInChar").setValue(that.newcharSelected);
                 that.byId("idPhaseInText").setText(that.mewCharDescp);
                 that.tokens = that.byId("idOldCharValue").getTokens();
+                that.byId("idPhaseinOldChar").removeAllTokens();
                 that.tokens.forEach(function (oItem) {
                     that.byId("idPhaseinOldChar").addToken(
                         new sap.m.Token({
@@ -1036,6 +1070,24 @@ sap.ui.define([
                         }
                     });
                 }
-            }
+            },
+            /**On Press of charnames in Characteristic Name Fragment */
+            handleCharNameSelection: function (oEvent) {
+                var selectedName = oEvent.getParameters().selectedItems[0].getTitle();
+                var selectedNum = oEvent.getParameters().selectedItems[0].getDescription();
+                that.allCharacterstics = [], that.aDistinct = [];
+                that.allCharacterstics = that.newChars;
+                var allChars = that.newChars.filter(a=>a.CHAR_NAME === selectedName && a.CHAR_NUM === selectedNum);
+                // that.aDistinct = that.removeDuplicate(that.allCharacterstics, 'CHAR_NAME');
+                that.aDistinct = that.totalTabData;
+                that.aDistinct = that.getUnqiueChars(allChars, that.aDistinct, "CHAR_NUM", "CHAR_VALUE", "CHAR_NUM", "REF_CHAR_VALUE");
+                that.aDistinct = that.aDistinct.filter(obj => !obj.hasOwnProperty("PROJECT_ID"));
+                that.prodModel.setData({ setCharacteristics: that.aDistinct })
+                sap.ui.getCore().byId("idCharSelect").setModel(that.prodModel);
+                that.byId("idCharValue").setEnabled(true);
+                that.byId("idCharValue").setValue();
+                that.byId("idCharName").setValue(selectedName);
+
+    }
         });
     });

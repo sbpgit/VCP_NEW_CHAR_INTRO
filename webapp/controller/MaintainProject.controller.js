@@ -23,6 +23,8 @@ sap.ui.define([
                 // that.oGModel = this.getOwnerComponent().getModel("oGModel");
                 that.projModel = new JSONModel();
                 that.projModel.setSizeLimit(1000);
+                that.projDetModel = new JSONModel();
+                that.projDetModel.setSizeLimit(1000);
                 this._oCore = sap.ui.getCore();
             },
             onAfterRendering:function(){
@@ -34,6 +36,13 @@ sap.ui.define([
                     );
                     this.getView().addDependent(this._valueHelpDialogProjectDet);
                 }
+                if (!this._valueHelpLinkProject) {
+                    this._valueHelpLinkProject = sap.ui.xmlfragment(
+                        "vcpapp.vcpnpicharvalue.view.OpenProjDet",
+                        this
+                    );
+                    this.getView().addDependent(this._valueHelpLinkProject);
+                }
                 this.getOwnerComponent().getModel("BModel").read("/getProjDetails", {
                     method: "GET",
                     success: function (oData) {
@@ -43,9 +52,13 @@ sap.ui.define([
                             that.tabProjDe.forEach(function (oItem) {
                                 if (oItem.PROJ_STATUS === true) {
                                     oItem.PROJ_STATUS = "Active";
+                                    oItem.STATE =false;
+                                    oItem.SWITCH = true;
                                 }
                                 else {
                                     oItem.PROJ_STATUS = "InActive";
+                                    oItem.STATE=true;
+                                    oItem.SWITCH = false;
                                 }
 
                             });
@@ -133,15 +146,15 @@ sap.ui.define([
                 return incrementedStr;
             },
             /**On select of preoject details in table */
-            onhandlePressMPD:function(oEvent){
-                var selectedProject = oEvent.getParameters().listItem.getCells()[2].getText();
-                if(selectedProject === "Active"){
-                    that.byId("idEdit").setEnabled(false);
-                }
-                else{
-                    that.byId("idEdit").setEnabled(true);
-                }
-            },
+            // onhandlePressMPD:function(oEvent){
+            //     var selectedProject = oEvent.getParameters().listItem.getCells()[2].getText();
+            //     if(selectedProject === "Active"){
+            //         that.byId("idEdit").setEnabled(false);
+            //     }
+            //     else{
+            //         that.byId("idEdit").setEnabled(true);
+            //     }
+            // },
             /**On Press of Edit in Maintain project Details tab */
             onEditPress: function () {
                 var tabItemSelected = that.byId("idMPD").getSelectedItem();
@@ -163,32 +176,34 @@ sap.ui.define([
                     var objectItems = tabItemSelected.getBindingContext().getObject();
                     sap.ui.getCore().byId("idProjID").setValue(objectItems.PROJECT_ID);
                     sap.ui.getCore().byId("idProjDesc").setValue(objectItems.PROJECT_DET);
+                    sap.ui.getCore().byId("idswtichbox").setVisible(true);
 
-                    if (objectItems.PROJ_STATUS === "Active") {
-                        sap.ui.getCore().byId("idSwitchState").setState(true);
-                    }
-                    else {
-                        sap.ui.getCore().byId("idSwitchState").setState(false);
-                    }
-                    if (objectItems.RELEASE_DATE) {
-                        sap.ui.getCore().byId("idRelDate").setValue(objectItems.RELEASE_DATE.toLocaleDateString());
-                    }
+                    // if (objectItems.PROJ_STATUS === "Active") {
+                    //     sap.ui.getCore().byId("idSwitchState").setState(true);
+                    // }
+                    // else {
+                    //     sap.ui.getCore().byId("idSwitchState").setState(false);
+                    // }
+                    // if (objectItems.RELEASE_DATE) {
+                    //     sap.ui.getCore().byId("idRelDate").setValue(objectItems.RELEASE_DATE.toLocaleDateString());
+                    // }
 
                 }
             },
              
-            /**On click of save in MultiProjdetails */
-            onProjSave: function () {
+            /**On click of save MultiProjectDetails */
+            onProjSave: function (oEvent) {
                 var object = {}, finalArray = [];
                 var projID = sap.ui.getCore().byId("idProjID").getValue();
                 var projDetails = sap.ui.getCore().byId("idProjDesc").getValue();
+                var releaseDate = null;
                 var projStatus = sap.ui.getCore().byId("idSwitchState").getState();
-                if (projStatus === true) {
-                    var releaseDate = sap.ui.getCore().byId("idRelDate").getDateValue();
-                }
-                else {
-                    var releaseDate = null;
-                }
+                // if (projStatus === true) {
+                //     var releaseDate = new Date();
+                // }
+                // else {
+                //     var releaseDate = null;
+                // }
 
                 object = {
                     PROJECT_ID: projID,
@@ -213,20 +228,49 @@ sap.ui.define([
                     },
                 });
             },
-            /**On change of switch button in MultiProjDetails fragment */
-            onSwitchChange: function (oEvent) {
+            /**On change of switch button in Maintain projects view */
+            onStateChange: function (oEvent) {
+                sap.ui.core.BusyIndicator.show();
                 var switchState = oEvent.getSource().getState();
                 if (switchState === true) {
-                    sap.ui.getCore().byId("idRelDate").setDateValue(new Date());
+                    var object1 = {}, finalArray1 = [];
+                    var projID = oEvent.getSource().getParent().getBindingContext().getObject().PROJECT_ID;
+                    var projDetails = oEvent.getSource().getParent().getBindingContext().getObject().PROJECT_DET;
+                    var projStatus = true;
+                    var releaseDate = new Date();
+    
+                    object1 = {
+                        PROJECT_ID: projID,
+                        PROJECT_DET: projDetails,
+                        PROJ_STATUS: projStatus,
+                        RELEASE_DATE: releaseDate,
+                    }
+                    finalArray1.push(object1);
+                    this.getOwnerComponent().getModel("BModel").callFunction("/saveProjDetails", {
+                        method: "GET",
+                        urlParameters: {
+                            NEWPROJDET: JSON.stringify(finalArray1)
+                        },
+                        success: function (oData) {
+                            MessageToast.show(oData.saveProjDetails);
+                            // that.onProjCancel();
+                            that.onAfterRendering();
+                            sap.ui.core.BusyIndicator.hide();
+                        },
+                        error: function () {
+                            sap.ui.core.BusyIndicator.hide();
+                            MessageToast.show("Failed to save project details");
+                        },
+                    });
                 }
-                else {
-                    sap.ui.getCore().byId("idRelDate").setDateValue();
-                }
+                
             },
             /**On Press of NPI */
             onNPIPress:function(){
                 sap.ui.core.BusyIndicator.show();
                 var tableSelectedItem = that.byId("idMPD").getSelectedItems();
+                var tableItems = that.byId("idMPD").getItems();
+                if(tableItems.length>0){
                 if(tableSelectedItem.length>0){
                     that.oGModel.setProperty('/selectedProject',tableSelectedItem[0].getCells()[0].getText());
                 }
@@ -235,6 +279,101 @@ sap.ui.define([
                 }
             var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
             oRouter.navTo("MaintainProject", {}, true);
+                }
+                else{
+                    sap.ui.core.BusyIndicator.hide();
+                    MessageToast.show("No Projects available yet. Please create a Project before moving forward.")
+                }
+            },
+            /**On Search in table */
+            oHomesearch:function(oEvent){
+                var sQuery = oEvent.getParameter("value") || oEvent.getParameter("newValue"),
+                sId = oEvent.getParameter("id"),
+                oFilters = [];
+            // Check if search filter is to be applied
+            sQuery = sQuery ? sQuery.trim() : "";
+            if (sId.includes("newProjSearch")) {
+                if (sQuery !== "") {
+                    oFilters.push(
+                        new Filter({
+                            filters: [
+                                new Filter("PROJECT_ID", FilterOperator.Contains, sQuery),
+                                new Filter("PROJECT_DET", FilterOperator.Contains, sQuery)
+                            ],
+                            and: false,
+                        })
+                    );
+                }
+                that.byId("idMPD").getBinding("items").filter(oFilters);
+            }
+            else if (sId.includes("newDetSearch")) {
+                if (sQuery !== "") {
+                    oFilters.push(
+                        new Filter({
+                            filters: [
+                                new Filter("PRODUCT_ID", FilterOperator.Contains, sQuery),
+                                new Filter("CHAR_NAME", FilterOperator.Contains, sQuery),
+                                new Filter("CHAR_VALUE", FilterOperator.Contains, sQuery),
+                                new Filter("REF_CHAR_VALUE", FilterOperator.Contains, sQuery)
+                            ],
+                            and: false,
+                        })
+                    );
+                }
+                sap.ui.getCore().byId("idProjDetails").getBinding("items").filter(oFilters);
+            }
+            },
+            /**On Press of link in Table */
+            onLinkPress:function(oEvent){
+                sap.ui.core.BusyIndicator.show();
+                that.selectedProjectDet;
+                that.selectedProjectDet = oEvent.getSource().getText();
+                this.getOwnerComponent().getModel("BModel").read("/getNPICharVal", {
+                    method: "GET",
+                    filters:[
+                        new Filter("PROJECT_ID", FilterOperator.EQ,that.selectedProjectDet)
+                    ],
+                    success: function (oData) {
+                        if (oData.results.length > 0) {                           
+                            if (!that._valueHelpLinkProject) {
+                                that._valueHelpLinkProject = sap.ui.xmlfragment(
+                                    "vcpapp.vcpnpicharvalue.view.OpenProjDet",
+                                    that
+                                );
+                                that.getView().addDependent(that._valueHelpLinkProject);
+                            }
+                            that.projDetModel.setData({basicProjDetails:oData.results});
+                            sap.ui.getCore().byId("idProjDetails").setModel(that.projDetModel);
+                            that._valueHelpLinkProject.open();
+                        }
+                        else{
+                            that.projDetModel.setData({basicProjDetails:[]});
+                            sap.ui.getCore().byId("idProjDetails").setModel(that.projDetModel);
+                            that._valueHelpLinkProject.open();
+                            MessageToast.show("No Details available for this project")
+                        }
+                        sap.ui.core.BusyIndicator.hide()
+                    },
+                    error: function () {
+                        sap.ui.core.BusyIndicator.hide();
+                        MessageToast.show("Failed to get project details");
+                    },
+                });
+            },
+            /**On close button in prohect details framgent */
+            onButtonClose:function(){
+                if (that._valueHelpLinkProject) {
+                    that._valueHelpLinkProject.destroy(true);
+                    that._valueHelpLinkProject = "";
+                }
+            },
+            /**On Press of Add project in OpenProjdet fragment */
+            onProjectAdd:function(){
+                var selectedProject = that.selectedProjectDet;
+                that.oGModel.setProperty('/selectedProject',selectedProject);
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+                oRouter.navTo("MaintainProject", {}, true);
+                that.onButtonClose();
             }
         });
     });

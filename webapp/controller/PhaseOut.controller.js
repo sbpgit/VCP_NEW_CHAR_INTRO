@@ -41,24 +41,6 @@ sap.ui.define([
                 that.selectedConfigProductOut = that.oGModel.getProperty("/configProduct");
                 that.selectedProjectPhase = that.oGModel.getProperty("/projectDetails");
                 that.byId("idConfigTextPhase").setText(that.selectedConfigProductOut);
-                this.getOwnerComponent().getModel("BModel").read("/getProdClsChar", {
-                    filters: [
-                        new Filter(
-                            "PRODUCT_ID",
-                            FilterOperator.EQ,
-                            that.selectedConfigProductOut
-                        ),
-                    ],
-                    success: function (oData1) {
-                        that.allCharactersticsPhase = [], that.aDistinctPhase = [];
-                        that.aDistinctPhase = oData1.results;
-                        that.prodModelPhase.setData({ setOldCharacteristics: that.aDistinctPhase })
-                        sap.ui.getCore().byId("idCharOldSelect").setModel(that.prodModelPhase);
-                    },
-                    error: function () {
-                        MessageToast.show("Failed to get characteristics");
-                    }
-                });
                 this._oCore = sap.ui.getCore();
                 if (!this._valueHelpDialogCharacter) {
                     this._valueHelpDialogCharacter = sap.ui.xmlfragment(
@@ -100,6 +82,25 @@ sap.ui.define([
                 that._iNewSelectedIndex=0;
                 that.oGModel.setProperty("/setStepPhase", "X");
                 that.handleButtonsVisibility1();
+                this.getOwnerComponent().getModel("BModel").read("/getProdClsChar", {
+                    filters: [
+                        new Filter(
+                            "PRODUCT_ID",
+                            FilterOperator.EQ,
+                            that.selectedConfigProductOut
+                        ),
+                    ],
+                    success: function (oData1) {
+                        that.allCharactersticsPhase = [], that.aDistinctPhase = [];
+                        that.aDistinctPhase = oData1.results;
+                        that.prodModelPhase.setData({ setOldCharacteristics: that.aDistinctPhase })
+                        sap.ui.getCore().byId("idCharOldSelect").setModel(that.prodModelPhase);
+                    },
+                    error: function () {
+                        MessageToast.show("Failed to get characteristics");
+                    }
+                });
+                
             },
              /**On press of Back */
              onBackPhase: function () {
@@ -474,7 +475,7 @@ sap.ui.define([
                                 CHAR_NUM: that.selectedItemsPhase[i].getBindingContext().getObject().CHAR_NUM,
                                 CHAR_VALUE: that.selectedItemsPhase[i].getTitle(),
                                 PHASE_OUT_START: aItems[j].getCells()[4].getDateValue(),
-                                PHASE_OUT_END: aItems[j].getCells()[5].getDateValue(),
+                                // PHASE_OUT_END: aItems[j].getCells()[5].getDateValue(),
                                 LOCATION_ID: aItems[j].getCells()[0].getText(),
                                 PRODUCT_ID: aItems[j].getCells()[2].getText()
                             }
@@ -510,17 +511,17 @@ sap.ui.define([
             clearAllData:function(){
                 /**Clearing data in Step 1 */
                 that.byId("idConfigTextPhase").setText();
-                that.byId("idCharValuePhase").setTokens();
+                that.byId("idCharValuePhase").removeAllTokens();
 
                 /**Clearing data in Step 2 */
                 that.byId("idConfigPhase").setText();
-                that.byId("idOldDimenPhase").setTokens();
+                that.byId("idOldDimenPhase").removeAllTokens();
                 that.listModePhase.setData({ dimenListPhase: [] });
                 that.byId("idDimenTablePhase").setModel(that.listModePhase)
 
                  /**Clearing data in Step 3 */
                  that.byId("idPhaseOutProd").setValue();
-                 that.byId("idPhaseOutNew").setTokens();
+                 that.byId("idPhaseOutNew").removeAllTokens();
                  that.locProdModel.setData({ PhaseOutList: [] });
                 that.byId("idPhaseOutTab").setModel(that.locProdModel);
             },
@@ -584,7 +585,7 @@ sap.ui.define([
                 }
             },
             /**On Press of cancel in any Step */
-            handleWizardCancel: function () {
+            handleWizardCancel1: function () {
                 this._handleMessageBoxOpen("Are you sure you want to cancel the process?", "warning");
             },
             _handleMessageBoxOpen: function (sMessage, sMessageBoxType) {

@@ -30,7 +30,7 @@
                         </f:SimpleForm>
                         <buttons>
                         <Button id="idSaveBtnPhase" text="Ok" press="onPhasePress" type="Emphasized" />
-                        <Button id="empClosebtn1" text="Cancel"  press="onPhaseCancel" />
+                        <Button id="empClosebtn12" text="Cancel"  press="onPhaseCancel" />
                         </buttons>
  </Dialog>
 </core:FragmentDefinition>

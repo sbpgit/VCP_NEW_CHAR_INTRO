@@ -1,0 +1,49 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+<Dialog title="Project Details" contentWidth="40vw" contentHeight="auto" afterClose="closeBatchFragment1" titleAlignment="Center">
+<Table id="idProjDetails" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
+                              updateFinished="" items="{path: '/basicProjDetails', sorter:{path:'CHAR_VALUE'}}"  itemPress=""  
+                              mode="None"   selectionChange="" rememberSelections="false">
+                              <headerToolbar>
+			                    <OverflowToolbar>
+                                <SearchField id="newDetSearch" search="oHomesearch" liveChange="oHomesearch" width="50vh" placeholder="Char Value" />
+				                    <ToolbarSpacer/>
+                                    <Button text="Add details" id="idAddDet" press="onProjectAdd" enabled="true"/>                                    
+			                    </OverflowToolbar>
+		                      </headerToolbar>   
+                               <columns>
+                                <Column hAlign="Center" width="auto" vAlign="Middle" visible="false">
+                                        <Text text="Project ID" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Product Id" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Characteristic Name" />
+                                    </Column>
+                                     <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Characteristic Value" />
+                                    </Column>
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="Reference Characteristic Value" />
+                                    </Column>                                                                                     
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                        <Text text="{PROJECT_ID}"/>
+                                            <Text text= "{REF_PRODID}" />
+                                             <Text text= "{REF_CHAR_NAME}" />  
+                                            <Text text= "{CHAR_VALUE}" />
+                                            <Text text= "{REF_CHAR_VALUE}" />                                            
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+</Table>
+<footer>
+<OverflowToolbar >
+<ToolbarSpacer/>
+<Button text="Close" press="onButtonClose"/>
+</OverflowToolbar>
+</footer>
+</Dialog>
+</core:FragmentDefinition>

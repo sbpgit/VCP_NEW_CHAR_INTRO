@@ -15,24 +15,30 @@
     <Wizard id="CreateWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" renderMode="Page" showNextButton="false" complete="wizardCompletedHandler">
     <!-- /Step 1 in Wizard/ -->
     <WizardStep id="idCharSelection" title="Characteristic Value Selection" validated="true" activate="">
-    <f:SimpleForm id="idNewCharSelection" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+    <f:SimpleForm id="idNewCharSelection" editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="2" labelSpanM="2" labelSpanS="2"
 						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
 						<f:content>
                             <Label text="Configurable Product"/>
                             <Text text="" id="idConfigText"/>
+                            <Label text="Select Characteristic" required="true"/>
+                            <HBox>
+							<Input id="idCharName" value="" placeholder="Characteristic Name" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp"
+								width="300px"/>
+                                <!-- <Text text="" id="idCharValText" class="newClass"/> -->
+                                </HBox>
 							<Label text="New Characteristic Value" required="true"/>
                             <HBox>
 							<Input id="idCharValue" value="" placeholder="Characteristic Value" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp"
-								width="300px"/>
-                                <Text text="" id="idCharValText" class="newClass"/>
+								width="300px" enabled="false"/>
+                                <Text text="" id="idCharValText" class="newClass" visible="false"/>
                                 </HBox>
 						</f:content>
 					</f:SimpleForm>
     </WizardStep>
     <!-- /Step 2 in Wizard/ -->
     <WizardStep id="idRefAssign" title="Reference Assignments" validated="true" activate="onStep2Press">
-    <f:SimpleForm id="idRefNewAssign" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+    <f:SimpleForm id="idRefNewAssign" editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="2" labelSpanM="2" labelSpanS="2"
 						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
 						<f:content>
@@ -44,15 +50,15 @@
 								width="300px"/>
                                 <Text text="" id="idCharValText1" class="newClass"/>
                                 </HBox>
-							<Label text="Old Characteristic Value" required="true"/>
+							<Label text="Reference Characteristic Value" required="true"/>
 							<MultiInput id="idOldCharValue" editable="false" value="" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
 						</f:content>
 					</f:SimpleForm>
     </WizardStep>
     <!-- /Step 3 in Wizard/ -->
     <WizardStep id="idRefDetails" title="Reference Details" validated="true" activate="onStep3Press">
-     <MessageStrip class="" text="If you want to add or delete values for the reference assignments, return to previous step." showIcon="true"/>
-    <f:SimpleForm id="idRefNewDetails" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+     <MessageStrip class="" text="If you want to add or delete values for the reference characteristic values, return to previous step." showIcon="true"/>
+    <f:SimpleForm id="idRefNewDetails" editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="2" labelSpanM="2" labelSpanS="2"
 						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
 						<f:content>
@@ -62,7 +68,7 @@
 								width="300px" editable="false"/>
                                 <Text text="" id="idste3Text" class="newClass"/>
                                 </HBox>
-							<Label text="Old Characteristic Value" required="false"/>
+							<Label text="Reference Characteristic Value" required="false"/>
 							<MultiInput id="idOldChar" value="" editable="false" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
 						</f:content>
 					</f:SimpleForm>
@@ -116,7 +122,7 @@
     </WizardStep>
     <!-- /Step 4 in Wizard/ -->
     <WizardStep id="idLaunchDet" title="Launch Dimension" validated="true" activate="onStep4Press">
-    <f:SimpleForm id="idDimensions" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+    <f:SimpleForm id="idDimensions" editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="2" labelSpanM="2" labelSpanS="2"
 						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
 						<f:content>
@@ -126,12 +132,12 @@
 								width="300px" editable="false"/>
                                 <Text text="" id="idLaunchText" class="newClass"/>
                                 </HBox>
-							<Label text="Old Characteristic Value" required="false"/>
+							<Label text="Reference Characteristic Value" required="false"/>
 							<MultiInput id="idOldDimen" value="" editable="false" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
                             
                         </f:content>
 					</f:SimpleForm>
-                    <MessageStrip class="" text="The system automatically takes over the launch dimensions that has been selected for the old Characteristic." showIcon="true"/>
+                    <!-- <MessageStrip class="" text="The system automatically takes over the launch dimensions that has been selected for the old Characteristic." showIcon="true"/> -->
                     <Table id="idDimenTable" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
                               updateFinished="onDimeTabFinish" 
                               mode="None"    rememberSelections="false" items="{path:'/dimenList'}"  >
@@ -157,7 +163,7 @@
     </WizardStep>
     <!-- /Step 5 in Wizard/ -->
     <WizardStep id="idPhaseIn" title="Phase-In Details New Characteristic Value" validated="true" activate="onStep5Press">
-    <f:SimpleForm id="idPhasein" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+    <f:SimpleForm id="idPhasein" editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="2" labelSpanM="2" labelSpanS="2"
 						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
                         <Text text="If yout want to add or delete dimension values, return to the previous step." id="textId"/>
@@ -168,11 +174,11 @@
 								width="300px" editable="false"/>
                                 <Text text="" id="idPhaseInText" class="newClass"/>
                                 </HBox>
-							<Label text="Old Characteristic Value" required="false"/>
+							<Label text="Reference Characteristic Value" required="false"/>
 							<MultiInput id="idPhaseinOldChar" value="" editable="false" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
                         </f:content>
 					</f:SimpleForm>
-                    <MessageStrip class="" text="Add phase-in start dates for all entries." showIcon="true"/>
+                    <MessageStrip class="" text="Add history consideration and phase-in start date for all entries." showIcon="true"/>
                     <Table id="idPhaseInTab" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
                               updateFinished="onDimeTabFinish" items="{path: '/PhaseInList'}"  
                               mode="None" rememberSelections="false" selectionChange="onPhaseInChange">

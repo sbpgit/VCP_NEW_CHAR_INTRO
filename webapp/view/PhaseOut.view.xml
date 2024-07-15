@@ -102,11 +102,11 @@
                                         <Text text="Product Desc" />
                                     </Column>
                                     <Column hAlign="Center" width="auto" vAlign="Middle" >
-                                        <Text text="Phase-Out Start" />
+                                        <Text text="Phase-Out Date" />
                                     </Column> 
-                                     <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                     <!-- <Column hAlign="Center" width="auto" vAlign="Middle" >
                                         <Text text="Phase-Out End" />
-                                    </Column>                          
+                                    </Column>                           -->
                                 </columns>
                                 <items>
                                     <ColumnListItem>
@@ -116,7 +116,7 @@
                                             <Text text="{PROD_ID}"/>
                                             <Text text="{PROD_DESC}" />
                                            <DatePicker displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" />
-                                           <DatePicker displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" />
+                                           <!-- <DatePicker displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" /> -->
                                         </cells>
                                     </ColumnListItem>
                                 </items>

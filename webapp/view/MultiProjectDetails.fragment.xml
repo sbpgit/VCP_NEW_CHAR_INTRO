@@ -13,7 +13,7 @@
                             <Label text="Project Description"/>
                             <Input value="" id="idProjDesc" enabled="true"/>
                             </VBox>
-                            <VBox visible="true">
+                            <VBox visible="false" id="idswtichbox">
                             <Label text="Active"/>
                             <Switch state="false" customTextOn="Yes" customTextOff="No" change="onSwitchChange" id="idSwitchState"></Switch>
                             </VBox>
