@@ -512,8 +512,8 @@ sap.ui.define([
                 if(selectedProject && seletedProduct){
 
                 MessageBox.information("Please create Unique Id's before going forward. If already created, please click on Continue", {
-                    actions: [MessageBox.Action.Continue, MessageBox.Action.CLOSE],
-                    emphasizedAction: MessageBox.Action.Continue,
+                    actions: ["Continue", MessageBox.Action.CLOSE],
+                    emphasizedAction: "Continue",
                     onClose: function (sAction) {
                         // MessageToast.show("Action selected: " + sAction);.
                         if (sAction === "Continue") {
