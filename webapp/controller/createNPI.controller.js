@@ -438,7 +438,7 @@ sap.ui.define([
             /**On Press of Step 4 */
             onStep4Press: function () {
                 // var object = { LAUNCH: [{ DIMENSIONS: 'LOCATION_ID' }, { DIMENSIONS: 'PRODUCT_ID' }], VALUE: '', ROW: 1 };
-                var object = { LAUNCH: [{ DIMENSIONS: 'LOCATION_ID', VALUE: '', ROW: 1 }, { DIMENSIONS: 'PRODUCT_ID', VALUE: '', ROW: 2 }] };
+                var object = { LAUNCH: [{ DIMENSIONS: 'Location', VALUE: '', ROW: 1 }, { DIMENSIONS: 'Partial Product', VALUE: '', ROW: 2 }] };
                 that.byId("idNewDimen").setValue(that.newcharSelected);
                 that.byId("idLaunchText").setText(that.mewCharDescp);
                 that.tokens = that.byId("idOldCharValue").getTokens();
@@ -461,7 +461,7 @@ sap.ui.define([
                 that.oSource = oEvent.getSource();
                 var table = that.byId("idDimenTable");
                 var selectedKey = oEvent.getSource().getEventingParent().getCells()[0].getText();
-                if (selectedKey === "LOCATION_ID") {
+                if (selectedKey === "Location") {
                     sap.ui.getCore().byId("idLocSelect").setVisible(true);
                     sap.ui.getCore().byId("idProdSelect").setVisible(false);
                     this.getOwnerComponent().getModel("BModel").read("/getLocation", {
@@ -579,6 +579,7 @@ sap.ui.define([
             },
             /**On Step 5 Press */
             onStep5Press: function () {
+                sap.ui.core.BusyIndicator.show();
                 that.combinedArray = [];
                 var newObject = {}, locArray = [], prodArray = [];
                 that.byId("idPhaseInChar").setValue(that.newcharSelected);
@@ -594,12 +595,13 @@ sap.ui.define([
                         })
                     );
                 });
-                var items = that.byId("idDimenTable").getItems();
-                var locItems = items[0].getCells()[1].getTokens();
-                var prodItems = items[1].getCells()[1].getTokens();
                 var date = new Date();
                 var previousDate = date.getDate() - 1;
                 date = date.setDate(previousDate);
+                var items = that.byId("idDimenTable").getItems();
+                if(items[0].getCells()[1].getTokens().length>0 && items[1].getCells()[1].getTokens().length>0){
+                var locItems = items[0].getCells()[1].getTokens();
+                var prodItems = items[1].getCells()[1].getTokens();              
                 if (locItems.length > 0) {
                     for (var i = 0; i < locItems.length; i++) {
                         newObject = {
@@ -630,6 +632,87 @@ sap.ui.define([
                 }
                 that.step5Model.setData({ PhaseInList: that.combinedArray });
                 that.byId("idPhaseInTab").setModel(that.step5Model);
+                sap.ui.core.BusyIndicator.hide();
+            }
+            else if(items[0].getCells()[1].getTokens().length===0 && items[1].getCells()[1].getTokens().length===0){
+                var newObject={},locArray=[],prodArray=[];
+                that.combinedArray=[];
+                this.getOwnerComponent().getModel("BModel").read("/getLocation", {
+                    success: function (oData1) {
+                        if (oData1.results.length > 0) {
+                            that.locDetails1 = [];
+                            that.locDetails1 = oData1.results;
+                            
+                        }
+                        else {
+                            sap.ui.core.BusyIndicator.hide();
+                            MessageToast.show("No Locations available")
+                        }
+                    },
+                    error: function () {
+                        sap.ui.core.BusyIndicator.hide();
+                        MessageToast.show("Failed to get Locations");
+                    }
+                });
+            
+           
+                sap.ui.getCore().byId("idLocSelect").setVisible(false);
+                sap.ui.getCore().byId("idProdSelect").setVisible(true);
+                this.getOwnerComponent().getModel("BModel").read("/getPartialProd", {
+                    filters: [
+                        new Filter(
+                            "REF_PRODID",
+                            FilterOperator.EQ,
+                            that.selectedConfigProduct
+                        ),
+                    ],
+                    success: function (oData1) {
+                        if (oData1.results.length > 0) {
+                            that.prods1 = [];
+                            that.prods1 = oData1.results;
+                            for (var i = 0; i < that.locDetails1.length; i++) {
+                                newObject = {
+                                    LOCATION_ID: that.locDetails1[i].LOCATION_ID,
+                                    LOCATION_DESC: that.locDetails1[i].LOCATION_DESC,
+                                    HISTORY_CONSIDERATION: new Date(date),
+                                    PHASE_IN: ''
+                                }
+                                locArray.push(newObject);
+                            }
+                       
+                            for (var i = 0; i < that.prods1.length; i++) {
+                                newObject = {
+                                    PROD_ID: that.prods1[i].PRODUCT_ID,
+                                    PROD_DESC: that.prods1[i].PROD_DESC
+                                }
+                                prodArray.push(newObject);
+                            }
+                        
+                        if (locArray.length > 0 && prodArray.length > 0) {
+            
+                            locArray.forEach(item1 => {
+                                prodArray.forEach(item2 => {
+                                    that.combinedArray.push({ ...item1, ...item2 });
+                                });
+                            });
+                        }
+                        that.step5Model.setData({ PhaseInList: that.combinedArray });
+                        that.byId("idPhaseInTab").setModel(that.step5Model);
+                        sap.ui.core.BusyIndicator.hide();
+                           
+                        }
+                        else {
+                            sap.ui.core.BusyIndicator.hide();
+                            MessageToast.show("No Products available")
+                        }
+                    },
+                    error: function () {
+                        sap.ui.core.BusyIndicator.hide();
+                        MessageToast.show("Failed to get products");
+                    }
+                });
+                
+            }
             },
             /**On Press of Edit button in Phase step 5/6 */
             onEditPhasePressed: function () {
@@ -790,9 +873,9 @@ sap.ui.define([
                             }
                         }
 
-                        if (bIsEmpty) {
-                            return MessageToast.show("At least one of the row's data is empty. Please fill in all the details.");
-                        } else {
+                        // if (bIsEmpty) {
+                        //     return MessageToast.show("Atleast one of the row's data is empty. Please fill in all the details.");
+                        // } else {
                             that._oWizard.nextStep();
                             that._iNewSelectedIndex++
                             oModel.setProperty("/nextButtonVisible", false);
@@ -800,7 +883,7 @@ sap.ui.define([
                             oModel.setProperty("/reviewButtonVisible", false);
                             oModel.setProperty("/finishButtonVisible", true);
                             break;
-                        }
+                        // }
                     default: break;
                 }
 
@@ -935,6 +1018,7 @@ sap.ui.define([
                 that.byId("idCharValue").setValue();
                 that.byId("idConfigText").setText();
                 that.byId("idCharValText").setText();
+                that.byId("idCharName").setValue();
                 // that.prodModel.setData({ setCharacteristics: []})
                 // sap.ui.getCore().byId("idCharSelect").setModel(that.prodModel);
 
@@ -1041,8 +1125,6 @@ sap.ui.define([
                             WEIGHT: parseInt(tableItemsStep3[j].getCells()[3].getValue()),
                             VALID_FROM: tableItemsStep3[j].getCells()[4].getDateValue(),
                             VALID_TO: tableItemsStep3[j].getCells()[5].getDateValue(),
-                            // OFFSET: parseInt(tableItemsStep3[j].getCells()[6].getValue()),
-                            // ACTIVE: tableItemsStep3[j].getCells()[6].getState(),
                             DIMENSION: JSON.stringify(dimeArray)
                         }
                         finalArray.push(object);
@@ -1088,6 +1170,13 @@ sap.ui.define([
                 that.byId("idCharValue").setValue();
                 that.byId("idCharName").setValue(selectedName);
 
+    },
+    /**On press of delete in Table in step5 */
+    onStep5delete:function(oEvent){
+        var selectedIndex = oEvent.getParameter("listItem").getBindingContext().sPath.split("/")[2];
+        var aData = that.step5Model.getData().PhaseInList;
+        aData.splice(selectedIndex,1);
+        that.step5Model.refresh();
     }
         });
     });

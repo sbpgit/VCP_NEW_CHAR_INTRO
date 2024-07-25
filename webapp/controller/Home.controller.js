@@ -55,8 +55,14 @@ sap.ui.define([
                 that.byId("idToggleButton").setPressed(false);
                 that.byId("idToggleButton1").setPressed(false);
                 var selectedProject = that.oGModel.getProperty("/selectedProject");
+                var selectedProduct = that.oGModel.getProperty("/selectedProduct");
                 if (selectedProject) {
-                    oFilter.push(new Filter("PROJECT_ID", FilterOperator.EQ, selectedProject))
+                    that.byId("idProjDet").setValue(selectedProject);
+                    oFilter.push(new Filter("PROJECT_ID", FilterOperator.EQ, selectedProject));
+                }
+                if(selectedProduct){
+                    that.byId("idConfigProd").setValue(selectedProduct);
+                    oFilter.push(new Filter("PROJECT_ID", FilterOperator.EQ, selectedProduct))  ;
                 }
                 
                 // that.byId("idToggleButton2").setPressed(false);
@@ -139,7 +145,7 @@ sap.ui.define([
                         MessageToast.show("Failed to get phaseout details");
                     },
                 });
-                that.byId("idProjDet").setValue(selectedProject);
+                
                 var project = that.oGModel.getProperty("/ProjDetails");
                 that.projModel1.setData({ projDetails: project });
                 sap.ui.getCore().byId("idProjDetailsFrag").setModel(that.projModel1);
@@ -208,7 +214,7 @@ sap.ui.define([
                     }
                 }
                 else {
-                    MessageToast.show("Please select a Configurable Product/Project");
+                    MessageToast.show("Please select a Project/Configurable Product");
                 }
             },
 
@@ -413,7 +419,7 @@ sap.ui.define([
                     }
                 }
                 else {
-                    MessageToast.show("Please select configurable product/project");
+                    MessageToast.show("Please select project/configurable product");
                 }
             },
             generateUniqueIds: function () {
@@ -455,7 +461,7 @@ sap.ui.define([
                     },
                     success: function (oData) {
                         // that.byId("idGenSeedOrder").setEnabled(false);
-                        sap.m.MessageToast.show(oData.addMLJob + ": Job Created");
+                        sap.m.MessageToast.show("Temporary Unique Id's creation started. Please wait for sometime to create combination Unique Id's" );
 
                         sap.ui.core.BusyIndicator.hide();
                         that.onResetData();
@@ -518,11 +524,18 @@ sap.ui.define([
                         // MessageToast.show("Action selected: " + sAction);.
                         if (sAction === "Continue") {
                             var xnavservice = sap.ushell && sap.ushell.Container && sap.ushell.Container.getService
-                            && sap.ushell.Container.getService("CrossApplicationNavigation");                            
+                            && sap.ushell.Container.getService("CrossApplicationNavigation");  
+                            var flag ="X"                          
                             var href = ( xnavservice && xnavservice.hrefForExternal({                            
                             target : { semanticObject : "TempIdCreate", action : "Display" },                            
-                            params : { "PROJECT_ID" : selectedProject, "PRODUCT_ID": seletedProduct }                            
+                            params : { "PROJECT_ID" : selectedProject, "PRODUCT_ID" : seletedProduct, "Flag" : flag }                            
                             })) || "";
+                            xnavservice.toExternal({
+                                target: {
+                                shellHash: href
+                                }
+                                });
+                            // sap.m.URLHelper.redirect(window.location.href.split('#')[0] + href, true);
                         }
                         
                     },

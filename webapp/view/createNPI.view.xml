@@ -127,7 +127,7 @@
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
 						<f:content>
 							<Label text="New Characteristic Value" required="false"/>
-                            <HBox class="newClass">
+                            <HBox >
 							<Input id="idNewDimen" value="" placeholder="Characteristic Value" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp"
 								width="300px" editable="false"/>
                                 <Text text="" id="idLaunchText" class="newClass"/>
@@ -166,7 +166,7 @@
     <f:SimpleForm id="idPhasein" editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="2" labelSpanM="2" labelSpanS="2"
 						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
-                        <Text text="If yout want to add or delete dimension values, return to the previous step." id="textId"/>
+                         <MessageStrip class="" text="If yout want to add or delete dimension values, return to the previous step." id="textId" showIcon="true"/>
 						<f:content>
 							<Label text="New Characteristic Value" required="false"/>
                             <HBox>
@@ -181,7 +181,7 @@
                     <MessageStrip class="" text="Add history consideration and phase-in start date for all entries." showIcon="true"/>
                     <Table id="idPhaseInTab" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
                               updateFinished="onDimeTabFinish" items="{path: '/PhaseInList'}"  
-                              mode="None" rememberSelections="false" selectionChange="onPhaseInChange">
+                              mode="Delete" rememberSelections="false" selectionChange="onPhaseInChange" delete="onStep5delete">
                                                        <headerToolbar>
 			                    <OverflowToolbar>
 				                    <ToolbarSpacer/>
@@ -205,7 +205,10 @@
                                     </Column>
                                     <Column hAlign="Center" width="auto" vAlign="Middle" >
                                         <Text text="Phase-In Start" />
-                                    </Column>                          
+                                    </Column> 
+                                     <!-- <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                        <Text text="" />
+                                    </Column>                           -->
                                 </columns>
                                 <items>
                                     <ColumnListItem>
@@ -216,6 +219,7 @@
                                             <Text text="{PROD_DESC}" />
                                             <DatePicker displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" maxDate="{HISTORY_CONSIDERATION}" />
                                            <DatePicker displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" />
+                                            <!-- <Button icon="sap-icon://delete" press="onPressDelStep5" tooltip="Delete Entry"/> -->
                                         </cells>
                                     </ColumnListItem>
                                 </items>

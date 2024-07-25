@@ -1,5 +1,5 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller",
+    "vcpapp/vcpnpicharvalue/controller/BaseController",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "sap/ui/model/json/JSONModel",
@@ -14,10 +14,10 @@ sap.ui.define([
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, Device, Fragment, File, library, Spreadsheet) {
+    function (BaseController, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, Device, Fragment, File, library, Spreadsheet) {
         "use strict";
         var that, oGModel;
-        return Controller.extend("vcpapp.vcpnpicharvalue.controller.MaintainProject", {
+        return BaseController.extend("vcpapp.vcpnpicharvalue.controller.MaintainProject", {
             onInit: function () {
                 that = this;
                 // that.oGModel = this.getOwnerComponent().getModel("oGModel");
@@ -26,9 +26,26 @@ sap.ui.define([
                 that.projDetModel = new JSONModel();
                 that.projDetModel.setSizeLimit(1000);
                 this._oCore = sap.ui.getCore();
+                this.getRouter().getRoute("RouteHome").attachPatternMatched(this._onPatternMatched.bind(this));
             },
-            onAfterRendering:function(){
+            _onPatternMatched: function () {
+                that.oGModel.setProperty("/SelectedFlag", '');
+                var params1 = that.getOwnerComponent().oComponentData.startupParameters;
                 that.oGModel = this.getOwnerComponent().getModel("oGModel");
+                if (params1.PRODUCT_ID && params1.PROJECT_ID) {
+                    that.oGModel.setProperty("/selectedProduct", params1.PRODUCT_ID[0]);
+                    that.oGModel.setProperty("/selectedProject", params1.PROJECT_ID[0]);
+                    that.oGModel.setProperty("/SelectedFlag", params1.Flag[0]);
+                    if (params1.Flag[0] === "Y") {
+                        that.onNPIPress();
+                    }
+                }
+            },
+            onAfterRendering: function () {
+                that.mainArray=[];
+                that.oGModel = this.getOwnerComponent().getModel("oGModel");
+                var vUser = this.getUser();
+                that.oGModel.setProperty("/User", vUser);
                 if (!this._valueHelpDialogProjectDet) {
                     this._valueHelpDialogProjectDet = sap.ui.xmlfragment(
                         "vcpapp.vcpnpicharvalue.view.MultiProjectDetails",
@@ -51,22 +68,22 @@ sap.ui.define([
                             that.tabProjDe = oData.results;
                             that.tabProjDe.forEach(function (oItem) {
                                 if (oItem.PROJ_STATUS === true) {
-                                    oItem.PROJ_STATUS = "Active";
-                                    oItem.STATE =false;
+                                    // oItem.PROJ_STATUS = "Active";
+                                    oItem.STATE = false;
                                     oItem.SWITCH = true;
                                 }
                                 else {
-                                    oItem.PROJ_STATUS = "InActive";
-                                    oItem.STATE=true;
+                                    // oItem.PROJ_STATUS = "InActive";
+                                    oItem.STATE = true;
                                     oItem.SWITCH = false;
                                 }
 
                             });
                             that.projModel.setData({ projDetails: that.tabProjDe });
                             that.byId("idMPD").setModel(that.projModel);
-                            that.oGModel.setProperty("/ProjDetails",that.tabProjDe);
+                            that.oGModel.setProperty("/ProjDetails", that.tabProjDe);
                         }
-                        else{
+                        else {
                             MessageToast.show("No Projects available");
                         }
                         sap.ui.core.BusyIndicator.hide()
@@ -78,11 +95,11 @@ sap.ui.define([
                 });
             },
             /**On Press of create project */
-            onPressCreate:function(){
+            onPressCreate: function () {
                 var projDetTable = that.byId("idMPD").getItems();
                 that.projArray = [];
                 if (projDetTable.length === 0) {
-                    var projectID = "PROJ" + "000001";                       
+                    var projectID = "PROJ" + "000001";
                 }
                 else {
                     projDetTable.forEach(function (oItem) {
@@ -115,8 +132,8 @@ sap.ui.define([
                     this._valueHelpDialogProjectDet = "";
                 }
             },
-             /**Finding out Max number in Array */
-             maxNumber: function (oEvent) {
+            /**Finding out Max number in Array */
+            maxNumber: function (oEvent) {
                 // Convert each element to a number
                 let numArray = oEvent.map(function (str) {
                     return parseInt(str, 10);
@@ -145,16 +162,6 @@ sap.ui.define([
 
                 return incrementedStr;
             },
-            /**On select of preoject details in table */
-            // onhandlePressMPD:function(oEvent){
-            //     var selectedProject = oEvent.getParameters().listItem.getCells()[2].getText();
-            //     if(selectedProject === "Active"){
-            //         that.byId("idEdit").setEnabled(false);
-            //     }
-            //     else{
-            //         that.byId("idEdit").setEnabled(true);
-            //     }
-            // },
             /**On Press of Edit in Maintain project Details tab */
             onEditPress: function () {
                 var tabItemSelected = that.byId("idMPD").getSelectedItem();
@@ -177,35 +184,20 @@ sap.ui.define([
                     sap.ui.getCore().byId("idProjID").setValue(objectItems.PROJECT_ID);
                     sap.ui.getCore().byId("idProjDesc").setValue(objectItems.PROJECT_DET);
                     sap.ui.getCore().byId("idswtichbox").setVisible(true);
-
-                    // if (objectItems.PROJ_STATUS === "Active") {
-                    //     sap.ui.getCore().byId("idSwitchState").setState(true);
-                    // }
-                    // else {
-                    //     sap.ui.getCore().byId("idSwitchState").setState(false);
-                    // }
-                    // if (objectItems.RELEASE_DATE) {
-                    //     sap.ui.getCore().byId("idRelDate").setValue(objectItems.RELEASE_DATE.toLocaleDateString());
-                    // }
-
                 }
             },
-             
+
             /**On click of save MultiProjectDetails */
             onProjSave: function (oEvent) {
+                sap.ui.core.BusyIndicator.show();
                 var object = {}, finalArray = [];
                 var projID = sap.ui.getCore().byId("idProjID").getValue();
                 var projDetails = sap.ui.getCore().byId("idProjDesc").getValue();
                 var releaseDate = null;
                 var projStatus = sap.ui.getCore().byId("idSwitchState").getState();
-                // if (projStatus === true) {
-                //     var releaseDate = new Date();
-                // }
-                // else {
-                //     var releaseDate = null;
-                // }
 
                 object = {
+                    USER: that.oGModel.getProperty("/User"),
                     PROJECT_ID: projID,
                     PROJECT_DET: projDetails,
                     PROJ_STATUS: projStatus,
@@ -215,12 +207,16 @@ sap.ui.define([
                 this.getOwnerComponent().getModel("BModel").callFunction("/saveProjDetails", {
                     method: "GET",
                     urlParameters: {
-                        NEWPROJDET: JSON.stringify(finalArray)
+                        NEWPROJDET: JSON.stringify(finalArray),
+                        FLAG:'C'
                     },
                     success: function (oData) {
-                        MessageToast.show(oData.saveProjDetails);
+                        if(oData.saveProjDetails.includes("Successfully")){
+                        MessageToast.show("Project Saves Successfully");
+                        }
                         that.onProjCancel();
                         that.onAfterRendering();
+                        sap.ui.core.BusyIndicator.hide();
                     },
                     error: function () {
                         sap.ui.core.BusyIndicator.hide();
@@ -238,8 +234,9 @@ sap.ui.define([
                     var projDetails = oEvent.getSource().getParent().getBindingContext().getObject().PROJECT_DET;
                     var projStatus = true;
                     var releaseDate = new Date();
-    
+
                     object1 = {
+                        USER: that.oGModel.getProperty("/User"),
                         PROJECT_ID: projID,
                         PROJECT_DET: projDetails,
                         PROJ_STATUS: projStatus,
@@ -249,7 +246,8 @@ sap.ui.define([
                     this.getOwnerComponent().getModel("BModel").callFunction("/saveProjDetails", {
                         method: "GET",
                         urlParameters: {
-                            NEWPROJDET: JSON.stringify(finalArray1)
+                            NEWPROJDET: JSON.stringify(finalArray1),
+                            FLAG:'U'
                         },
                         success: function (oData) {
                             MessageToast.show(oData.saveProjDetails);
@@ -263,78 +261,84 @@ sap.ui.define([
                         },
                     });
                 }
-                
+
             },
             /**On Press of NPI */
-            onNPIPress:function(){
+            onNPIPress: function (oEvent) {
                 sap.ui.core.BusyIndicator.show();
-                var tableSelectedItem = that.byId("idMPD").getSelectedItems();
-                var tableItems = that.byId("idMPD").getItems();
-                if(tableItems.length>0){
-                if(tableSelectedItem.length>0){
-                    that.oGModel.setProperty('/selectedProject',tableSelectedItem[0].getCells()[0].getText());
+                if (oEvent) {
+                    var tableSelectedItem = that.byId("idMPD").getSelectedItems();
+                    var tableItems = that.byId("idMPD").getItems();
+                    if (tableItems.length > 0) {
+                        if (tableSelectedItem.length > 0) {
+                            that.oGModel.setProperty('/selectedProject', tableSelectedItem[0].getCells()[0].getText());
+                        }
+                        else {
+                            that.oGModel.setProperty('/selectedProject', '');
+                        }
+                        var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+                        oRouter.navTo("MaintainProject", {}, true);
+                    }
+                    else {
+                        sap.ui.core.BusyIndicator.hide();
+                        MessageToast.show("No Projects available yet. Please create a Project before moving forward.")
+                    }
                 }
-                else{
-                    that.oGModel.setProperty('/selectedProject','');
-                }
-            var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-            oRouter.navTo("MaintainProject", {}, true);
-                }
-                else{
-                    sap.ui.core.BusyIndicator.hide();
-                    MessageToast.show("No Projects available yet. Please create a Project before moving forward.")
+                else {
+                    var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+                    oRouter.navTo("MaintainProject", {}, true);
                 }
             },
             /**On Search in table */
-            oHomesearch:function(oEvent){
+            oHomesearch: function (oEvent) {
                 var sQuery = oEvent.getParameter("value") || oEvent.getParameter("newValue"),
-                sId = oEvent.getParameter("id"),
-                oFilters = [];
-            // Check if search filter is to be applied
-            sQuery = sQuery ? sQuery.trim() : "";
-            if (sId.includes("newProjSearch")) {
-                if (sQuery !== "") {
-                    oFilters.push(
-                        new Filter({
-                            filters: [
-                                new Filter("PROJECT_ID", FilterOperator.Contains, sQuery),
-                                new Filter("PROJECT_DET", FilterOperator.Contains, sQuery)
-                            ],
-                            and: false,
-                        })
-                    );
+                    sId = oEvent.getParameter("id"),
+                    oFilters = [];
+                // Check if search filter is to be applied
+                sQuery = sQuery ? sQuery.trim() : "";
+                if (sId.includes("newProjSearch")) {
+                    if (sQuery !== "") {
+                        oFilters.push(
+                            new Filter({
+                                filters: [
+                                    new Filter("PROJECT_ID", FilterOperator.Contains, sQuery),
+                                    new Filter("PROJECT_DET", FilterOperator.Contains, sQuery)
+                                ],
+                                and: false,
+                            })
+                        );
+                    }
+                    that.byId("idMPD").getBinding("items").filter(oFilters);
                 }
-                that.byId("idMPD").getBinding("items").filter(oFilters);
-            }
-            else if (sId.includes("newDetSearch")) {
-                if (sQuery !== "") {
-                    oFilters.push(
-                        new Filter({
-                            filters: [
-                                new Filter("PRODUCT_ID", FilterOperator.Contains, sQuery),
-                                new Filter("CHAR_NAME", FilterOperator.Contains, sQuery),
-                                new Filter("CHAR_VALUE", FilterOperator.Contains, sQuery),
-                                new Filter("REF_CHAR_VALUE", FilterOperator.Contains, sQuery)
-                            ],
-                            and: false,
-                        })
-                    );
+                else if (sId.includes("newDetSearch")) {
+                    if (sQuery !== "") {
+                        oFilters.push(
+                            new Filter({
+                                filters: [
+                                    new Filter("PRODUCT_ID", FilterOperator.Contains, sQuery),
+                                    new Filter("CHAR_NAME", FilterOperator.Contains, sQuery),
+                                    new Filter("CHAR_VALUE", FilterOperator.Contains, sQuery),
+                                    new Filter("REF_CHAR_VALUE", FilterOperator.Contains, sQuery)
+                                ],
+                                and: false,
+                            })
+                        );
+                    }
+                    sap.ui.getCore().byId("idProjDetails").getBinding("items").filter(oFilters);
                 }
-                sap.ui.getCore().byId("idProjDetails").getBinding("items").filter(oFilters);
-            }
             },
             /**On Press of link in Table */
-            onLinkPress:function(oEvent){
+            onLinkPress: function (oEvent) {
                 sap.ui.core.BusyIndicator.show();
                 that.selectedProjectDet;
                 that.selectedProjectDet = oEvent.getSource().getText();
                 this.getOwnerComponent().getModel("BModel").read("/getNPICharVal", {
                     method: "GET",
-                    filters:[
-                        new Filter("PROJECT_ID", FilterOperator.EQ,that.selectedProjectDet)
+                    filters: [
+                        new Filter("PROJECT_ID", FilterOperator.EQ, that.selectedProjectDet)
                     ],
                     success: function (oData) {
-                        if (oData.results.length > 0) {                           
+                        if (oData.results.length > 0) {
                             if (!that._valueHelpLinkProject) {
                                 that._valueHelpLinkProject = sap.ui.xmlfragment(
                                     "vcpapp.vcpnpicharvalue.view.OpenProjDet",
@@ -342,12 +346,12 @@ sap.ui.define([
                                 );
                                 that.getView().addDependent(that._valueHelpLinkProject);
                             }
-                            that.projDetModel.setData({basicProjDetails:oData.results});
+                            that.projDetModel.setData({ basicProjDetails: oData.results });
                             sap.ui.getCore().byId("idProjDetails").setModel(that.projDetModel);
                             that._valueHelpLinkProject.open();
                         }
-                        else{
-                            that.projDetModel.setData({basicProjDetails:[]});
+                        else {
+                            that.projDetModel.setData({ basicProjDetails: [] });
                             sap.ui.getCore().byId("idProjDetails").setModel(that.projDetModel);
                             that._valueHelpLinkProject.open();
                             MessageToast.show("No Details available for this project")
@@ -361,19 +365,65 @@ sap.ui.define([
                 });
             },
             /**On close button in prohect details framgent */
-            onButtonClose:function(){
+            onButtonClose: function () {
                 if (that._valueHelpLinkProject) {
                     that._valueHelpLinkProject.destroy(true);
                     that._valueHelpLinkProject = "";
                 }
             },
             /**On Press of Add project in OpenProjdet fragment */
-            onProjectAdd:function(){
+            onProjectAdd: function () {
                 var selectedProject = that.selectedProjectDet;
-                that.oGModel.setProperty('/selectedProject',selectedProject);
+                that.oGModel.setProperty('/selectedProject', selectedProject);
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
                 oRouter.navTo("MaintainProject", {}, true);
                 that.onButtonClose();
+            },
+            /**On Press of Update in Maintain Projects page */
+            onSaveChanges:function(){
+                var maintain=[];
+                sap.ui.core.BusyIndicator.show();
+                if(that.mainArray.length>0){
+                    this.getOwnerComponent().getModel("BModel").callFunction("/saveProjDetails", {
+                        method: "GET",
+                        urlParameters: {
+                            NEWPROJDET: JSON.stringify(that.mainArray),
+                            FLAG:'X'
+                        },
+                        success: function (oData) {
+                            sap.ui.core.BusyIndicator.hide();
+                            MessageToast.show(oData.saveProjDetails);
+                            that.onAfterRendering();
+                        },
+                        error: function () {
+                            sap.ui.core.BusyIndicator.hide();
+                            MessageToast.show("Failed to save project details.");
+                        },
+                    });
+                }
+                else{
+                    sap.ui.core.BusyIndicator.hide();
+                    MessageToast.show("No changes made.");
+                }
+            },
+            onInputPress:function(oEvent){
+                var path = oEvent.getSource().getBindingContext().getPath();
+                var Data = that.byId("idMPD").getModel().getProperty(path);
+                var index = that.mainArray.findIndex(a=>a.PROJECT_ID === Data.PROJECT_ID);
+                if (index === -1) {
+                    var newObject = {
+                       USER: that.oGModel.getProperty("/User"),
+                        PROJECT_ID: Data.PROJECT_ID,
+                        PROJECT_DET :oEvent.getParameters("value").value,
+                        PROJ_STATUS: Data.PROJ_STATUS,
+                        RELEASE_DATE: Data.RELEASE_DATE,
+                        SWITCH : Data.SWITCH
+                    }
+                    that.mainArray.push(newObject);
+                }
+                else {
+                    that.mainArray[index].PROJECT_DET = (oEvent.getParameters("value").value);
+                }
             }
         });
     });

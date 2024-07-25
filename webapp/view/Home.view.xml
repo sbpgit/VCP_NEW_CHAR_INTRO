@@ -1,8 +1,8 @@
-<mvc:View controllerName="vcpapp.vcpnpicharvalue.controller.Home"
+<mvc:View xmlns:footerbar="sap.ushell.ui.footerbar" controllerName="vcpapp.vcpnpicharvalue.controller.Home"
    xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core"
 	displayBlock="true" xmlns="sap.m" xmlns:m="sap.m" xmlns:l="sap.ui.layout" xmlns:ux="sap.uxap" xmlns:f="sap.ui.layout.form"
 	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:u="sap.ui.unified">
-    <Page showNavButton="true" navButtonPress="onBackToMPD">
+    <Page showNavButton="true" navButtonPress="onBackToMPD" showFooter="true">
 	<ux:ObjectPageLayout id="ObjectPageLayout">
 		<ux:headerTitle>
 			<ux:ObjectPageDynamicHeaderTitle>
@@ -24,11 +24,11 @@
 		  <ux:headerContent>
             <FlexBox wrap="Wrap" justifyContent= "Inherit" fitContainer="true">
              <VBox >
-                <Label text="Project Id" class="flux"/>
+                <Label text="Project Id" class="flux" required="true"/>
                 <Input id="idProjDet" class="flux" width="250px" placeholder="Project Id" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp" />
             </VBox>
             <VBox >
-                <Label text="Configurable Product" class="flux"/>
+                <Label text="Configurable Product" class="flux" required="true"/>
                 <Input id="idConfigProd" class="flux" width="450px" placeholder="Configurable Product" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp" />
             </VBox>
             <VBox>
@@ -60,8 +60,8 @@
                                 <!-- <Title  text="Characteristic Value Replacement"></Title> -->
                                 <SearchField id="newCharSearch" search="oHomesearch" liveChange="oHomesearch" width="100vh" placeholder="New Char Value/Product/Ref Char Value" />
 				                    <ToolbarSpacer/>
-                                    <Button text="Show Unique Ids" press="onShowUniqueIds" tooltip="Show Unique Ids" />
-                                    <Button text="Generate Unique Ids" press="onGenerateUniqueIds" tooltip="Generate Unique Ids" />
+                                    <!-- <Button text="Maintain Unique Ids" press="onShowUniqueIds" tooltip="Show Unique Ids" />
+                                    <Button text="Generate Unique Ids" press="onGenerateUniqueIds" tooltip="Generate Unique Ids" /> -->
 				                    <ToggleButton id="idToggleButton" text="Add" press="onAddPressed" tooltip="OnAdd" icon="sap-icon://slim-arrow-down">
                                     </ToggleButton>
 			                    </OverflowToolbar>
@@ -70,11 +70,14 @@
                                 <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Project Id" />
                                     </Column>
+                                    <!-- <Column hAlign="Center" width="auto" vAlign="Middle">
+                                        <Text text="Project Details" />
+                                    </Column> -->
                                     <Column hAlign="Center" width="auto" vAlign="Middle" >
-                                        <Text text="Product Id" />
+                                        <Text text="Configurable Product" />
                                     </Column>
                                     <Column hAlign="Center" width="auto" vAlign="Middle" >
-                                        <Text text="Product Desc" />
+                                        <Text text="Configurable Product Desc" />
                                     </Column>
                                     <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="New Characteristic Value" />
@@ -99,7 +102,8 @@
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                        <Text text="{PROJECT_ID}" />  
+                                        <Text text="{PROJECT_ID}" /> 
+                                        <!-- <Text text="{PROJECT_DET}" />   -->
                                         <Text text="{REF_PRODID}" />
                                             <Text text= "{PROD_DESC}" />
                                             <Text text="{CHAR_VALUE}" />                                           
@@ -180,5 +184,13 @@
 			</ux:ObjectPageSection>
 		</ux:sections>
 	</ux:ObjectPageLayout>
+<footer>
+ <OverflowToolbar>
+                               
+				                    <ToolbarSpacer/>
+                                    <Button text="Maintain Unique Ids" press="onShowUniqueIds" tooltip="Show Unique Ids" />
+                                    <Button text="Generate Unique Ids" press="onGenerateUniqueIds" tooltip="Generate Unique Ids" />
+				                   
+			                    </OverflowToolbar></footer>
     </Page>
 </mvc:View>

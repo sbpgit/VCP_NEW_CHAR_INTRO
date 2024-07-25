@@ -21,7 +21,7 @@
                                 <SearchField id="newProjSearch" search="oHomesearch" liveChange="oHomesearch" width="150vh" placeholder="Project ID/Project Details" />
 				                    <ToolbarSpacer/>
                                     <Button text="NPI Project Details" press="onNPIPress" enabled="true"/>
-                                    <Button text = "NPI Project" press="onPressCreate" enabled="true"/>
+                                    <Button text = "NPI Create Project" press="onPressCreate" enabled="true"/>
                                     <!-- <Button text="Edit" id="idEdit" press="onEditPress" enabled="true"/> -->
                                     
 			                    </OverflowToolbar>
@@ -34,10 +34,10 @@
                                         <Text text="Project Details" />
                                     </Column>
                                     <Column hAlign="Center" width="auto" vAlign="Middle" >
-                                        <Text text="Status" />
+                                        <Text text="Project Active Status" />
                                     </Column>
                                     <Column hAlign="Center" width="auto" vAlign="Middle">
-                                        <Text text="Release Date" />
+                                        <Text text="Project Release Date" />
                                     </Column>  
                                     <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="" />
@@ -47,10 +47,10 @@
                                     <ColumnListItem>
                                         <cells>
                                             <Link text="{PROJECT_ID}" press="onLinkPress"/>    
-                                            <Input value="{PROJECT_DET}" />
-                                            <Text text= "{PROJ_STATUS}" />
+                                            <Input value="{PROJECT_DET}" liveChange="onInputPress"/>
+                                             <Switch state="{PROJ_STATUS}" change="onStateChange" enabled="{STATE}" customTextOff="No" customTextOn="Yes"></Switch>
                                             <Text text= "{path:'RELEASE_DATE', type:'sap.ui.model.type.Date', formatOptions : { pattern:'MM/dd/yyyy',style:'medium', UTC: true}}" />
-                                            <Switch state="{SWITCH}" change="onStateChange" enabled="{STATE}"></Switch>
+                                           <Button icon="sap-icon://delete" press="onDeleteProjectPress" enabled="{STATE}" tooltip="Delete Project"/>
                                         </cells>
                                     </ColumnListItem>
                                 </items>
@@ -58,7 +58,7 @@
                               <footer>
                               <OverflowToolbar>
                               <ToolbarSpacer/>
-                              <Button text="Save" press="OnSaveChanges"/>
+                              <Button text="Update" press="onSaveChanges" enabled="true" type="Emphasized"/>
                               </OverflowToolbar>
                               </footer>
 </Page>
