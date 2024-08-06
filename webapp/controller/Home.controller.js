@@ -49,21 +49,27 @@ sap.ui.define([
             onAfterRendering: function () {
                 that.tabData = [];
                 var oFilter = [];
-                sap.ui.core.BusyIndicator.show()
-                that.byId("idConfigProd").setValue();
-                that.byId("idProjDet").setValue();
+                // sap.ui.core.BusyIndicator.show();
+                
+                that.byId("idConfProd").setValue();
+                // that.byId("idProjDet").setValue();
                 that.byId("idToggleButton").setPressed(false);
                 that.byId("idToggleButton1").setPressed(false);
                 var selectedProject = that.oGModel.getProperty("/selectedProject");
-                var selectedProduct = that.oGModel.getProperty("/selectedProduct");
+                var selectedProjectDesc = that.oGModel.getProperty("/selectedProjectDesc");
+                // var selectedProduct = that.oGModel.getProperty("/selectedProduct");
+                if(selectedProject === undefined || selectedProject === ""){
+                    that.onBackToMPD();
+                } else {
+                that.byId("idprojTitle").setText(selectedProject + " - " + selectedProjectDesc);
                 if (selectedProject) {
-                    that.byId("idProjDet").setValue(selectedProject);
+                    // that.byId("idProjDet").setValue(selectedProject);
                     oFilter.push(new Filter("PROJECT_ID", FilterOperator.EQ, selectedProject));
                 }
-                if(selectedProduct){
-                    that.byId("idConfigProd").setValue(selectedProduct);
-                    oFilter.push(new Filter("PROJECT_ID", FilterOperator.EQ, selectedProduct))  ;
-                }
+                // if(selectedProduct){
+                //     that.byId("idConfProd").setValue(selectedProduct);
+                //     oFilter.push(new Filter("PROJECT_ID", FilterOperator.EQ, selectedProduct))  ;
+                // }
                 
                 // that.byId("idToggleButton2").setPressed(false);
                 if (!this._popOver) {
@@ -81,13 +87,13 @@ sap.ui.define([
                     );
                     this.getView().addDependent(this._valueHelpDialogProd);
                 }
-                if (!this._valueHelpDialogProject) {
-                    this._valueHelpDialogProject = sap.ui.xmlfragment(
-                        "vcpapp.vcpnpicharvalue.view.ProjectDetails",
-                        this
-                    );
-                    this.getView().addDependent(this._valueHelpDialogProject);
-                }
+                // if (!this._valueHelpDialogProject) {
+                //     this._valueHelpDialogProject = sap.ui.xmlfragment(
+                //         "vcpapp.vcpnpicharvalue.view.ProjectDetails",
+                //         this
+                //     );
+                //     this.getView().addDependent(this._valueHelpDialogProject);
+                // }
                 sap.ui.getCore().byId("idList").removeSelections();
                 this.getOwnerComponent().getModel("BModel").read("/getProducts", {
                     method: "GET",
@@ -121,6 +127,10 @@ sap.ui.define([
                             // that.oGModel.setProperty("/charvalData",that.tabData);
                             that.custModel.setData({ configProdResults: that.tabData });
                             that.byId("idOrderList").setModel(that.custModel);
+                        } else {
+                            that.tabData = oData.results;
+                            that.custModel.setData({ configProdResults: that.tabData });
+                            that.byId("idOrderList").setModel(that.custModel);
                         }
                         // sap.ui.core.BusyIndicator.hide()
                     },
@@ -131,13 +141,16 @@ sap.ui.define([
                 });
                 this.getOwnerComponent().getModel("BModel").read("/getPhaseOutDet", {
                     method: "GET",
+                    filters: oFilter,
                     success: function (oData) {
-                        if (oData.results.length > 0) {
-                            that.tabPhaseData = [];
+                        that.tabPhaseData = [];
+                        if (oData.results.length > 0) {                            
                             that.tabPhaseData = oData.results;
-                            that.phaseOutModel.setData({ phaseOutDet: that.tabPhaseData });
+                            // that.phaseOutModel.setData({ phaseOutDet: that.tabPhaseData });
+                            // that.byId("idPhaseOutList").setModel(that.phaseOutModel);
+                        } 
+                        that.phaseOutModel.setData({ phaseOutDet: that.tabPhaseData });
                             that.byId("idPhaseOutList").setModel(that.phaseOutModel);
-                        }
                         sap.ui.core.BusyIndicator.hide()
                     },
                     error: function () {
@@ -146,21 +159,24 @@ sap.ui.define([
                     },
                 });
                 
-                var project = that.oGModel.getProperty("/ProjDetails");
-                that.projModel1.setData({ projDetails: project });
-                sap.ui.getCore().byId("idProjDetailsFrag").setModel(that.projModel1);
+                // var project = that.oGModel.getProperty("/ProjDetails");
+                // that.projModel1.setData({ projDetails: project });
+                // sap.ui.getCore().byId("idProjDetailsFrag").setModel(that.projModel1);
+            
+                
+            }
 
             },
 
             handleValueHelp: function (oEvent) {
                 var sId = oEvent.getParameter("id");
                 // Prod Dialog
-                if (sId.includes("ConfigProd")) {
+                if (sId.includes("ConfProd")) {
                     that._valueHelpDialogProd.open();
                 }
-                else if (sId.includes("idProjDet")) {
-                    that._valueHelpDialogProject.open();
-                }
+                // else if (sId.includes("idProjDet")) {
+                //     that._valueHelpDialogProject.open();
+                // }
             },
             /**On Press of dropdown Add */
             onAddPressed: function (oEvent) {
@@ -174,25 +190,30 @@ sap.ui.define([
             /**On Selection of Item in Add button */
             handleSelectPress: function (oEvent) {
                 var selectedTitle = oEvent.getParameters().listItems[0].getTitle();
-                var selectedProduct = that.byId("idConfigProd").getValue();
-                var selectedProject = that.byId("idProjDet").getValue();
+                // var selectedProduct = that.byId("idConfProd").getValue();
+                var selectedProject = that.oGModel.getProperty("/selectedProject");
                 this._popOver.close();
                 sap.ui.getCore().byId("idList").removeSelections();
                 that.byId("idToggleButton").setPressed(false);
                 that.byId("idToggleButton1").setPressed(false);
                 // that.byId("idToggleButton2").setPressed(false);
-                if (selectedProduct && selectedProject) {
+                if (selectedProject) {
+                    if (this._valueHelpDialogProd) {
+                        that._valueHelpDialogProd.destroy(true);
+                        that._valueHelpDialogProd = "";
+                    }
                     if (selectedTitle === "Characteristic Value Replacement") {
-                        sap.ui.core.BusyIndicator.show();
-                        if (that.tabData.length > 0) {
-                            var tableProjectData = that.tabData.filter(item => item.REF_PRODID === selectedProduct && item.PROJECT_ID === selectedProject);
-                        }
-                        else {
-                            var tableProjectData = [];
-                        }
-                        that.oGModel.setProperty("/charvalData", tableProjectData);
-                        that.oGModel.setProperty("/configProduct", selectedProduct);
+                        // sap.ui.core.BusyIndicator.show();
+                        // if (that.tabData.length > 0) {
+                        //     var tableProjectData = that.tabData.filter(item => item.PROJECT_ID === selectedProject);
+                        // }
+                        // else {
+                        //     var tableProjectData = [];
+                        // }
+                        that.oGModel.setProperty("/charvalData", that.tabData);
+                        // that.oGModel.setProperty("/configProduct", selectedProduct);
                         that.oGModel.setProperty("/projectDetails", selectedProject);
+                        
                         var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
                         oRouter.navTo("CreateWizard", {}, true);
                     }
@@ -207,10 +228,10 @@ sap.ui.define([
                         that.oGModel.setProperty("/projectDetails", selectedProject);
                         var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
                         oRouter.navTo("MultiProdAssign", {}, true);
-                        if (this._valueHelpDialogProd) {
-                            this._valueHelpDialogProd.destroy(true);
-                            this._valueHelpDialogProd = "";
-                        }
+                        // if (this._valueHelpDialogProd) {
+                        //     this._valueHelpDialogProd.destroy(true);
+                        //     this._valueHelpDialogProd = "";
+                        // }
                     }
                 }
                 else {
@@ -221,16 +242,18 @@ sap.ui.define([
             /**On Selection of config product in prod dialog */
             handleSelection: function (oEvent) {
                 var selectedItem = oEvent.getParameters().selectedItems[0].getTitle();
-                that.byId("idConfigProd").setValue(selectedItem);
+                that.byId("idConfProd").setValue(selectedItem);
                 sap.ui.getCore().byId("prodSlctListOD").getBinding("items").filter([]);
                 sap.ui.getCore().byId("prodSlctListOD").clearSelection();
+
+                that.onGetData();
             },
 
             /**On Press of Reset Button */
 
             onResetData: function () {
-                that.byId("idConfigProd").setValue("");
-                that.byId("idProjDet").setValue("");
+                that.byId("idConfProd").setValue("");
+                // that.byId("idProjDet").setValue("");
                 // that.byId("newProjSearch").setValue("");
                 that.byId("newCharSearch").setValue("");
                 that.byId("newPhaseSearch").setValue("");
@@ -299,8 +322,8 @@ sap.ui.define([
             },
             /**On Press of Go on home screem */
             onGetData: function () {
-                var selectedProd = that.byId("idConfigProd").getValue();
-                var selectedProject = that.byId("idProjDet").getValue();
+                var selectedProd = that.byId("idConfProd").getValue();
+                var selectedProject = that.oGModel.getProperty('/selectedProject');
                 that.proDetails = [], that.phaseOutData = [];
                 that.proDetails = that.tabData;
                 that.phaseOutData = that.tabPhaseData;
@@ -316,12 +339,12 @@ sap.ui.define([
                     MessageToast.show("No new characteristics for the selected product");
                 }
             },
-            handleProjSelection: function (oEvent) {
-                var selectedItemz = oEvent.getParameters().selectedItem.getTitle();
-                that.byId("idProjDet").setValue(selectedItemz);
-                sap.ui.getCore().byId("idProjDetailsFrag").getBinding("items").filter([]);
-                sap.ui.getCore().byId("idProjDetailsFrag").clearSelection();
-            },
+            // handleProjSelection: function (oEvent) {
+            //     var selectedItemz = oEvent.getParameters().selectedItem.getTitle();
+            //     that.byId("idProjDet").setValue(selectedItemz);
+            //     sap.ui.getCore().byId("idProjDetailsFrag").getBinding("items").filter([]);
+            //     sap.ui.getCore().byId("idProjDetailsFrag").clearSelection();
+            // },
             /**Search in Projects dialog */
             handleCharSearch: function (oEvent) {
                 var sQuery = oEvent.getParameter("value") || oEvent.getParameter("newValue"),
@@ -361,13 +384,17 @@ sap.ui.define([
             },
             /**On Press of back navigation button */
             onBackToMPD: function () {
+                if (this._valueHelpDialogProd) {
+                    that._valueHelpDialogProd.destroy(true);
+                    that._valueHelpDialogProd = "";
+                }
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
                 oRouter.navTo("RouteHome", {}, true);
             },
             /**On press of Generate unique ids */
             onGenerateUniqueIds: function () {
-                that.selectProject = that.byId("idProjDet").getValue();
-                that.selectProduct = that.byId("idConfigProd").getValue();
+                that.selectProject = that.oGModel.getProperty('/selectedProject');
+                that.selectProduct = that.byId("idConfProd").getValue();
                 var tableItems = that.oTable.getModel().oData.configProdResults;
                 if (that.selectProject && that.selectProduct) {
                     var filteredData = tableItems.filter(a => a.PROJECT_ID === that.selectProject && a.REF_PRODID === that.selectProduct);
@@ -387,7 +414,7 @@ sap.ui.define([
                             ],
                             success: function (oData1) {
                                 if (oData1.results.length > 0) {
-                                    MessageBox.information("Temporary Unique IDs already exists for this combination. Old temporary unique id's will be deleted on press of 'Yes'. Do you want to still generate temporary unique ids?", {
+                                    MessageBox.information("Temporary Unique ID's already exists for this combination. Old Temporary Unique ID's will be deleted on press of 'Yes'. Do you want to still generate Temporary Unique ID's?", {
                                         actions: ["Yes", MessageBox.Action.CLOSE],
                                         emphasizedAction: "Yes",
                                         onClose: function (sAction) {
@@ -419,7 +446,7 @@ sap.ui.define([
                     }
                 }
                 else {
-                    MessageToast.show("Please select project/configurable product");
+                    MessageToast.show("Please select configurable product");
                 }
             },
             generateUniqueIds: function () {
@@ -513,38 +540,46 @@ sap.ui.define([
             },
             /**On Press of show Unique Id's  in home view*/
             onShowUniqueIds:function(){
-                var selectedProject = that.byId("idProjDet").getValue();
-                var seletedProduct = that.byId("idConfigProd").getValue();
-                if(selectedProject && seletedProduct){
+                var selectedProject = that.oGModel.getProperty('/selectedProject');
+                // var seletedProduct = that.byId("idConfProd").getValue();
+                if(selectedProject){
+                    if (this._valueHelpDialogProd) {
+                        that._valueHelpDialogProd.destroy(true);
+                        that._valueHelpDialogProd = "";
+                    }
+                    var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+                    oRouter.navTo("Details", {}, true);
+                }
+            //     if(selectedProject && seletedProduct){
 
-                MessageBox.information("Please create Unique Id's before going forward. If already created, please click on Continue", {
-                    actions: ["Continue", MessageBox.Action.CLOSE],
-                    emphasizedAction: "Continue",
-                    onClose: function (sAction) {
-                        // MessageToast.show("Action selected: " + sAction);.
-                        if (sAction === "Continue") {
-                            var xnavservice = sap.ushell && sap.ushell.Container && sap.ushell.Container.getService
-                            && sap.ushell.Container.getService("CrossApplicationNavigation");  
-                            var flag ="X"                          
-                            var href = ( xnavservice && xnavservice.hrefForExternal({                            
-                            target : { semanticObject : "TempIdCreate", action : "Display" },                            
-                            params : { "PROJECT_ID" : selectedProject, "PRODUCT_ID" : seletedProduct, "Flag" : flag }                            
-                            })) || "";
-                            xnavservice.toExternal({
-                                target: {
-                                shellHash: href
-                                }
-                                });
-                            // sap.m.URLHelper.redirect(window.location.href.split('#')[0] + href, true);
-                        }
+            //     MessageBox.information("Please create Unique Id's before going forward. If already created, please click on Continue", {
+            //         actions: ["Continue", MessageBox.Action.CLOSE],
+            //         emphasizedAction: "Continue",
+            //         onClose: function (sAction) {
+            //             // MessageToast.show("Action selected: " + sAction);.
+            //             if (sAction === "Continue") {
+            //                 var xnavservice = sap.ushell && sap.ushell.Container && sap.ushell.Container.getService
+            //                 && sap.ushell.Container.getService("CrossApplicationNavigation");  
+            //                 var flag ="X"                          
+            //                 var href = ( xnavservice && xnavservice.hrefForExternal({                            
+            //                 target : { semanticObject : "TempIdCreate", action : "Display" },                            
+            //                 params : { "PROJECT_ID" : selectedProject, "PRODUCT_ID" : seletedProduct, "Flag" : flag }                            
+            //                 })) || "";
+            //                 xnavservice.toExternal({
+            //                     target: {
+            //                     shellHash: href
+            //                     }
+            //                     });
+            //                 // sap.m.URLHelper.redirect(window.location.href.split('#')[0] + href, true);
+            //             }
                         
-                    },
-                    dependentOn: that.getView()
-                });
-            }
-            else{
-                MessageToast.show("Please select a Project/Product");
-            }
+            //         },
+            //         dependentOn: that.getView()
+            //     });
+            // }
+            // else{
+            //     MessageToast.show("Please select a Project/Product");
+            // }
             }
         });
     });

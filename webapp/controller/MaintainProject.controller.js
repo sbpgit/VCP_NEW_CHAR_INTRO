@@ -30,20 +30,21 @@ sap.ui.define([
             },
             _onPatternMatched: function () {
                 that.oGModel.setProperty("/SelectedFlag", '');
-                var params1 = that.getOwnerComponent().oComponentData.startupParameters;
-                that.oGModel = this.getOwnerComponent().getModel("oGModel");
-                if (params1.PRODUCT_ID && params1.PROJECT_ID) {
-                    that.oGModel.setProperty("/selectedProduct", params1.PRODUCT_ID[0]);
-                    that.oGModel.setProperty("/selectedProject", params1.PROJECT_ID[0]);
-                    that.oGModel.setProperty("/SelectedFlag", params1.Flag[0]);
-                    if (params1.Flag[0] === "Y") {
-                        that.onNPIPress();
-                    }
-                }
+                // var params1 = that.getOwnerComponent().oComponentData.startupParameters;
+                // that.oGModel = this.getOwnerComponent().getModel("oGModel");
+                // if (params1.PRODUCT_ID && params1.PROJECT_ID) {
+                //     that.oGModel.setProperty("/selectedProduct", params1.PRODUCT_ID[0]);
+                //     that.oGModel.setProperty("/selectedProject", params1.PROJECT_ID[0]);
+                //     that.oGModel.setProperty("/SelectedFlag", params1.Flag[0]);
+                //     if (params1.Flag[0] === "Y") {
+                //         that.onNPIPress();
+                //     }
+                // }
             },
             onAfterRendering: function () {
                 that.mainArray=[];
                 that.oGModel = this.getOwnerComponent().getModel("oGModel");
+                that.byId("idMPD").removeSelections();
                 var vUser = this.getUser();
                 that.oGModel.setProperty("/User", vUser);
                 if (!this._valueHelpDialogProjectDet) {
@@ -195,6 +196,7 @@ sap.ui.define([
                 var projDetails = sap.ui.getCore().byId("idProjDesc").getValue();
                 var releaseDate = null;
                 var projStatus = sap.ui.getCore().byId("idSwitchState").getState();
+                var Date1 = new Date();
 
                 object = {
                     USER: that.oGModel.getProperty("/User"),
@@ -202,6 +204,7 @@ sap.ui.define([
                     PROJECT_DET: projDetails,
                     PROJ_STATUS: projStatus,
                     RELEASE_DATE: releaseDate,
+                    CREATED_DATE: Date1
                 }
                 finalArray.push(object);
                 this.getOwnerComponent().getModel("BModel").callFunction("/saveProjDetails", {
@@ -241,6 +244,7 @@ sap.ui.define([
                         PROJECT_DET: projDetails,
                         PROJ_STATUS: projStatus,
                         RELEASE_DATE: releaseDate,
+                        CHANGED_DATE: releaseDate
                     }
                     finalArray1.push(object1);
                     this.getOwnerComponent().getModel("BModel").callFunction("/saveProjDetails", {
@@ -272,6 +276,7 @@ sap.ui.define([
                     if (tableItems.length > 0) {
                         if (tableSelectedItem.length > 0) {
                             that.oGModel.setProperty('/selectedProject', tableSelectedItem[0].getCells()[0].getText());
+                            that.oGModel.setProperty('/selectedProjectDesc', tableSelectedItem[0].getCells()[1].getValue());
                         }
                         else {
                             that.oGModel.setProperty('/selectedProject', '');
@@ -382,7 +387,7 @@ sap.ui.define([
             /**On Press of Update in Maintain Projects page */
             onSaveChanges:function(){
                 var maintain=[];
-                sap.ui.core.BusyIndicator.show();
+                sap.ui.core.BusyIndicator.show();    
                 if(that.mainArray.length>0){
                     this.getOwnerComponent().getModel("BModel").callFunction("/saveProjDetails", {
                         method: "GET",
@@ -410,6 +415,7 @@ sap.ui.define([
                 var path = oEvent.getSource().getBindingContext().getPath();
                 var Data = that.byId("idMPD").getModel().getProperty(path);
                 var index = that.mainArray.findIndex(a=>a.PROJECT_ID === Data.PROJECT_ID);
+                var date1 = new Date();
                 if (index === -1) {
                     var newObject = {
                        USER: that.oGModel.getProperty("/User"),
@@ -417,7 +423,8 @@ sap.ui.define([
                         PROJECT_DET :oEvent.getParameters("value").value,
                         PROJ_STATUS: Data.PROJ_STATUS,
                         RELEASE_DATE: Data.RELEASE_DATE,
-                        SWITCH : Data.SWITCH
+                        SWITCH : Data.SWITCH,
+                        CHANGED_DATE: date1
                     }
                     that.mainArray.push(newObject);
                 }

@@ -2,9 +2,18 @@
    xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core"
 	displayBlock="true" xmlns="sap.m" xmlns:m="sap.m" xmlns:l="sap.ui.layout" xmlns:ux="sap.uxap" xmlns:f="sap.ui.layout.form"
 	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:u="sap.ui.unified">
-    <Page showNavButton="true" navButtonPress="onBackToMPD" showFooter="true">
+    <Page  showFooter="true">
+    <customHeader>
+			<Toolbar>
+				<Button id="leftMenu" icon="sap-icon://nav-back"  press="onBackToMPD" type="Transparent" visible="true"/>
+				<ToolbarSpacer/>
+				<Title id="idprojTitle" text="" />
+				<ToolbarSpacer/>
+				<Button class="classHdr" icon="sap-icon://sys-help" id="idNav3" press="onNavPress" type="Emphasized" tooltip="Help Document" />
+			</Toolbar>
+		</customHeader>
 	<ux:ObjectPageLayout id="ObjectPageLayout">
-		<ux:headerTitle>
+		<!-- <ux:headerTitle>
 			<ux:ObjectPageDynamicHeaderTitle>
 				<ux:expandedHeading>
 					<HBox>
@@ -20,8 +29,8 @@
                             <Button class="classHdr" icon="sap-icon://sys-help" id="idNav3" press="onNavPress" type="Emphasized" tooltip="Help Document" />
                         </ux:navigationActions>
                 </ux:ObjectPageDynamicHeaderTitle>
-		</ux:headerTitle>
-		  <ux:headerContent>
+		</ux:headerTitle> -->
+		  <!-- <ux:headerContent>
             <FlexBox wrap="Wrap" justifyContent= "Inherit" fitContainer="true">
              <VBox >
                 <Label text="Project Id" class="flux" required="true"/>
@@ -43,7 +52,7 @@
              </HBox>
              </VBox> 
         </FlexBox>
-        </ux:headerContent>
+        </ux:headerContent> -->
 		<ux:sections>
 			<ux:ObjectPageSection id="idObjPageSec">
 				<ux:subSections>
@@ -58,7 +67,11 @@
                               <headerToolbar>
 			                    <OverflowToolbar>
                                 <!-- <Title  text="Characteristic Value Replacement"></Title> -->
-                                <SearchField id="newCharSearch" search="oHomesearch" liveChange="oHomesearch" width="100vh" placeholder="New Char Value/Product/Ref Char Value" />
+                                <HBox >
+                                    <Label text="Config Product" class="sapUiTinyMarginTop sapUiTinyMarginEnd"/>
+                                    <Input id="idConfProd" width="250px" placeholder="Configurable Product" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp" />
+                                </HBox>
+                                <SearchField id="newCharSearch" search="oHomesearch" liveChange="oHomesearch" width="50vh" placeholder="New Char Value/Product/Ref Char Value" />
 				                    <ToolbarSpacer/>
                                     <!-- <Button text="Maintain Unique Ids" press="onShowUniqueIds" tooltip="Show Unique Ids" />
                                     <Button text="Generate Unique Ids" press="onGenerateUniqueIds" tooltip="Generate Unique Ids" /> -->
@@ -67,18 +80,18 @@
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
-                                <Column hAlign="Center" width="auto" vAlign="Middle">
+                                <!-- <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Project Id" />
-                                    </Column>
+                                    </Column> -->
                                     <!-- <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Project Details" />
                                     </Column> -->
                                     <Column hAlign="Center" width="auto" vAlign="Middle" >
-                                        <Text text="Configurable Product" />
+                                        <Text text="Config Product" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                    <!-- <Column hAlign="Center" width="auto" vAlign="Middle" >
                                         <Text text="Configurable Product Desc" />
-                                    </Column>
+                                    </Column> -->
                                     <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="New Characteristic Value" />
                                     </Column>                             
@@ -86,11 +99,11 @@
                                     <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Reference Char Value" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <!-- <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Reference Char Value Desc" />
-                                    </Column>
+                                    </Column> -->
                                     <Column hAlign="Center" width="auto" vAlign="Middle">
-                                        <Text text="Reference Char Name" />
+                                        <Text text="Char Name" />
                                     </Column>
                                       <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Weight in %" />
@@ -102,16 +115,21 @@
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                        <Text text="{PROJECT_ID}" /> 
+                                        <!-- <Text text="{PROJECT_ID}" />  -->
                                         <!-- <Text text="{PROJECT_DET}" />   -->
-                                        <Text text="{REF_PRODID}" />
+                                        <!-- <Text text="{REF_PRODID}" />
                                             <Text text= "{PROD_DESC}" />
                                             <Text text="{CHAR_VALUE}" />                                           
                                             <Text text= "{REF_CHAR_VALUE}" />
                                             <Text text= "{REF_CHAR_DESC}" />
                                             <Text text= "{REF_CHAR_NAME}" />                                            
-                                            <Text text= "{WEIGHT}" />
+                                            <Text text= "{WEIGHT}" /> -->
                                             <!-- <Text text= "{ACTIVE}" /> -->
+                                            <ObjectIdentifier title="{PROD_DESC}" text ="{REF_PRODID}"/>
+                                            <ObjectIdentifier title="" text ="{CHAR_VALUE}"/>
+                                            <ObjectIdentifier title="{REF_CHAR_DESC}" text ="{REF_CHAR_VALUE}"/>
+                                            <Text text= "{REF_CHAR_NAME}" />   
+                                            <Text text= "{WEIGHT}" />
                                         </cells>
                                     </ColumnListItem>
                                 </items>
@@ -125,16 +143,16 @@
                               <headerToolbar>
 			                    <OverflowToolbar>
                                 <!-- <Title  text="Phase Out Details"></Title> -->
-                                <SearchField id="newPhaseSearch" search="oHomesearch" liveChange="oHomesearch" width="100vh" placeholder="Ref Product ID/Char Num/Location/Product ID" />
+                                <SearchField id="newPhaseSearch" search="oHomesearch" liveChange="oHomesearch" width="50vh" placeholder="Ref Product ID/Char Num/Location/Product ID" />
 				                    <ToolbarSpacer/>
 				                    <ToggleButton id="idToggleButton1" text="Add" press="onAddPressed" tooltip="OnAdd" icon="sap-icon://slim-arrow-down">
                                     </ToggleButton>
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
-                                <Column hAlign="Center" width="auto" vAlign="Middle">
+                                <!-- <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Project Id" />
-                                    </Column>
+                                    </Column> -->
                                     <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Reference Product ID" />
                                     </Column>
@@ -161,7 +179,7 @@
                                     <ColumnListItem>
                                         <cells>
 
-                                            <Text text="{PROJECT_ID}" /> 
+                                            <!-- <Text text="{PROJECT_ID}" />  -->
                                             <Text text="{REF_PRODID}" />    
                                             <Text text="{CHAR_NUM}" />
                                             <Text text= "{CHAR_VALUE}" />
@@ -186,11 +204,11 @@
 	</ux:ObjectPageLayout>
 <footer>
  <OverflowToolbar>
-                               
-				                    <ToolbarSpacer/>
-                                    <Button text="Maintain Unique Ids" press="onShowUniqueIds" tooltip="Show Unique Ids" />
-                                    <Button text="Generate Unique Ids" press="onGenerateUniqueIds" tooltip="Generate Unique Ids" />
+            <Button text="Reset Data" class="hom1" type="Transparent" press="onResetData" tooltip="Reset" />
+			<ToolbarSpacer/>
+            <Button text="Maintain Unique ID's" press="onShowUniqueIds" tooltip="Show Unique ID's" />
+            <Button text="Generate Unique ID's" press="onGenerateUniqueIds" tooltip="Generate Unique ID's" />
 				                   
-			                    </OverflowToolbar></footer>
+	</OverflowToolbar></footer>
     </Page>
 </mvc:View>

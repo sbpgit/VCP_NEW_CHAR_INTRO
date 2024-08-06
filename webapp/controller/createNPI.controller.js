@@ -33,6 +33,7 @@ sap.ui.define([
                 that.locModel = new JSONModel();
                 that.prodModel = new JSONModel();
                 that.listMode = new JSONModel();
+                that.prodModel1 = new JSONModel();
                 that.step5Model = new JSONModel();
                 that.step6Model = new JSONModel();
                 that.oGModel = that.getOwnerComponent().getModel("oGModel");
@@ -64,39 +65,9 @@ sap.ui.define([
                 that.oldCharVal = that.byId("idOldCharValue");
                 that.selectedConfigProduct = that.oGModel.getProperty("/configProduct");
                 that.selectedProject = that.oGModel.getProperty("/projectDetails");
-                that.totalTabData = that.oGModel.getProperty("/charvalData");
-                that.byId("idConfigText").setText(that.selectedConfigProduct);
-                this.getOwnerComponent().getModel("BModel").read("/getCharType", {
-                    filters: [
-                        new Filter(
-                            "PRODUCT_ID",
-                            FilterOperator.EQ,
-                            that.selectedConfigProduct
-                        ),
-                        new Filter(
-                            "CHAR_TYPE",
-                            FilterOperator.EQ,
-                            "CHAR"
-                        ),
-                    ],
-                    success: function (oData1) {
-                        if (oData1.results.length > 0) {
-                            that.newChars = [];
-                            that.newChars = oData1.results;
-                            var charNames = that.removeDuplicate(oData1.results, 'CHAR_NAME');
-                            that.charModel.setData({ setCharacteristicNames: charNames });
-                            sap.ui.getCore().byId("idCharNameSelect").setModel(that.charModel);
-                        }
-                        else {
-                            MessageToast.show("No Characteristcs available for this product.")
-                        }
-                        sap.ui.core.BusyIndicator.hide();
-                    },
-                    error: function () {
-                        sap.ui.core.BusyIndicator.hide();
-                        MessageToast.show("Failed to get characteristics");
-                    }
-                });
+                // that.totalTabData = that.oGModel.getProperty("/charvalData");
+                // that.byId("ConfigProd").setText(that.selectedConfigProduct);
+
                 this._oCore = sap.ui.getCore();
                 if (!this._valueHelpDialogCharacter) {
                     this._valueHelpDialogCharacter = sap.ui.xmlfragment(
@@ -104,6 +75,14 @@ sap.ui.define([
                         this
                     );
                     this.getView().addDependent(this._valueHelpDialogCharacter);
+                }
+
+                if (!this._valueHelpDialogProd) {
+                    this._valueHelpDialogProd = sap.ui.xmlfragment(
+                        "vcpapp.vcpnpicharvalue.view.ProdDialog",
+                        this
+                    );
+                    this.getView().addDependent(this._valueHelpDialogProd);
                 }
                 if (!this._valueHelpDialogOldCharacter) {
                     this._valueHelpDialogOldCharacter = sap.ui.xmlfragment(
@@ -140,6 +119,63 @@ sap.ui.define([
                     );
                     this.getView().addDependent(this._valueHelpCharName);
                 }
+
+                // sap.ui.getCore().byId("idList").removeSelections();
+
+                if(that.selectedProject === undefined || that.selectedProject === "" || that.selectedProject === null){
+                    if (this._valueHelpDialogProd) {
+                        that._valueHelpDialogProd.destroy(true);
+                        that._valueHelpDialogProd = "";
+                    }
+                    var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+                oRouter.navTo("RouteHome", {}, true);
+                } else {
+                sap.ui.core.BusyIndicator.show();
+                this.getOwnerComponent().getModel("BModel").read("/getProducts", {
+                    method: "GET",
+                    success: function (oData) {
+                        sap.ui.core.BusyIndicator.hide();
+                        that.prodModel1.setData({ configProdRes: oData.results });
+                        sap.ui.getCore().byId("prodSlctListOD").setModel(that.prodModel1);
+                        // sap.ui.core.BusyIndicator.hide()
+                    },
+                    error: function () {
+                        sap.ui.core.BusyIndicator.hide();
+                        MessageToast.show("Failed to get configurable products");
+                    },
+                });
+                // this.getOwnerComponent().getModel("BModel").read("/getCharType", {
+                //     filters: [
+                //         new Filter(
+                //             "PRODUCT_ID",
+                //             FilterOperator.EQ,
+                //             that.selectedConfigProduct
+                //         ),
+                //         new Filter(
+                //             "CHAR_TYPE",
+                //             FilterOperator.EQ,
+                //             "CHAR"
+                //         ),
+                //     ],
+                //     success: function (oData1) {
+                //         if (oData1.results.length > 0) {
+                //             that.newChars = [];
+                //             that.newChars = oData1.results;
+                //             var charNames = that.removeDuplicate(oData1.results, 'CHAR_NAME');
+                //             that.charModel.setData({ setCharacteristicNames: charNames });
+                //             sap.ui.getCore().byId("idCharNameSelect").setModel(that.charModel);
+                //         }
+                //         else {
+                //             MessageToast.show("No Characteristcs available for this product.")
+                //         }
+                //         sap.ui.core.BusyIndicator.hide();
+                //     },
+                //     error: function () {
+                //         sap.ui.core.BusyIndicator.hide();
+                //         MessageToast.show("Failed to get characteristics");
+                //     }
+                // });
+                
                 var oModel = new JSONModel(),
                     oInitialModelState = Object.assign({}, oData);
                 oModel.setData(oInitialModelState);
@@ -150,6 +186,7 @@ sap.ui.define([
                 that._iNewSelectedIndex = 0;
                 that.oGModel.setProperty("/setStep", "X");
                 that.handleButtonsVisibility();
+            }
 
             },
             getUnqiueChars: function (arr1, arr2, prop1Arr1, prop2Arr1, prop1Arr2, prop2Arr2) {
@@ -184,6 +221,11 @@ sap.ui.define([
                     that._valueHelpDialogProdLoc.destroy(true);
                     that._valueHelpDialogProdLoc = "";
                 }
+
+                if (this._valueHelpDialogProd) {
+                    that._valueHelpDialogProd.destroy(true);
+                    that._valueHelpDialogProd = "";
+                }
                 sap.ui.core.BusyIndicator.hide();
             },
             /**Remoing duplicates function */
@@ -194,6 +236,10 @@ sap.ui.define([
             /**On click of Value Helps */
             handleValueHelp: function (oEvent) {
                 var sId = oEvent.getParameter("id");
+
+                if (sId.includes("ConfigProd")) {
+                    that._valueHelpDialogProd.open();
+                }
                 if (sId.includes("idCharName")) {
                     that._valueHelpCharName.open();
                 }
@@ -249,6 +295,60 @@ sap.ui.define([
                 sap.ui.getCore().byId("idCharOldSelect").setModel(that.TemplateModel);
 
             },
+
+             /**On Selection of config product in prod dialog */
+            handleSelection: function (oEvent) {
+                var selectedItem = oEvent.getParameters().selectedItems[0].getTitle();
+                that.byId("ConfigProd").setValue(selectedItem);
+                that.selectedConfigProduct = selectedItem;
+
+                var tableProjectData = that.oGModel.getProperty("/charvalData");
+                
+
+                if (tableProjectData.length > 0) {
+                    that.totalTabData = tableProjectData.filter(item => item.REF_PRODID === selectedItem && item.PROJECT_ID === that.selectedProject);
+                }
+                else {
+                    that.totalTabData = [];
+                }
+
+                sap.ui.core.BusyIndicator.show()
+                this.getOwnerComponent().getModel("BModel").read("/getCharType", {
+                    filters: [
+                        new Filter(
+                            "PRODUCT_ID",
+                            FilterOperator.EQ,
+                            selectedItem
+                        ),
+                        new Filter(
+                            "CHAR_TYPE",
+                            FilterOperator.EQ,
+                            "CHAR"
+                        ),
+                    ],
+                    success: function (oData1) {
+                        sap.ui.core.BusyIndicator.hide()
+                        if (oData1.results.length > 0) {
+                            that.newChars = [];
+                            that.newChars = oData1.results;
+                            var charNames = that.removeDuplicate(oData1.results, 'CHAR_NAME');
+                            that.charModel.setData({ setCharacteristicNames: charNames });
+                            sap.ui.getCore().byId("idCharNameSelect").setModel(that.charModel);
+                        }
+                        else {
+                            MessageToast.show("No Characteristcs available for this product.")
+                        }
+                        // sap.ui.core.BusyIndicator.hide();
+                    },
+                    error: function () {
+                        sap.ui.core.BusyIndicator.hide();
+                        MessageToast.show("Failed to get characteristics");
+                    }
+                });
+                
+            },
+
+
             /**On Selection of chars in Old Char Value */
             handleOldCharSelection: function (oEvent) {
                 that.charsSelected = [], that.intChars = {};
@@ -317,6 +417,8 @@ sap.ui.define([
             onStep3Press: function () {
                 that.byId("idNewValue").setValue(that.newcharSelected);
                 that.byId("idste3Text").setText(that.mewCharDescp);
+                that.byId("ConfigProd2").setText(that.selectedConfigProduct);
+                that.byId("STfromDate").setMinDate(new Date());
                 that.tokens = that.byId("idOldCharValue").getTokens();
                 that.byId("idOldChar").removeAllTokens();
                 that.tokens.forEach(function (oItem) {
@@ -367,7 +469,7 @@ sap.ui.define([
             },
             /**On Press of Step2 */
             onStep2Press: function () {
-                that.byId("idConfigText1").setText(that.selectedConfigProduct);
+                that.byId("ConfigProd1").setText(that.selectedConfigProduct);
                 that.byId("idCharValue1").setValue(that.newcharSelected);
                 that.byId("idCharValText1").setText(that.mewCharDescp);
 
@@ -441,6 +543,7 @@ sap.ui.define([
                 var object = { LAUNCH: [{ DIMENSIONS: 'Location', VALUE: '', ROW: 1 }, { DIMENSIONS: 'Partial Product', VALUE: '', ROW: 2 }] };
                 that.byId("idNewDimen").setValue(that.newcharSelected);
                 that.byId("idLaunchText").setText(that.mewCharDescp);
+                that.byId("ConfigProd3").setText(that.selectedConfigProduct);
                 that.tokens = that.byId("idOldCharValue").getTokens();
                 that.byId("idOldDimen").removeAllTokens();
                 that.tokens.forEach(function (oItem) {
@@ -582,8 +685,10 @@ sap.ui.define([
                 sap.ui.core.BusyIndicator.show();
                 that.combinedArray = [];
                 var newObject = {}, locArray = [], prodArray = [];
+                that.byId("ConfigProd4").setText(that.selectedConfigProduct);
                 that.byId("idPhaseInChar").setValue(that.newcharSelected);
                 that.byId("idPhaseInText").setText(that.mewCharDescp);
+                that.byId("idPhaseinStart").setMinDate(new Date());
                 that.tokens = that.byId("idOldCharValue").getTokens();
                 that.byId("idPhaseinOldChar").removeAllTokens();
                 that.tokens.forEach(function (oItem) {
@@ -1016,7 +1121,7 @@ sap.ui.define([
             clearAllData: function () {
                 /**Clearing data in Step 1 */
                 that.byId("idCharValue").setValue();
-                that.byId("idConfigText").setText();
+                that.byId("ConfigProd").setValue();
                 that.byId("idCharValText").setText();
                 that.byId("idCharName").setValue();
                 // that.prodModel.setData({ setCharacteristics: []})
@@ -1024,7 +1129,7 @@ sap.ui.define([
 
                 /**Clearing data in Step 2 */
                 that.byId("idCharValue1").setValue();
-                that.byId("idConfigText1").setText();
+                that.byId("ConfigProd1").setText();
                 that.byId("idCharValText1").setText();
                 that.byId("idOldCharValue").removeAllTokens();
                 that.TemplateModel.setData({ setOldCharacteristics: [] });

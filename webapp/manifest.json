@@ -166,6 +166,13 @@
     "target": [
         "MaintainProject"
     ]
+},
+{
+  "name": "Details",
+  "pattern": "Details",
+  "target": [
+      "Details"
+  ]
 }
       ],
       "targets": {
@@ -203,6 +210,27 @@
       "clearControlAggregation": true,
       "viewId": "MultiProd",
       "viewName": "MultiProd"
+  },
+  "Details": {
+    "viewType": "XML",
+    "transition": "slide",
+      "clearControlAggregation": true,
+    "viewName": "Details",
+    "viewId": "Details"
+  },
+    "ItemMaster": {
+    "viewType": "XML",
+    "transition": "slide",
+      "clearControlAggregation": true,
+    "viewName": "ItemMaster",
+      "viewId": "ItemMaster"
+  },
+  "ItemDetail": {
+    "viewType": "XML",
+    "transition": "slide",
+      "clearControlAggregation": true,
+    "viewName": "ItemDetail",
+    "viewId": "ItemDetail"
   }
       }
     },

@@ -67,5 +67,11 @@ margin-left:50px !important;
 .boldText{
     font-size:24px !important;
     font:bold !important;
-    padding-left: 700px !important;
+    padding-left: 550px !important;
+}
+
+.boldText1{
+    font-size:24px !important;
+    font:bold !important;
+    padding-left: 400px !important;
 }
