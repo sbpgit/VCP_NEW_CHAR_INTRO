@@ -257,8 +257,9 @@ sap.ui.define([
                 // that.byId("idProjDet").setValue("");
                 that.byId("newTabSearch").setValue();
                 that.byId("idTempDetails").getBinding("items").filter([]);
-                that.tabModel.setData({ tempDetails: [] });
-                that.byId("idTempDetails").setModel(that.tabModel);
+                // that.tabModel.setData({ tempDetails: [] });
+                // that.byId("idTempDetails").setModel(that.tabModel);
+                that.onGetData();
             },
             /**
                  * Called when it routes to a page containing the item details.
@@ -803,6 +804,7 @@ sap.ui.define([
 
 
                 if (sQuery !== "" && sQuery !== undefined) {
+                    that.byId("newTabSearch").setValue();
                     // var filteredHeaderData = HeadData.filter(el => el.CONFIG_DATA.includes(sQuery) );
                     var filteredHeaderData = [];
                     HeadData.forEach(function(el){
