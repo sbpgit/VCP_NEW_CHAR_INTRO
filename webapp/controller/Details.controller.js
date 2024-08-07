@@ -57,7 +57,7 @@ sap.ui.define(
             );
           } else {
             this.oFlexibleColumnLayout.setLayout(
-              sap.f.LayoutType.TwoColumnsMidExpanded
+              sap.f.LayoutType.TwoColumnsBeginExpanded
             );
           }
           var oViewModel = new JSONModel({
@@ -195,7 +195,7 @@ sap.ui.define(
             }
           }
           this.oFlexibleColumnLayout.setLayout(
-            sap.f.LayoutType.TwoColumnsMidExpanded
+            sap.f.LayoutType.TwoColumnsBeginExpanded
           );
           /* Adding ItemDetail page */
           if (aPages.length < 1) {

@@ -165,13 +165,23 @@ sap.ui.define([
                             //     that.byId("idGen").setVisible(false);
                             //     finalData = finalData.sort((a, b) => parseInt(a.TMP_UNIQUE_ID.match(/\d+/g)[0]) - parseInt(b.TMP_UNIQUE_ID.match(/\d+/g)[0]));
                             // }
-
+                            if (oData.results[0].GenFlag === "X") {
+                                    that.byId("idGen").setEnabled(true);
+                                    that.byId("idGen").setVisible(true);
+                                    that.byId("idSave").setEnabled(false);
+                                    that.byId("idSave").setVisible(false);
+                            } else {
+                                    that.byId("idSave").setEnabled(true);
+                                    that.byId("idSave").setVisible(true);
+                                    that.byId("idGen").setEnabled(false);
+                                    that.byId("idGen").setVisible(false);
+                            }
                             that.HeaderData = JSON.parse(oData.results[0].UID);
 
-                            that.HeaderData.forEach(el => {
-                                    // el.CONFIG = el.CONFIG;
-                                    el.CONFIG_DATA = JSON.stringify(el.CONFIG);
-                                });
+                            // that.HeaderData.forEach(el => {
+                            //         // el.CONFIG = el.CONFIG;
+                            //         el.CONFIG_DATA = JSON.stringify(el.CONFIG);
+                            //     });
 
                             sap.ui.core.BusyIndicator.hide();
                             // that.tabModel.setData({ tempDetails: finalData });
@@ -884,7 +894,7 @@ sap.ui.define([
                 sap.ui.core.BusyIndicator.show();
                 if (that.genFlag === "X" && oEvent.getParameters().id.includes("idGen")) {
                     var HeadData1 = that.HeaderData;
-                    var ItemData = that.ItemData;
+                    var ItemData = [];
 
                     function removeProperty(array, property) {
                         return array.map(obj => {
