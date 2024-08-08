@@ -119,7 +119,7 @@
                                              <Text text="{CHAR_DESC}" />
                                             <Input value="{WEIGHT}" liveChange="onInputChange" />
                                             <DatePicker id="STfromDate"  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange"/>
-                                            <DatePicker  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" enabled="false"/>
+                                            <DatePicker id="STtoDate" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange" enabled="false"/>
                                             <!-- <Switch state="false" customTextOn="Yes" customTextOff="No" /> -->
                                         </cells>
                                     </ColumnListItem>

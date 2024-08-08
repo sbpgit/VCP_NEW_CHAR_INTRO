@@ -166,11 +166,13 @@ sap.ui.define([
                             //     finalData = finalData.sort((a, b) => parseInt(a.TMP_UNIQUE_ID.match(/\d+/g)[0]) - parseInt(b.TMP_UNIQUE_ID.match(/\d+/g)[0]));
                             // }
                             if (oData.results[0].GenFlag === "X") {
+                                that.oGModel.setProperty("/delFlag", true);
                                     that.byId("idGen").setEnabled(true);
                                     that.byId("idGen").setVisible(true);
                                     that.byId("idSave").setEnabled(false);
                                     that.byId("idSave").setVisible(false);
                             } else {
+                                that.oGModel.setProperty("/delFlag", false);
                                     that.byId("idSave").setEnabled(true);
                                     that.byId("idSave").setVisible(true);
                                     that.byId("idGen").setEnabled(false);
@@ -178,10 +180,7 @@ sap.ui.define([
                             }
                             that.HeaderData = JSON.parse(oData.results[0].UID);
 
-                            // that.HeaderData.forEach(el => {
-                            //         // el.CONFIG = el.CONFIG;
-                            //         el.CONFIG_DATA = JSON.stringify(el.CONFIG);
-                            //     });
+                            that.HeaderData = that.HeaderData.sort((a, b) => parseInt(a.TMP_UNIQUE_ID.match(/\d+/g)[0]) - parseInt(b.TMP_UNIQUE_ID.match(/\d+/g)[0]));
 
                             sap.ui.core.BusyIndicator.hide();
                             // that.tabModel.setData({ tempDetails: finalData });

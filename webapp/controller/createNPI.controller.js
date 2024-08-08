@@ -67,7 +67,8 @@ sap.ui.define([
                 that.selectedProject = that.oGModel.getProperty("/projectDetails");
                 // that.totalTabData = that.oGModel.getProperty("/charvalData");
                 // that.byId("ConfigProd").setText(that.selectedConfigProduct);
-
+                that.phaseInMin  = new Date();
+                that.phaseInMax  = new Date();
                 this._oCore = sap.ui.getCore();
                 if (!this._valueHelpDialogCharacter) {
                     this._valueHelpDialogCharacter = sap.ui.xmlfragment(
@@ -1053,8 +1054,25 @@ sap.ui.define([
                 var selectedDate = oEvent.getSource().getDateValue();
                 // sap.ui.getCore().byId("idValidTo").setMinDate(selectedDate);
                 // sap.ui.getCore().byId("idValidTo").setEnabled(true);
-                oEvent.getSource().getParent().getCells()[5].setEnabled(true);
-                oEvent.getSource().getParent().getCells()[5].setMinDate(selectedDate);
+                if(oEvent.getParameters().id.includes("STfromDate")){
+                    oEvent.getSource().getParent().getCells()[5].setEnabled(true);
+                    oEvent.getSource().getParent().getCells()[5].setMinDate(selectedDate);
+                        if(that.phaseInMin === ""){
+                            that.phaseInMin = new Date(selectedDate);
+                        } else{
+                        if(that.phaseInMin > new Date(selectedDate)){
+                            that.phaseInMin = new Date(selectedDate);
+                        }
+                    }
+                } else {
+                    if(that.phaseInMax === ""){
+                        that.phaseInMax = new Date(selectedDate);
+                    } else{
+                    if(that.phaseInMax > new Date(selectedDate)){
+                        that.phaseInMax = new Date(selectedDate);
+                    }
+                }
+            }
             },
             /**On Ok press in PhaseInPhaseout Fragment */
             onPhasePress: function () {

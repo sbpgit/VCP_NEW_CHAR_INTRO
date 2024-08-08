@@ -1,7 +1,7 @@
 <mvc:View controllerName="vcpapp.vcpnpicharvalue.controller.MaintainProject"
    xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core"
-	displayBlock="true" xmlns="sap.m" xmlns:m="sap.m" xmlns:l="sap.ui.layout" xmlns:ux="sap.uxap" xmlns:f="sap.ui.layout.form"
-	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:u="sap.ui.unified">
+    displayBlock="true" xmlns="sap.m" xmlns:m="sap.m" xmlns:l="sap.ui.layout" xmlns:ux="sap.uxap" xmlns:f="sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:u="sap.ui.unified">
     <Page showFooter="true">
      <customHeader>
             <Bar>
@@ -13,49 +13,65 @@
                 </contentRight>
             </Bar>
         </customHeader>
-     <Table id="idMPD" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
+     <Table id="idMPD" growing="true"  growingDirection="Downwards" growingThreshold="1000"
                               updateFinished="onTableUpdate" items="{path: '/projDetails', sorter:{path:'PROJECT_ID'}}"  itemPress="onNPIPress"  
-                              mode="SingleSelectMaster"   selectionChange="onNPIPress" rememberSelections="false"> 
+                              mode="SingleSelectMaster"   selectionChange="onNPIPress" rememberSelections="false">
                               <headerToolbar>
-			                    <OverflowToolbar>
+                                <OverflowToolbar>
                                 <SearchField id="newProjSearch" search="oHomesearch" liveChange="oHomesearch" width="50vh" placeholder="Project ID/Project Description" />
-				                    <ToolbarSpacer/>
+                                    <ToolbarSpacer/>
                                     <!-- <Button text="NPI Project Details" press="onNPIPress" enabled="true"/> -->
                                     <Button text = "Create NPI Project" press="onPressCreate" enabled="true"/>
                                     <!-- <Button text="Edit" id="idEdit" press="onEditPress" enabled="true"/> -->
-                                    
-			                    </OverflowToolbar>
-		                      </headerToolbar>                             
+                                   
+                                </OverflowToolbar>
+                              </headerToolbar>                            
                                 <columns>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Center" width="10%" vAlign="Middle">
                                         <Text text="Project ID" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
-                                        <Text text="Project Description" />
+                                    <Column hAlign="Center" width="10%" vAlign="Middle" >
+                                        <Text text="Project Details" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                    <Column hAlign="Center" width="10%" vAlign="Middle" >
                                         <Text text="Project Active Status" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Center" width="10%" vAlign="Middle">
                                         <Text text="Project Release Date" />
-                                    </Column>  
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    </Column>
+                                    <Column hAlign="Center" width="12%" vAlign="Middle">
+                                        <Text text="Created By" />
+                                    </Column>
+                                    <Column hAlign="Center" width="10%" vAlign="Middle">
+                                        <Text text="Created Date" />
+                                    </Column>
+                                    <Column hAlign="Center" width="12%" vAlign="Middle">
+                                        <Text text="Changed By" />
+                                    </Column>
+                                    <Column hAlign="Center" width="10%" vAlign="Middle">
+                                        <Text text="Changed Date" />
+                                    </Column>
+                                    <Column hAlign="Center" width="5%" vAlign="Middle" >
                                         <Text text="" />
                                     </Column>                                                    
                                 </columns>
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                            <!-- <Link text="{PROJECT_ID}" press="onLinkPress"/>     -->
-                                            <Text text="{PROJECT_ID}" />
+                                            <Link text="{PROJECT_ID}" press="onLinkPress"/>    
                                             <Input value="{PROJECT_DET}" liveChange="onInputPress"/>
                                              <Switch state="{PROJ_STATUS}" change="onStateChange" enabled="{STATE}" customTextOff="No" customTextOn="Yes"></Switch>
                                             <Text text= "{path:'RELEASE_DATE', type:'sap.ui.model.type.Date', formatOptions : { pattern:'MM/dd/yyyy',style:'medium', UTC: true}}" />
+                                            <Text text= "{CREATED_BY}" />
+                                            <Text text= "{path:'CREATED_DATE', type:'sap.ui.model.type.Date', formatOptions : { pattern:'MM/dd/yyyy',style:'medium', UTC: false}}" />
+                                            <Text text= "{CHANGED_BY}" />
+                                            <Text text= "{path:'CHANGED_DATE', type:'sap.ui.model.type.Date', formatOptions : { pattern:'MM/dd/yyyy',style:'medium', UTC: false}}" />
                                            <Button icon="sap-icon://delete" press="onDeleteProjectPress" enabled="{STATE}" tooltip="Delete Project"/>
                                         </cells>
                                     </ColumnListItem>
                                 </items>
-                              </Table>	
+                              </Table>  
+ 
                               <footer>
                               <OverflowToolbar>
                               <ToolbarSpacer/>
