@@ -58,7 +58,7 @@
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                            <Link text="{PROJECT_ID}" press="onLinkPress"/>    
+                                            <ObjectIdentifier title="{PROJECT_ID}"/>    
                                             <Input value="{PROJECT_DET}" liveChange="onInputPress"/>
                                              <Switch state="{PROJ_STATUS}" change="onStateChange" enabled="{STATE}" customTextOff="No" customTextOn="Yes"></Switch>
                                             <Text text= "{path:'RELEASE_DATE', type:'sap.ui.model.type.Date', formatOptions : { pattern:'MM/dd/yyyy',style:'medium', UTC: true}}" />

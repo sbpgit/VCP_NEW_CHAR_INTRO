@@ -461,5 +461,6 @@ sap.ui.define([
                         MessageToast.show("Failed to delete project details.");
                     },
                 });
+            }
         });
     });
