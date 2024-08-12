@@ -50,121 +50,121 @@ sap.ui.define([
                 that.tabData = [];
                 var oFilter = [];
                 // sap.ui.core.BusyIndicator.show();
-                
+
                 that.byId("idConfProd").setValue();
                 // that.byId("idProjDet").setValue();
-                that.byId("idToggleButton").setPressed(false);
-                that.byId("idToggleButton1").setPressed(false);
+                // that.byId("idToggleButton").setPressed(false);
+                // that.byId("idToggleButton1").setPressed(false);
                 var selectedProject = that.oGModel.getProperty("/selectedProject");
                 var selectedProjectDesc = that.oGModel.getProperty("/selectedProjectDesc");
                 // var selectedProduct = that.oGModel.getProperty("/selectedProduct");
-                if(selectedProject === undefined || selectedProject === ""){
+                if (selectedProject === undefined || selectedProject === "") {
                     that.onBackToMPD();
                 } else {
-                that.byId("idprojTitle").setText(selectedProject + " - " + selectedProjectDesc);
-                if (selectedProject) {
-                    // that.byId("idProjDet").setValue(selectedProject);
-                    oFilter.push(new Filter("PROJECT_ID", FilterOperator.EQ, selectedProject));
-                }
-                // if(selectedProduct){
-                //     that.byId("idConfProd").setValue(selectedProduct);
-                //     oFilter.push(new Filter("PROJECT_ID", FilterOperator.EQ, selectedProduct))  ;
-                // }
-                
-                // that.byId("idToggleButton2").setPressed(false);
-                if (!this._popOver) {
-                    this._popOver = sap.ui.xmlfragment(
-                        "vcpapp.vcpnpicharvalue.view.PopOver",
-                        this
-                    );
-                    this.getView().addDependent(this._popOver);
-                }
+                    that.byId("idprojTitle").setText(selectedProject + " - " + selectedProjectDesc);
+                    if (selectedProject) {
+                        // that.byId("idProjDet").setValue(selectedProject);
+                        oFilter.push(new Filter("PROJECT_ID", FilterOperator.EQ, selectedProject));
+                    }
+                    // if(selectedProduct){
+                    //     that.byId("idConfProd").setValue(selectedProduct);
+                    //     oFilter.push(new Filter("PROJECT_ID", FilterOperator.EQ, selectedProduct))  ;
+                    // }
 
-                if (!this._valueHelpDialogProd) {
-                    this._valueHelpDialogProd = sap.ui.xmlfragment(
-                        "vcpapp.vcpnpicharvalue.view.ProdDialog",
-                        this
-                    );
-                    this.getView().addDependent(this._valueHelpDialogProd);
-                }
-                // if (!this._valueHelpDialogProject) {
-                //     this._valueHelpDialogProject = sap.ui.xmlfragment(
-                //         "vcpapp.vcpnpicharvalue.view.ProjectDetails",
-                //         this
-                //     );
-                //     this.getView().addDependent(this._valueHelpDialogProject);
-                // }
-                sap.ui.getCore().byId("idList").removeSelections();
-                this.getOwnerComponent().getModel("BModel").read("/getProducts", {
-                    method: "GET",
-                    success: function (oData) {
+                    // that.byId("idToggleButton2").setPressed(false);
+                    if (!this._popOver) {
+                        this._popOver = sap.ui.xmlfragment(
+                            "vcpapp.vcpnpicharvalue.view.PopOver",
+                            this
+                        );
+                        this.getView().addDependent(this._popOver);
+                    }
 
-                        that.prodModel1.setData({ configProdRes: oData.results });
-                        sap.ui.getCore().byId("prodSlctListOD").setModel(that.prodModel1);
-                        // sap.ui.core.BusyIndicator.hide()
-                    },
-                    error: function () {
-                        // sap.ui.core.BusyIndicator.hide();
-                        MessageToast.show("Failed to get configurable products");
-                    },
-                });
-                this.getOwnerComponent().getModel("BModel").read("/getNPICharVal", {
-                    method: "GET",
-                    filters: oFilter,
-                    success: function (oData) {
-                        if (oData.results.length > 0) {
+                    if (!this._valueHelpDialogProd) {
+                        this._valueHelpDialogProd = sap.ui.xmlfragment(
+                            "vcpapp.vcpnpicharvalue.view.ProdDialog",
+                            this
+                        );
+                        this.getView().addDependent(this._valueHelpDialogProd);
+                    }
+                    // if (!this._valueHelpDialogProject) {
+                    //     this._valueHelpDialogProject = sap.ui.xmlfragment(
+                    //         "vcpapp.vcpnpicharvalue.view.ProjectDetails",
+                    //         this
+                    //     );
+                    //     this.getView().addDependent(this._valueHelpDialogProject);
+                    // }
+                    sap.ui.getCore().byId("idList").removeSelections();
+                    this.getOwnerComponent().getModel("BModel").read("/getProducts", {
+                        method: "GET",
+                        success: function (oData) {
 
-                            that.tabData = oData.results;
-                            that.tabData.forEach(function (oItem) {
-                                if (oItem.ACTIVE === true) {
-                                    oItem.ACTIVE = "Active";
-                                }
-                                else {
-                                    oItem.ACTIVE = "InActive";
-                                }
+                            that.prodModel1.setData({ configProdRes: oData.results });
+                            sap.ui.getCore().byId("prodSlctListOD").setModel(that.prodModel1);
+                            // sap.ui.core.BusyIndicator.hide()
+                        },
+                        error: function () {
+                            // sap.ui.core.BusyIndicator.hide();
+                            MessageToast.show("Failed to get configurable products");
+                        },
+                    });
+                    this.getOwnerComponent().getModel("BModel").read("/getNPICharVal", {
+                        method: "GET",
+                        filters: oFilter,
+                        success: function (oData) {
+                            if (oData.results.length > 0) {
 
-                            });
-                            // that.oGModel.setProperty("/charvalData",that.tabData);
-                            that.custModel.setData({ configProdResults: that.tabData });
-                            that.byId("idOrderList").setModel(that.custModel);
-                        } else {
-                            that.tabData = oData.results;
-                            that.custModel.setData({ configProdResults: that.tabData });
-                            that.byId("idOrderList").setModel(that.custModel);
-                        }
-                        // sap.ui.core.BusyIndicator.hide()
-                    },
-                    error: function () {
-                        // sap.ui.core.BusyIndicator.hide();
-                        MessageToast.show("Failed to get new characteristic value data");
-                    },
-                });
-                this.getOwnerComponent().getModel("BModel").read("/getPhaseOutDet", {
-                    method: "GET",
-                    filters: oFilter,
-                    success: function (oData) {
-                        that.tabPhaseData = [];
-                        if (oData.results.length > 0) {                            
-                            that.tabPhaseData = oData.results;
-                            // that.phaseOutModel.setData({ phaseOutDet: that.tabPhaseData });
-                            // that.byId("idPhaseOutList").setModel(that.phaseOutModel);
-                        } 
-                        that.phaseOutModel.setData({ phaseOutDet: that.tabPhaseData });
+                                that.tabData = oData.results;
+                                that.tabData.forEach(function (oItem) {
+                                    if (oItem.ACTIVE === true) {
+                                        oItem.ACTIVE = "Active";
+                                    }
+                                    else {
+                                        oItem.ACTIVE = "InActive";
+                                    }
+
+                                });
+                                // that.oGModel.setProperty("/charvalData",that.tabData);
+                                that.custModel.setData({ configProdResults: that.tabData });
+                                that.byId("idOrderList").setModel(that.custModel);
+                            } else {
+                                that.tabData = oData.results;
+                                that.custModel.setData({ configProdResults: that.tabData });
+                                that.byId("idOrderList").setModel(that.custModel);
+                            }
+                            // sap.ui.core.BusyIndicator.hide()
+                        },
+                        error: function () {
+                            // sap.ui.core.BusyIndicator.hide();
+                            MessageToast.show("Failed to get new characteristic value data");
+                        },
+                    });
+                    this.getOwnerComponent().getModel("BModel").read("/getPhaseOutDet", {
+                        method: "GET",
+                        filters: oFilter,
+                        success: function (oData) {
+                            that.tabPhaseData = [];
+                            if (oData.results.length > 0) {
+                                that.tabPhaseData = oData.results;
+                                // that.phaseOutModel.setData({ phaseOutDet: that.tabPhaseData });
+                                // that.byId("idPhaseOutList").setModel(that.phaseOutModel);
+                            }
+                            that.phaseOutModel.setData({ phaseOutDet: that.tabPhaseData });
                             that.byId("idPhaseOutList").setModel(that.phaseOutModel);
-                        sap.ui.core.BusyIndicator.hide()
-                    },
-                    error: function () {
-                        sap.ui.core.BusyIndicator.hide();
-                        MessageToast.show("Failed to get phaseout details");
-                    },
-                });
-                
-                // var project = that.oGModel.getProperty("/ProjDetails");
-                // that.projModel1.setData({ projDetails: project });
-                // sap.ui.getCore().byId("idProjDetailsFrag").setModel(that.projModel1);
-            
-                
-            }
+                            sap.ui.core.BusyIndicator.hide()
+                        },
+                        error: function () {
+                            sap.ui.core.BusyIndicator.hide();
+                            MessageToast.show("Failed to get phaseout details");
+                        },
+                    });
+
+                    // var project = that.oGModel.getProperty("/ProjDetails");
+                    // that.projModel1.setData({ projDetails: project });
+                    // sap.ui.getCore().byId("idProjDetailsFrag").setModel(that.projModel1);
+
+
+                }
 
             },
 
@@ -194,8 +194,8 @@ sap.ui.define([
                 var selectedProject = that.oGModel.getProperty("/selectedProject");
                 this._popOver.close();
                 sap.ui.getCore().byId("idList").removeSelections();
-                that.byId("idToggleButton").setPressed(false);
-                that.byId("idToggleButton1").setPressed(false);
+                // that.byId("idToggleButton").setPressed(false);
+                // that.byId("idToggleButton1").setPressed(false);
                 // that.byId("idToggleButton2").setPressed(false);
                 if (selectedProject) {
                     if (this._valueHelpDialogProd) {
@@ -213,7 +213,7 @@ sap.ui.define([
                         that.oGModel.setProperty("/charvalData", that.tabData);
                         // that.oGModel.setProperty("/configProduct", selectedProduct);
                         that.oGModel.setProperty("/projectDetails", selectedProject);
-                        
+
                         var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
                         oRouter.navTo("CreateWizard", {}, true);
                     }
@@ -241,7 +241,7 @@ sap.ui.define([
 
             /**On Selection of config product in prod dialog */
             handleSelection: function (oEvent) {
-                var selectedItem = oEvent.getParameters().selectedItems[0].getTitle();
+                var selectedItem = oEvent.getParameters().selectedItems[0].getDescription();
                 that.byId("idConfProd").setValue(selectedItem);
                 sap.ui.getCore().byId("prodSlctListOD").getBinding("items").filter([]);
                 sap.ui.getCore().byId("prodSlctListOD").clearSelection();
@@ -488,7 +488,7 @@ sap.ui.define([
                     },
                     success: function (oData) {
                         // that.byId("idGenSeedOrder").setEnabled(false);
-                        sap.m.MessageToast.show("Temporary Unique Id's creation started. Please wait for sometime to create combination Unique Id's" );
+                        sap.m.MessageToast.show("Temporary Unique Id's creation started. Please wait for sometime to create combination Unique Id's");
 
                         sap.ui.core.BusyIndicator.hide();
                         that.onResetData();
@@ -539,10 +539,10 @@ sap.ui.define([
 
             },
             /**On Press of show Unique Id's  in home view*/
-            onShowUniqueIds:function(){
+            onShowUniqueIds: function () {
                 var selectedProject = that.oGModel.getProperty('/selectedProject');
                 // var seletedProduct = that.byId("idConfProd").getValue();
-                if(selectedProject){
+                if (selectedProject) {
                     if (this._valueHelpDialogProd) {
                         that._valueHelpDialogProd.destroy(true);
                         that._valueHelpDialogProd = "";
@@ -550,36 +550,55 @@ sap.ui.define([
                     var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
                     oRouter.navTo("Details", {}, true);
                 }
-            //     if(selectedProject && seletedProduct){
+                //     if(selectedProject && seletedProduct){
 
-            //     MessageBox.information("Please create Unique Id's before going forward. If already created, please click on Continue", {
-            //         actions: ["Continue", MessageBox.Action.CLOSE],
-            //         emphasizedAction: "Continue",
-            //         onClose: function (sAction) {
-            //             // MessageToast.show("Action selected: " + sAction);.
-            //             if (sAction === "Continue") {
-            //                 var xnavservice = sap.ushell && sap.ushell.Container && sap.ushell.Container.getService
-            //                 && sap.ushell.Container.getService("CrossApplicationNavigation");  
-            //                 var flag ="X"                          
-            //                 var href = ( xnavservice && xnavservice.hrefForExternal({                            
-            //                 target : { semanticObject : "TempIdCreate", action : "Display" },                            
-            //                 params : { "PROJECT_ID" : selectedProject, "PRODUCT_ID" : seletedProduct, "Flag" : flag }                            
-            //                 })) || "";
-            //                 xnavservice.toExternal({
-            //                     target: {
-            //                     shellHash: href
-            //                     }
-            //                     });
-            //                 // sap.m.URLHelper.redirect(window.location.href.split('#')[0] + href, true);
-            //             }
-                        
-            //         },
-            //         dependentOn: that.getView()
-            //     });
-            // }
-            // else{
-            //     MessageToast.show("Please select a Project/Product");
-            // }
+                //     MessageBox.information("Please create Unique Id's before going forward. If already created, please click on Continue", {
+                //         actions: ["Continue", MessageBox.Action.CLOSE],
+                //         emphasizedAction: "Continue",
+                //         onClose: function (sAction) {
+                //             // MessageToast.show("Action selected: " + sAction);.
+                //             if (sAction === "Continue") {
+                //                 var xnavservice = sap.ushell && sap.ushell.Container && sap.ushell.Container.getService
+                //                 && sap.ushell.Container.getService("CrossApplicationNavigation");  
+                //                 var flag ="X"                          
+                //                 var href = ( xnavservice && xnavservice.hrefForExternal({                            
+                //                 target : { semanticObject : "TempIdCreate", action : "Display" },                            
+                //                 params : { "PROJECT_ID" : selectedProject, "PRODUCT_ID" : seletedProduct, "Flag" : flag }                            
+                //                 })) || "";
+                //                 xnavservice.toExternal({
+                //                     target: {
+                //                     shellHash: href
+                //                     }
+                //                     });
+                //                 // sap.m.URLHelper.redirect(window.location.href.split('#')[0] + href, true);
+                //             }
+
+                //         },
+                //         dependentOn: that.getView()
+                //     });
+                // }
+                // else{
+                //     MessageToast.show("Please select a Project/Product");
+                // }
+            },
+            onCharValRep: function () {
+                var selectedProject = that.oGModel.getProperty("/selectedProject");
+                that.oGModel.setProperty("/charvalData", that.tabData);
+                that.oGModel.setProperty("/projectDetails", selectedProject);
+                if (this._valueHelpDialogProd) {
+                    that._valueHelpDialogProd.destroy(true);
+                    that._valueHelpDialogProd = "";
+                }
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+                oRouter.navTo("CreateWizard", {}, true);
+            },
+            /**onPress of Phase out button */
+            onPhaseOutPress:function(){
+                var selectedProject = that.oGModel.getProperty("/selectedProject");
+                        that.oGModel.setProperty("/projectDetails", selectedProject);
+                        var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+                        oRouter.navTo("PhaseOutWizard", {}, true);
             }
+
         });
     });

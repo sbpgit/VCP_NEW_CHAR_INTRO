@@ -279,7 +279,7 @@ sap.ui.define([
                     var tableItems = that.byId("idMPD").getItems();
                     if (tableItems.length > 0) {
                         if (tableSelectedItem.length > 0) {
-                            that.oGModel.setProperty('/selectedProject', tableSelectedItem[0].getCells()[0].getText());
+                            that.oGModel.setProperty('/selectedProject', tableSelectedItem[0].getCells()[0].getTitle());
                             that.oGModel.setProperty('/selectedProjectDesc', tableSelectedItem[0].getCells()[1].getValue());
                         }
                         else {

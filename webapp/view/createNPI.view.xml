@@ -25,7 +25,7 @@
                             <Label text="Characteristic Name" required="true"/>
                             <HBox>
 							<Input id="idCharName" value="" placeholder="Characteristic Name" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp"
-								width="300px"/>
+								width="300px" enabled="false"/>
                                 <!-- <Text text="" id="idCharValText" class="newClass"/> -->
                                 </HBox>
 							<Label text="New Characteristic Value" required="true"/>
@@ -34,11 +34,13 @@
 								width="300px" enabled="false"/>
                                 <Text text="" id="idCharValText" class="newClass" visible="false"/>
                                 </HBox>
+                                <Label text="Reference Characteristic Value" required="true"/>
+							<MultiInput id="idOldCharValue" enabled="false" value="" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
 						</f:content>
 					</f:SimpleForm>
     </WizardStep>
     <!-- /Step 2 in Wizard/ -->
-    <WizardStep id="idRefAssign" title="Reference Assignments" validated="true" activate="onStep2Press">
+    <!-- <WizardStep id="idRefAssign" title="Reference Assignments" validated="true" activate="onStep2Press">
     <f:SimpleForm id="idRefNewAssign" editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="2" labelSpanM="2" labelSpanS="2"
 						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
@@ -54,10 +56,10 @@
                                 
                                 </HBox>
 							<Label text="Reference Characteristic Value" required="true"/>
-							<MultiInput id="idOldCharValue" editable="false" value="" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
+							<MultiInput id="idOldCharValue123" editable="false" value="" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
 						</f:content>
 					</f:SimpleForm>
-    </WizardStep>
+    </WizardStep> -->
     <!-- /Step 3 in Wizard/ -->
     <WizardStep id="idRefDetails" title="Reference Details" validated="true" activate="onStep3Press">
      <!-- <MessageStrip class="" text="If you want to add or delete values for the reference characteristic values, return to previous step." showIcon="true"/> -->
@@ -115,8 +117,8 @@
                                     <ColumnListItem>
                                         <cells>
                                             <Text text="{CHAR_VALUE}" />    
-                                            <Text text="{CHAR_NAME}" />
-                                             <Text text="{CHAR_DESC}" />
+                                            <Text text="{CHARVAL_NUM}" />
+                                             <Text text="{CHARVAL_DESC}" />
                                             <Input value="{WEIGHT}" liveChange="onInputChange" />
                                             <DatePicker id="STfromDate"  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange"/>
                                             <DatePicker id="STtoDate" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange" enabled="false"/>
