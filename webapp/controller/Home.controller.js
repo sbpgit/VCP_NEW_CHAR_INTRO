@@ -582,6 +582,13 @@ sap.ui.define([
                 // }
             },
             onCharValRep: function () {
+                var productSelected = that.byId("idConfProd").getValue();
+                if(productSelected){
+                    that.oGModel.setProperty("/selectedProduct",productSelected);
+                }
+                else{
+                    that.oGModel.setProperty("/selectedProduct",'') ;
+                }
                 var selectedProject = that.oGModel.getProperty("/selectedProject");
                 that.oGModel.setProperty("/charvalData", that.tabData);
                 that.oGModel.setProperty("/projectDetails", selectedProject);
