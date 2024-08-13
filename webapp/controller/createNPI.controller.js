@@ -856,8 +856,8 @@ sap.ui.define([
                             var sumarray = [], sum = 0;
                             var tabData = that.byId("idOldCharList").getItems();
                             for (var i = 0; i < tabData.length; i++) {
-                                if (tabData[i].getCells()[3].getValue() > 0) {
-                                    sumarray.push(Number(tabData[i].getCells()[3].getValue()));
+                                if (tabData[i].getCells()[2].getValue() > 0) {
+                                    sumarray.push(Number(tabData[i].getCells()[2].getValue()));
                                 }
                                 else {
                                     return MessageToast.show("One or More characteristics weights is zero");
@@ -1082,8 +1082,8 @@ sap.ui.define([
                 // sap.ui.getCore().byId("idValidTo").setMinDate(selectedDate);
                 // sap.ui.getCore().byId("idValidTo").setEnabled(true);
                 if (oEvent.getParameters().id.includes("STfromDate")) {
-                    oEvent.getSource().getParent().getCells()[5].setEnabled(true);
-                    oEvent.getSource().getParent().getCells()[5].setMinDate(selectedDate);
+                    oEvent.getSource().getParent().getCells()[4].setEnabled(true);
+                    oEvent.getSource().getParent().getCells()[4].setMinDate(selectedDate);
                     if (that.phaseInMin === "") {
                         that.phaseInMin = new Date(selectedDate);
                     } else {
@@ -1271,12 +1271,12 @@ sap.ui.define([
                             REF_PRODID: that.selectedConfigProduct,
                             CHAR_NUM: that.newCharNumSelected,
                             CHAR_VALUE: that.newCharValueSelected,
-                            CHARVALUE_DESC : that.newcharSelected,
+                            CHARVAL_DESC : that.newcharSelected,
                             REF_CHAR_VALUE: tableItemsStep3[j].getCells()[0].getText(),
-                            REF_CHARVALUE_DESC : tableItemsStep3[j].getCells()[2].getText(),
-                            WEIGHT: parseInt(tableItemsStep3[j].getCells()[3].getValue()),
-                            VALID_FROM: tableItemsStep3[j].getCells()[4].getDateValue(),
-                            VALID_TO: tableItemsStep3[j].getCells()[5].getDateValue(),
+                            REF_CHARVALUE_DESC : tableItemsStep3[j].getCells()[0].getTitle(),
+                            WEIGHT: parseInt(tableItemsStep3[j].getCells()[2].getValue()),
+                            VALID_FROM: tableItemsStep3[j].getCells()[3].getDateValue(),
+                            VALID_TO: tableItemsStep3[j].getCells()[4].getDateValue(),
                             DIMENSION: JSON.stringify(dimeArray)
                         }
                         finalArray.push(object);

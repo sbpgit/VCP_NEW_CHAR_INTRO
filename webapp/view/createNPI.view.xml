@@ -97,9 +97,9 @@
                                     <Column hAlign="Center" width="auto" vAlign="Middle" visible="false">
                                         <Text text="Ref Char Name " />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                    <!-- <Column hAlign="Center" width="auto" vAlign="Middle" >
                                         <Text text="Ref Char Value Desc" />
-                                    </Column>
+                                    </Column> -->
                                     <Column hAlign="Center" width="auto" vAlign="Middle" >
                                         <Text text="Weight in %" />
                                     </Column>
@@ -116,9 +116,9 @@
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                            <Text text="{CHAR_VALUE}" />    
+                                            <ObjectIdentifier title="{CHARVAL_DESC}" text="{CHAR_VALUE}" />    
                                             <Text text="{CHARVAL_NUM}" />
-                                             <Text text="{CHARVAL_DESC}" />
+                                             <!-- <Text text="{CHARVAL_DESC}" /> -->
                                             <Input value="{WEIGHT}" liveChange="onInputChange" />
                                             <DatePicker id="STfromDate"  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange"/>
                                             <DatePicker id="STtoDate" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange" enabled="false"/>

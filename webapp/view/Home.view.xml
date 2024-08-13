@@ -63,7 +63,7 @@
 		<IconTabFilter	text="Characteristic Value Replacement"	key="CVP">
 				<Table id="idOrderList" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
                               updateFinished="onTableUpdate" items="{path: '/configProdResults'}"  itemPress="onhandlePress"  
-                              mode="SingleSelectMaster"   selectionChange="onhandlePress" rememberSelections="false"> 
+                              mode="None"   selectionChange="onhandlePress" rememberSelections="false"> 
                               <headerToolbar>
 			                    <OverflowToolbar>
                                 <!-- <Title  text="Characteristic Value Replacement"></Title> -->
@@ -132,8 +132,8 @@
                                             <Text text= "{WEIGHT}" /> -->
                                             <!-- <Text text= "{ACTIVE}" /> -->
                                             <ObjectIdentifier title="{PROD_DESC}" text ="{REF_PRODID}"/>
-                                            <ObjectIdentifier title="" text ="{CHAR_VALUE}"/>
-                                            <ObjectIdentifier title="{REF_CHAR_DESC}" text ="{REF_CHAR_VALUE}"/>
+                                            <ObjectIdentifier title="{CHARVAL_DESC}" text ="{CHAR_VALUE}"/>
+                                            <ObjectIdentifier title="{REF_CHARVALUE_DESC}" text ="{REF_CHAR_VALUE}"/>
                                             <Text text= "{REF_CHAR_NAME}" />   
                                             <Text text= "{WEIGHT}"/>
                                             <Text text= "{path:'VALID_FROM', type:'sap.ui.model.type.Date', formatOptions : { pattern:'MM/dd/yyyy',style:'medium', UTC: false}}"/>
@@ -152,7 +152,7 @@
 		<IconTabFilter	text="Phase Out"	key="PhaseOutId">	
                 <Table id="idPhaseOutList" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
                               updateFinished="onTableUpdate" items="{path: '/phaseOutDet'}"  itemPress="onhandlePress"  
-                              mode="SingleSelectMaster"   selectionChange="onhandlePress" rememberSelections="false"> 
+                              mode="None"   selectionChange="onhandlePress" rememberSelections="false"> 
                               <headerToolbar>
 			                    <OverflowToolbar>
                                 <!-- <Title  text="Phase Out Details"></Title> -->
