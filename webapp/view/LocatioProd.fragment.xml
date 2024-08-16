@@ -1,6 +1,22 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<SelectDialog id="idLocSelect" title="Location" search="handleSearch" liveChange="handleSearch" rememberSelections="true"
+	<!-- <SelectDialog id="idLocSelect" title="Location" search="handleSearch" liveChange="handleSearch" rememberSelections="true"
 		confirm="handleLocSelection" cancel="handleCloseLoc" items="{/setLocation}" multiSelect="true" visible="false">
 		<StandardListItem title="{LOCATION_DESC}" description="{LOCATION_ID}" type="Active"/>
-	</SelectDialog>
+	</SelectDialog> -->
+	<TableSelectDialog id="idLocSelect" title="" search="handleSearch" liveChange="handleSearch" rememberSelections="true"
+		confirm="handleLocSelection" cancel="handleClose"
+		items="{/setLocation}" multiSelect="true" contentWidth="300px">
+			<columns>
+			<Column width="auto" hAlign="Center">
+				<header>
+					<Text text="Location" />
+				</header>
+			</Column>
+			</columns>
+			<ColumnListItem vAlign="Middle">
+			<cells>
+			<ObjectIdentifier title="{LOCATION_DESC}" text="{LOCATION_ID}" ></ObjectIdentifier>
+			</cells>
+			</ColumnListItem>
+		</TableSelectDialog>
 </core:FragmentDefinition>

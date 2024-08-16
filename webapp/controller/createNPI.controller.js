@@ -609,8 +609,8 @@ sap.ui.define([
                 selectedItem.forEach(function (oItem) {
                     that.oSource.addToken(
                         new sap.m.Token({
-                            key: oItem.getDescription(),
-                            text: oItem.getTitle(),
+                            key: oItem.getCells()[0].getText(),
+                            text: oItem.getCells()[0].getTitle(),
                             editable: false
                         })
                     );
@@ -623,8 +623,8 @@ sap.ui.define([
                 selectedItem.forEach(function (oItem) {
                     that.oSource.addToken(
                         new sap.m.Token({
-                            key: oItem.getDescription(),
-                            text: oItem.getTitle(),
+                            key: oItem.getCells()[0].getText(),
+                            text: oItem.getCells()[0].getTitle(),
                             editable: false
                         })
                     );
@@ -993,20 +993,20 @@ sap.ui.define([
                 var selectedDate = oEvent.getSource().getDateValue();
                 var Flag = that.oGModel.getProperty("/setDate");
                 if(Flag === "X"){
-                    var toDate = oEvent.getSource().getParent().getCells()[4].getDateValue();
+                    var toDate = oEvent.getSource().getParent().getCells()[3].getDateValue();
                     if(selectedDate > toDate){
-                        oEvent.getSource().getParent().getCells()[4].setMinDate(selectedDate);
-                        oEvent.getSource().getParent().getCells()[4].setDateValue(); 
+                        oEvent.getSource().getParent().getCells()[3].setMinDate(selectedDate);
+                        oEvent.getSource().getParent().getCells()[3].setDateValue(); 
                     }
                     else{
-                        oEvent.getSource().getParent().getCells()[4].setMinDate(selectedDate);                        
+                        oEvent.getSource().getParent().getCells()[3].setMinDate(selectedDate);                        
                     }
                     that.oGModel.setProperty("/setDate","");
                 }
                 else{
                 if (oEvent.getParameters().id.includes("STfromDate")) {
-                    oEvent.getSource().getParent().getCells()[4].setEnabled(true);
-                    oEvent.getSource().getParent().getCells()[4].setMinDate(selectedDate);
+                    oEvent.getSource().getParent().getCells()[3].setEnabled(true);
+                    oEvent.getSource().getParent().getCells()[3].setMinDate(selectedDate);
                     if (that.phaseInMin === "") {
                         that.phaseInMin = new Date(selectedDate);
                     } else {

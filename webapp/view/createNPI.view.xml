@@ -204,7 +204,7 @@
                                     change="onDateChange" maxDate="{HISTORY_CONSIDERATION}"/>
                                     </HBox>  
                                      <HBox>
-                                    <Label text="Phase-In Date :" class="dateClass"/>                                    
+                                    <Label text="Phase-In Start :" class="dateClass"/>                                    
                                     <DatePicker id="idPhaseInDate"  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" 
                                     change="onDateChange" />
                                     </HBox>    
