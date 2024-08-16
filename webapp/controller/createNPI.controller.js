@@ -287,7 +287,7 @@ sap.ui.define([
                 that.TemplateModel.setData({ setOldCharacteristics: filteredItems });
                 sap.ui.getCore().byId("idCharOldSelect").setModel(that.TemplateModel);
                 var selectedItemsTab = sap.ui.getCore().byId("idCharOldSelect").getItems();
-                selectedItemsTab.forEach(function(oItems){
+                selectedItemsTab.forEach(function (oItems) {
                     oItems.setSelected(false);
                 });
             },
@@ -376,13 +376,13 @@ sap.ui.define([
                 selectedItems.forEach(function (oItem) {
                     that.oldCharVal.addToken(
                         new sap.m.Token({
-                            key: oItem.getCells()[0].getTitle(),
-                            text: oItem.getCells()[0].getText(),
+                            key: oItem.getCells()[0].getText(),
+                            text: oItem.getCells()[0].getTitle(),
                             editable: false
                         })
                     );
                     that.intChars = {
-                        CHAR_VALUE:oItem.getCells()[0].getText(),
+                        CHAR_VALUE: oItem.getCells()[0].getText(),
                         CHARVAL_DESC: oItem.getCells()[0].getTitle(),
                         CHARVAL_NUM: oItem.getCells()[1].getText(),
                         WEIGHT: weightage.toFixed(2),
@@ -504,6 +504,7 @@ sap.ui.define([
             },
             /**On select of value help in table in step4*/
             handleValueHelpTable: function (oEvent) {
+                sap.ui.core.BusyIndicator.hide();
                 that.oSource = oEvent.getSource();
                 var table = that.byId("idDimenTable");
                 var selectedKey = oEvent.getSource().getEventingParent().getCells()[0].getText();
@@ -524,12 +525,15 @@ sap.ui.define([
                                 that.locDetails = oData1.results;
                                 that.locModel.setData({ setLocation: that.locDetails });
                                 sap.ui.getCore().byId("idLocSelect").setModel(that.locModel);
+                                sap.ui.core.BusyIndicator.hide();
                             }
                             else {
+                                sap.ui.core.BusyIndicator.hide();
                                 MessageToast.show("No Locations available")
                             }
                         },
                         error: function () {
+                            sap.ui.core.BusyIndicator.hide();
                             MessageToast.show("Failed to get Locations");
                         }
                     });
@@ -553,12 +557,15 @@ sap.ui.define([
                                 that.prods = oData1.results;
                                 that.prodModel.setData({ setProds: that.prods });
                                 sap.ui.getCore().byId("idProdSelect").setModel(that.prodModel);
+                                sap.ui.core.BusyIndicator.hide();
                             }
                             else {
+                                sap.ui.core.BusyIndicator.hide();
                                 MessageToast.show("No Products available")
                             }
                         },
                         error: function () {
+                            sap.ui.core.BusyIndicator.hide();
                             MessageToast.show("Failed to get products");
                         }
                     });
@@ -779,7 +786,7 @@ sap.ui.define([
                             sumarray.forEach(value => {
                                 sum += value;
                             });
-                            if (sum === 100 || sum === 99.99) {
+                            if (sum >= 99.95 && sum <= 100.05) {
                                 that._oWizard.nextStep();
                                 that._iNewSelectedIndex++
                                 oModel.setProperty("/nextButtonVisible", true);
@@ -931,6 +938,7 @@ sap.ui.define([
                                 }
                             });
                         }
+                        sap.ui.core.BusyIndicator.hide();
                         break;
                     default: break;
                 }
@@ -954,7 +962,7 @@ sap.ui.define([
                         that.step5Model.setData({ PhaseInList: [] });
                         that.byId("idPhaseInTab").setModel(that.step5Model);
                         that.byId("idPhaseInDate").setDateValue();
-                        that.byId("idHistoryDate").setDateValue();                        
+                        that.byId("idHistoryDate").setDateValue();
                         break;
 
                     case "Launch Dimension":
@@ -965,10 +973,14 @@ sap.ui.define([
                         that.byId("idOldDimen").removeAllTokens();
                         that.listMode.setData({ dimenList: [] });
                         that.byId("idDimenTable").setModel(that.listMode);
-                        sap.ui.getCore().byId("idLocSelect").clearSelection();
-                        sap.ui.getCore().byId("idProdSelect").clearSelection();
+                        // sap.ui.getCore().byId("idLocSelect").clearSelection();
+                        // sap.ui.getCore().byId("idProdSelect").clearSelection();
                         sap.ui.getCore().byId("idProdSelect").getBinding("items").filter([]);
                         sap.ui.getCore().byId("idLocSelect").getBinding("items").filter([]);
+                        that.prodModel.setData({ setProds: [] });
+                        sap.ui.getCore().byId("idProdSelect").setModel(that.prodModel);
+                        that.locModel.setData({ setLocation: [] });
+                        sap.ui.getCore().byId("idLocSelect").setModel(that.locModel);
                         break;
 
                     case "Reference Details":
@@ -992,38 +1004,38 @@ sap.ui.define([
             onFromDateChange: function (oEvent) {
                 var selectedDate = oEvent.getSource().getDateValue();
                 var Flag = that.oGModel.getProperty("/setDate");
-                if(Flag === "X"){
+                if (Flag === "X") {
                     var toDate = oEvent.getSource().getParent().getCells()[3].getDateValue();
-                    if(selectedDate > toDate){
+                    if (selectedDate > toDate) {
                         oEvent.getSource().getParent().getCells()[3].setMinDate(selectedDate);
-                        oEvent.getSource().getParent().getCells()[3].setDateValue(); 
+                        oEvent.getSource().getParent().getCells()[3].setDateValue();
                     }
-                    else{
-                        oEvent.getSource().getParent().getCells()[3].setMinDate(selectedDate);                        
+                    else {
+                        oEvent.getSource().getParent().getCells()[3].setMinDate(selectedDate);
                     }
-                    that.oGModel.setProperty("/setDate","");
+                    that.oGModel.setProperty("/setDate", "");
                 }
-                else{
-                if (oEvent.getParameters().id.includes("STfromDate")) {
-                    oEvent.getSource().getParent().getCells()[3].setEnabled(true);
-                    oEvent.getSource().getParent().getCells()[3].setMinDate(selectedDate);
-                    if (that.phaseInMin === "") {
-                        that.phaseInMin = new Date(selectedDate);
-                    } else {
-                        if (that.phaseInMin > new Date(selectedDate)) {
+                else {
+                    if (oEvent.getParameters().id.includes("STfromDate")) {
+                        oEvent.getSource().getParent().getCells()[3].setEnabled(true);
+                        oEvent.getSource().getParent().getCells()[3].setMinDate(selectedDate);
+                        if (that.phaseInMin === "") {
                             that.phaseInMin = new Date(selectedDate);
+                        } else {
+                            if (that.phaseInMin > new Date(selectedDate)) {
+                                that.phaseInMin = new Date(selectedDate);
+                            }
                         }
-                    }
-                } else {
-                    if (that.phaseInMax === "") {
-                        that.phaseInMax = new Date(selectedDate);
                     } else {
-                        if (that.phaseInMax > new Date(selectedDate)) {
+                        if (that.phaseInMax === "") {
                             that.phaseInMax = new Date(selectedDate);
+                        } else {
+                            if (that.phaseInMax > new Date(selectedDate)) {
+                                that.phaseInMax = new Date(selectedDate);
+                            }
                         }
                     }
                 }
-            }
             },
             /**On Ok press in PhaseInPhaseout Fragment */
             onPhasePress: function () {
@@ -1128,10 +1140,8 @@ sap.ui.define([
                 that.byId("idDimenTable").setModel(that.listMode);
                 that.prodModel.setData({ setProds: [] });
                 sap.ui.getCore().byId("idProdSelect").setModel(that.prodModel);
-                sap.ui.getCore().byId("idProdSelect").clearSelection();
                 that.locModel.setData({ setLocation: [] });
                 sap.ui.getCore().byId("idLocSelect").setModel(that.locModel);
-                sap.ui.getCore().byId("idLocSelect").clearSelection();
 
                 /**Clearing data in Step 5 */
                 that.byId("idPhaseInChar").setValue();
@@ -1141,7 +1151,7 @@ sap.ui.define([
                 that.step5Model.setData({ PhaseInList: [] });
                 that.byId("idPhaseInTab").setModel(that.step5Model);
                 that.byId("idPhaseInDate").setDateValue();
-                        that.byId("idHistoryDate").setDateValue();
+                that.byId("idHistoryDate").setDateValue();
             },
             /**On Input Change in RefCharVal fragment to support only numerics */
             onInputChange: function (oEvent) {
@@ -1268,34 +1278,34 @@ sap.ui.define([
             },
 
             /**On Change of Date Range in Step Reference Details */
-            onDateRangeSelection: function(oEvent){
+            onDateRangeSelection: function (oEvent) {
                 var FromDate = oEvent.getSource().getFrom();
                 var ToDate = oEvent.getSource().getTo();
                 var items = that.byId("idOldCharList").getItems();
-                that.oGModel.setProperty("/setDate","X");
-                for(var k=0;k<items.length;k++){
-                items[k].getCells()[2].setDateValue(FromDate);
-                items[k].getCells()[3].setMinDate(FromDate);
-                items[k].getCells()[3].setDateValue(ToDate);
-                items[k].getCells()[3].setEnabled(true);
+                that.oGModel.setProperty("/setDate", "X");
+                for (var k = 0; k < items.length; k++) {
+                    items[k].getCells()[2].setDateValue(FromDate);
+                    items[k].getCells()[3].setMinDate(FromDate);
+                    items[k].getCells()[3].setDateValue(ToDate);
+                    items[k].getCells()[3].setEnabled(true);
                 }
             },
 
             /**On Change of History Consideration/phase-in Date in Step4 */
-            onDateChange:function(oEvent){
+            onDateChange: function (oEvent) {
                 var selectedDate = oEvent.getSource().getDateValue();
                 var sID = oEvent.getSource().sId;
                 var tabItems = that.byId("idPhaseInTab").getItems();
-                if(sID.includes("HistoryDate")){                
-                for(var s=0;s<tabItems.length;s++){
-                    tabItems[s].getCells()[4].setDateValue(selectedDate); 
+                if (sID.includes("HistoryDate")) {
+                    for (var s = 0; s < tabItems.length; s++) {
+                        tabItems[s].getCells()[4].setDateValue(selectedDate);
+                    }
                 }
-            }
-            else{
-                for(var s=0;s<tabItems.length;s++){
-                    tabItems[s].getCells()[5].setDateValue(selectedDate); 
+                else {
+                    for (var s = 0; s < tabItems.length; s++) {
+                        tabItems[s].getCells()[5].setDateValue(selectedDate);
+                    }
                 }
-            }
             }
         });
     });
