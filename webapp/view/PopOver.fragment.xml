@@ -8,18 +8,13 @@
 		placement="Bottom"
 		initialFocus="idSaveAs">
 		<List id="idList" mode="SingleSelectMaster" selectionChange="handleSelectPress" showSeparators="None" rememberSelections="false">
-		 <!-- <StandardListItem type="Active" 
-			title="Maintain Project Details"
-			/> -->
+		
 		<StandardListItem type="Active" 
 			title="Characteristic Value Replacement"
 			/>
 			 <StandardListItem type="Active" 
 			title="Phase-Out"
 			/>
-		<!-- <StandardListItem type="Active" 
-			title="Multiple Product Assignments"
-			/>                     -->
 	</List>
 	</Popover>
 </core:FragmentDefinition>

@@ -20,7 +20,6 @@ sap.ui.define([
         return BaseController.extend("vcpapp.vcpnpicharvalue.controller.MaintainProject", {
             onInit: function () {
                 that = this;
-                // that.oGModel = this.getOwnerComponent().getModel("oGModel");
                 that.projModel = new JSONModel();
                 that.projModel.setSizeLimit(1000);
                 that.projDetModel = new JSONModel();
@@ -30,19 +29,9 @@ sap.ui.define([
             },
             _onPatternMatched: function () {
                 that.oGModel.setProperty("/SelectedFlag", '');
-                // var params1 = that.getOwnerComponent().oComponentData.startupParameters;
-                // that.oGModel = this.getOwnerComponent().getModel("oGModel");
-                // if (params1.PRODUCT_ID && params1.PROJECT_ID) {
-                //     that.oGModel.setProperty("/selectedProduct", params1.PRODUCT_ID[0]);
-                //     that.oGModel.setProperty("/selectedProject", params1.PROJECT_ID[0]);
-                //     that.oGModel.setProperty("/SelectedFlag", params1.Flag[0]);
-                //     if (params1.Flag[0] === "Y") {
-                //         that.onNPIPress();
-                //     }
-                // }
             },
             onAfterRendering: function () {
-                that.mainArray=[];
+                that.mainArray = [];
                 that.oGModel = this.getOwnerComponent().getModel("oGModel");
                 that.byId("idMPD").removeSelections();
                 var vUser = this.getUser();
@@ -69,12 +58,10 @@ sap.ui.define([
                             that.tabProjDe = oData.results;
                             that.tabProjDe.forEach(function (oItem) {
                                 if (oItem.PROJ_STATUS === true) {
-                                    // oItem.PROJ_STATUS = "Active";
                                     oItem.STATE = false;
                                     oItem.SWITCH = true;
                                 }
                                 else {
-                                    // oItem.PROJ_STATUS = "InActive";
                                     oItem.STATE = true;
                                     oItem.SWITCH = false;
                                 }
@@ -188,8 +175,8 @@ sap.ui.define([
                 }
             },
 
-             /**On click of save MultiProjectDetails */
-             onProjSave: function (oEvent) {
+            /**On click of save MultiProjectDetails */
+            onProjSave: function (oEvent) {
                 sap.ui.core.BusyIndicator.show();
                 var object = {}, finalArray = [];
                 var projID = sap.ui.getCore().byId("idProjID").getValue();
@@ -197,7 +184,6 @@ sap.ui.define([
                 var releaseDate = null;
                 var projStatus = sap.ui.getCore().byId("idSwitchState").getState();
                 var Date1 = new Date();
- 
                 object = {
                     USER: that.oGModel.getProperty("/User"),
                     PROJECT_ID: projID,
@@ -211,18 +197,18 @@ sap.ui.define([
                     method: "GET",
                     urlParameters: {
                         NEWPROJDET: JSON.stringify(finalArray),
-                        FLAG:'C'
+                        FLAG: 'C'
                     },
                     success: function (oData) {
-                        if(oData.saveProjDetails.includes("Successfully")){
-                        MessageToast.show("Project Saved Successfully");
-                        that.onProjCancel();
-                        that.onAfterRendering();
+                        if (oData.saveProjDetails.includes("Successfully")) {
+                            MessageToast.show("Project Saved Successfully");
+                            that.onProjCancel();
+                            that.onAfterRendering();
                         }
-                        else{
+                        else {
                             MessageToast.show("Error while saving project.")
                         }
-                       
+
                         sap.ui.core.BusyIndicator.hide();
                     },
                     error: function () {
@@ -241,7 +227,6 @@ sap.ui.define([
                     var projDetails = oEvent.getSource().getParent().getBindingContext().getObject().PROJECT_DET;
                     var projStatus = true;
                     var releaseDate = new Date();
-
                     object1 = {
                         USER: that.oGModel.getProperty("/User"),
                         PROJECT_ID: projID,
@@ -255,11 +240,10 @@ sap.ui.define([
                         method: "GET",
                         urlParameters: {
                             NEWPROJDET: JSON.stringify(finalArray1),
-                            FLAG:'U'
+                            FLAG: 'U'
                         },
                         success: function (oData) {
                             MessageToast.show(oData.saveProjDetails);
-                            // that.onProjCancel();
                             that.onAfterRendering();
                             sap.ui.core.BusyIndicator.hide();
                         },
@@ -389,15 +373,15 @@ sap.ui.define([
                 that.onButtonClose();
             },
             /**On Press of Update in Maintain Projects page */
-            onSaveChanges:function(){
-                var maintain=[];
-                sap.ui.core.BusyIndicator.show();    
-                if(that.mainArray.length>0){
+            onSaveChanges: function () {
+                var maintain = [];
+                sap.ui.core.BusyIndicator.show();
+                if (that.mainArray.length > 0) {
                     this.getOwnerComponent().getModel("BModel").callFunction("/saveProjDetails", {
                         method: "GET",
                         urlParameters: {
                             NEWPROJDET: JSON.stringify(that.mainArray),
-                            FLAG:'X'
+                            FLAG: 'X'
                         },
                         success: function (oData) {
                             sap.ui.core.BusyIndicator.hide();
@@ -410,24 +394,24 @@ sap.ui.define([
                         },
                     });
                 }
-                else{
+                else {
                     sap.ui.core.BusyIndicator.hide();
                     MessageToast.show("No changes made.");
                 }
             },
-            onInputPress:function(oEvent){
+            onInputPress: function (oEvent) {
                 var path = oEvent.getSource().getBindingContext().getPath();
                 var Data = that.byId("idMPD").getModel().getProperty(path);
-                var index = that.mainArray.findIndex(a=>a.PROJECT_ID === Data.PROJECT_ID);
+                var index = that.mainArray.findIndex(a => a.PROJECT_ID === Data.PROJECT_ID);
                 var date1 = new Date();
                 if (index === -1) {
                     var newObject = {
-                       USER: that.oGModel.getProperty("/User"),
+                        USER: that.oGModel.getProperty("/User"),
                         PROJECT_ID: Data.PROJECT_ID,
-                        PROJECT_DET :oEvent.getParameters("value").value,
+                        PROJECT_DET: oEvent.getParameters("value").value,
                         PROJ_STATUS: Data.PROJ_STATUS,
                         RELEASE_DATE: Data.RELEASE_DATE,
-                        SWITCH : Data.SWITCH,
+                        SWITCH: Data.SWITCH,
                         CHANGED_DATE: date1
                     }
                     that.mainArray.push(newObject);
@@ -437,23 +421,23 @@ sap.ui.define([
                 }
             },
             /**On Press of delete in Maintain Project Details Pages */
-            onDeleteProjectPress:function(oEvent){
+            onDeleteProjectPress: function (oEvent) {
                 sap.ui.core.BusyIndicator.show();
                 var selectedProject = oEvent.getSource().getBindingContext().getObject().PROJECT_ID;
                 this.getOwnerComponent().getModel("BModel").callFunction("/saveProjDetails", {
                     method: "GET",
                     urlParameters: {
                         NEWPROJDET: JSON.stringify(selectedProject),
-                        FLAG:'D'
+                        FLAG: 'D'
                     },
                     success: function (oData) {
                         sap.ui.core.BusyIndicator.hide();
-                        if(oData.saveProjDetails.includes("Successfully")){
+                        if (oData.saveProjDetails.includes("Successfully")) {
                             MessageToast.show("Project deleted.");
-                            }
-                            else{
-                                MessageToast.show("Error while deleting Project.")
-                            }
+                        }
+                        else {
+                            MessageToast.show("Error while deleting Project.")
+                        }
                         that.onAfterRendering();
                     },
                     error: function () {

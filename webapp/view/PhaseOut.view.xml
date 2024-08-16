@@ -40,7 +40,6 @@
 							<MultiInput id="idOldDimenPhase" value="" editable="false" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
                         </f:content>
 					</f:SimpleForm>
-                    <!-- <MessageStrip class="" text="The system automatically takes over the launch dimensions that has been selected for the old Characteristic." showIcon="true"/> -->
                     <Table id="idDimenTablePhase" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
                               updateFinished="onDimeTabFinish" 
                               mode="None"    rememberSelections="false" items="{path:'/dimenListPhase'}" >
@@ -69,7 +68,6 @@
     <f:SimpleForm id="idPhaseOut" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
 						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
-                        <!-- <Text text="If yout want to add or delete dimension values, return to the previous step." id="textId"/> -->
 						<f:content>
 							<Label text="Configurable Product" required="false"/>
 							<Input id="idPhaseOutProd" value="" placeholder="" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp"
@@ -84,8 +82,6 @@
                             <headerToolbar>
 			                    <OverflowToolbar>
 				                    <ToolbarSpacer/>
-				                    <!-- <Button id="idEditBtn" text="Edit" press="onEditPhaseOutPressed" tooltip="Edit" enabled="false">
-                                    </Button> -->
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
@@ -104,9 +100,6 @@
                                     <Column hAlign="Center" width="auto" vAlign="Middle" >
                                         <Text text="Phase-Out Date" />
                                     </Column> 
-                                     <!-- <Column hAlign="Center" width="auto" vAlign="Middle" >
-                                        <Text text="Phase-Out End" />
-                                    </Column>                           -->
                                 </columns>
                                 <items>
                                     <ColumnListItem>
@@ -116,7 +109,7 @@
                                             <Text text="{PROD_ID}"/>
                                             <Text text="{PROD_DESC}" />
                                            <DatePicker displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" />
-                                           <!-- <DatePicker displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" /> -->
+                                          
                                         </cells>
                                     </ColumnListItem>
                                 </items>
@@ -127,8 +120,7 @@
             <OverflowToolbar>
 					<ToolbarSpacer/>
 					<Button text="Previous Step" visible="{/backButtonVisible}" press="onDialogBackButton1" />
-					<Button text="Next Step" type="Emphasized" enabled="{/nextButtonEnabled}" visible="{/nextButtonVisible}" press="onDialogNextButton1" />
-					<!-- <Button text="Review" type="Emphasized" visible="{/reviewButtonVisible}" press="onDialogNextButton" /> -->
+					<Button text="Next Step" type="Emphasized" enabled="{/nextButtonEnabled}" visible="{/nextButtonVisible}" press="onDialogNextButton1" />		
 					<Button text="Finish" type="Emphasized" visible="{/finishButtonVisible}" press="handleWizardSubmit1" />
 					<Button	text="Cancel" type="Transparent" press="handleWizardCancel1"/>
 				</OverflowToolbar>

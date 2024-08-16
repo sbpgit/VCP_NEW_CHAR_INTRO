@@ -43,6 +43,7 @@ sap.ui.define([
             },
 
             onAfterRendering: function () {
+                that.selectedProdID='';
                 var oFilters=[];
                 if (!this._valueHelpDialogProd) {
                     this._valueHelpDialogProd = sap.ui.xmlfragment(
@@ -119,7 +120,8 @@ sap.ui.define([
             onGetData: function () {
                 that.mainArray = [];
                 
-                var selectedProd = that.byId("idConfigProd").getValue();
+                // var selectedProd = that.byId("idConfigProd").getValue();
+                var selectedProd = that.selectedProdID;
                 var selectedProj = that.proj;
                 
                 if (selectedProj) {
@@ -220,6 +222,7 @@ sap.ui.define([
             /**On Selection of config product in prod dialog */
             handleSelection: function (oEvent) {
                 var selectedItem = oEvent.getParameters().selectedItems[0].getTitle();
+                that.selectedProdID = oEvent.getParameters().selectedItems[0].getDescription();
                 that.byId("idConfigProd").setValue(selectedItem);
                 sap.ui.getCore().byId("prodSlctListOD").getBinding("items").filter([]);
                 sap.ui.getCore().byId("prodSlctListOD").clearSelection();

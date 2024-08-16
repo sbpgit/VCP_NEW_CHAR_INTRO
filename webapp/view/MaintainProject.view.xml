@@ -20,10 +20,7 @@
                                 <OverflowToolbar>
                                 <SearchField id="newProjSearch" search="oHomesearch" liveChange="oHomesearch" width="50vh" placeholder="Project ID/Project Description" />
                                     <ToolbarSpacer/>
-                                    <!-- <Button text="NPI Project Details" press="onNPIPress" enabled="true"/> -->
-                                    <Button text = "Create NPI Project" press="onPressCreate" enabled="true"/>
-                                    <!-- <Button text="Edit" id="idEdit" press="onEditPress" enabled="true"/> -->
-                                   
+                                    <Button text = "Create NPI Project" press="onPressCreate" enabled="true"/>                                   
                                 </OverflowToolbar>
                               </headerToolbar>                            
                                 <columns>

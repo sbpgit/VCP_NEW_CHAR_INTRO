@@ -1,6 +1,29 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<SelectDialog id="idCharOldSelect" title="Characteristic Values" search="handleCharSearch" liveChange="handleCharSearch" rememberSelections="true"
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" header="false">
+	<!-- <SelectDialog id="idCharOldSelect" title="Characteristic Values" search="handleCharSearch" liveChange="handleCharSearch" rememberSelections="true"
 		confirm="handleOldCharSelection" cancel="handleClose" items="{/setOldCharacteristics}" multiSelect="true">
 		<StandardListItem title="{CHARVAL_DESC}" description="{CHAR_VALUE}" info="{CHARVAL_NUM}" type="Active"/>
-	</SelectDialog>
+	</SelectDialog> -->
+	<TableSelectDialog id="idCharOldSelect" title="" search="handleCharSearch" liveChange="handleCharSearch" rememberSelections="true"
+		confirm="handleOldCharSelection" cancel="handleClose"
+		items="{/setOldCharacteristics}" multiSelect="true" contentWidth="300px">
+		<!-- <StandardListItem title="{CHARVAL_DESC}" description="{CHAR_VALUE}" info="{CHARVAL_NUM}" type="Active"/> -->
+			<columns>
+			<Column width="60%" hAlign="Left">
+				<header>
+					<Text text="Characteristic Values" />
+				</header>
+			</Column>
+			<Column width="40%" hAlign="Left">
+				<header>
+					<Text text="" />
+				</header>
+			</Column>
+			</columns>
+			<ColumnListItem vAlign="Middle">
+			<cells>
+			<ObjectIdentifier title="{CHARVAL_DESC}" text="{CHAR_VALUE}" ></ObjectIdentifier>
+			<ObjectIdentifier  text="{CHARVAL_NUM}" ></ObjectIdentifier>
+			</cells>
+			</ColumnListItem>
+		</TableSelectDialog>
 </core:FragmentDefinition>

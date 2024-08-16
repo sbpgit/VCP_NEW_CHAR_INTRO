@@ -1,0 +1,36 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<TableSelectDialog id="idDimensions" title="Dimensions" search="handleCharSearch" liveChange="handleCharSearch" rememberSelections="false"
+		confirm="" cancel="handleClose" 
+		items="{/setDimensions}" multiSelect="false" contentWidth="700px" contentHeight="auto">
+			<columns>
+			<Column width="auto" hAlign="Center">
+				<header>
+					<Text text="Location" />
+				</header>
+			</Column>
+			<Column width="auto" hAlign="Center">
+				<header>
+					<Text text="Product" />
+				</header>
+			</Column>
+            <Column width="30%" hAlign="Center">
+				<header>
+					<Text text="History Consideration Date" />
+				</header>
+			</Column>
+            <Column width="auto" hAlign="Center">
+				<header>
+					<Text text="Phase-In Start Date" />
+				</header>
+			</Column>
+			</columns>
+			<ColumnListItem vAlign="Middle">
+			<cells>
+			<ObjectIdentifier title="{LOCATION_DESC}" text="{LOCATION_ID}" ></ObjectIdentifier>
+			<ObjectIdentifier title="{PRODUCT_DESC}" text="{PRODUCT_ID}" ></ObjectIdentifier>
+            <Text text= "{path:'HISTORY_DATE', type:'sap.ui.model.type.Date', formatOptions : { pattern:'MM/dd/yyyy',style:'medium', UTC: false}}" />
+			<Text text= "{path:'PHASE_IN_START', type:'sap.ui.model.type.Date', formatOptions : { pattern:'MM/dd/yyyy',style:'medium', UTC: false}}" />
+            </cells>
+			</ColumnListItem>
+		</TableSelectDialog>
+</core:FragmentDefinition>

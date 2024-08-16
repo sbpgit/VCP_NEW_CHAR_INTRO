@@ -65,8 +65,6 @@ sap.ui.define([
                 that.oldCharVal = that.byId("idOldCharValue");
                 that.selectedProject = that.oGModel.getProperty("/projectDetails");
                 that.selectedProduct = that.oGModel.getProperty("/selectedProduct");
-                // that.totalTabData = that.oGModel.getProperty("/charvalData");
-                // that.byId("ConfigProd").setText(that.selectedConfigProduct);
                 that.phaseInMin = new Date();
                 that.phaseInMax = new Date();
                 this._oCore = sap.ui.getCore();
@@ -120,9 +118,6 @@ sap.ui.define([
                     );
                     this.getView().addDependent(this._valueHelpCharName);
                 }
-
-                // sap.ui.getCore().byId("idList").removeSelections();
-
                 if (that.selectedProject === undefined || that.selectedProject === "" || that.selectedProject === null) {
                     if (this._valueHelpDialogProd) {
                         that._valueHelpDialogProd.destroy(true);
@@ -138,81 +133,49 @@ sap.ui.define([
                             sap.ui.core.BusyIndicator.hide();
                             that.prodModel1.setData({ configProdRes: oData.results });
                             sap.ui.getCore().byId("prodSlctListOD").setModel(that.prodModel1);
-                            if(that.selectedProduct){
+                            if (that.selectedProduct) {
                                 that.byId("ConfigProd").setValue(that.selectedProduct);
-                            
-                            that.getOwnerComponent().getModel("BModel").read("/getCharType", {
-                                filters: [
-                                    new Filter(
-                                        "PRODUCT_ID",
-                                        FilterOperator.EQ,
-                                        that.selectedProduct
-                                    ),
-                                    new Filter(
-                                        "CHAR_TYPE",
-                                        FilterOperator.EQ,
-                                        "CHAR"
-                                    ),
-                                ],
-                                success: function (oData1) {
-                                    sap.ui.core.BusyIndicator.hide()
-                                    if (oData1.results.length > 0) {
-                                        that.newChars = [];
-                                        that.newChars = oData1.results;
-                                        var charNames = that.removeDuplicate(oData1.results, 'CHAR_NAME');
-                                        that.charModel.setData({ setCharacteristicNames: charNames });
-                                        sap.ui.getCore().byId("idCharNameSelect").setModel(that.charModel);
-                                        that.byId("idCharName").setEnabled(true);
+
+                                that.getOwnerComponent().getModel("BModel").read("/getCharType", {
+                                    filters: [
+                                        new Filter(
+                                            "PRODUCT_ID",
+                                            FilterOperator.EQ,
+                                            that.selectedProduct
+                                        ),
+                                        new Filter(
+                                            "CHAR_TYPE",
+                                            FilterOperator.EQ,
+                                            "CHAR"
+                                        ),
+                                    ],
+                                    success: function (oData1) {
+                                        if (oData1.results.length > 0) {
+                                            that.newChars = [];
+                                            that.newChars = oData1.results;
+                                            var charNames = that.removeDuplicate(oData1.results, 'CHAR_NAME');
+                                            that.charModel.setData({ setCharacteristicNames: charNames });
+                                            sap.ui.getCore().byId("idCharNameSelect").setModel(that.charModel);
+                                            that.byId("idCharName").setEnabled(true);
+                                            sap.ui.core.BusyIndicator.hide()
+                                        }
+                                        else {
+                                            sap.ui.core.BusyIndicator.hide()
+                                            MessageToast.show("No Characteristcs available for this product.")
+                                        }
+                                    },
+                                    error: function () {
+                                        sap.ui.core.BusyIndicator.hide();
+                                        MessageToast.show("Failed to get characteristics");
                                     }
-                                    else {
-                                        MessageToast.show("No Characteristcs available for this product.")
-                                    }
-                                    // sap.ui.core.BusyIndicator.hide();
-                                },
-                                error: function () {
-                                    sap.ui.core.BusyIndicator.hide();
-                                    MessageToast.show("Failed to get characteristics");
-                                }
-                            });
-                        }
+                                });
+                            }
                         },
                         error: function () {
                             sap.ui.core.BusyIndicator.hide();
                             MessageToast.show("Failed to get configurable products");
                         },
                     });
-                    // this.getOwnerComponent().getModel("BModel").read("/getCharType", {
-                    //     filters: [
-                    //         new Filter(
-                    //             "PRODUCT_ID",
-                    //             FilterOperator.EQ,
-                    //             that.selectedConfigProduct
-                    //         ),
-                    //         new Filter(
-                    //             "CHAR_TYPE",
-                    //             FilterOperator.EQ,
-                    //             "CHAR"
-                    //         ),
-                    //     ],
-                    //     success: function (oData1) {
-                    //         if (oData1.results.length > 0) {
-                    //             that.newChars = [];
-                    //             that.newChars = oData1.results;
-                    //             var charNames = that.removeDuplicate(oData1.results, 'CHAR_NAME');
-                    //             that.charModel.setData({ setCharacteristicNames: charNames });
-                    //             sap.ui.getCore().byId("idCharNameSelect").setModel(that.charModel);
-                    //         }
-                    //         else {
-                    //             MessageToast.show("No Characteristcs available for this product.")
-                    //         }
-                    //         sap.ui.core.BusyIndicator.hide();
-                    //     },
-                    //     error: function () {
-                    //         sap.ui.core.BusyIndicator.hide();
-                    //         MessageToast.show("Failed to get characteristics");
-                    //     }
-                    // });
-
                     var oModel = new JSONModel(),
                         oInitialModelState = Object.assign({}, oData);
                     oModel.setData(oInitialModelState);
@@ -293,7 +256,7 @@ sap.ui.define([
                 that.oldCharVal.removeAllTokens();
                 that.TemplateModel.setData({ setOldCharacteristics: [] });
                 sap.ui.getCore().byId("idCharOldSelect").setModel(that.TemplateModel);
-                sap.ui.getCore().byId("idCharOldSelect").clearSelection();
+                // sap.ui.getCore().byId("idCharOldSelect").clearSelection();
                 var selectedItem = oEvent.getParameters().selectedItem.getDescription();
                 that.newCharValueSelected = selectedItem;
                 var selectedID = oEvent.getParameters().selectedItem.getTitle();
@@ -309,15 +272,6 @@ sap.ui.define([
                 if (selectedItemsCount.length > 0) {
                     var filteredItems1 = that.getUnqiueChars(that.allCharacterstics, selectedItemsCount, "CHAR_NUM", "CHAR_VALUE", "CHAR_NUM", "CHAR_VALUE");
                     filteredItems1 = filteredItems1.filter(item => item.CHAR_VALUE !== selectedItem && item.CHAR_NUM === that.newCharNumSelected && item.CLASS_NUM === that.selectedClassNum);
-                    // filteredItems = that.getUnqiueChars(filteredItems, that.totalTabData, "CHAR_NUM", "CHAR_VALUE", "CHAR_NUM", "REF_CHAR_VALUE");
-                    // function  removeObjects(array1, array2, prop1Array1, prop1Array2, prop2Array1, prop2Array2){
-                    //     return array1.filter(obj1 => {
-                    //         return !array2.some(obj2 => obj1[prop1Array1] === obj2[prop1Array2] && obj1[prop2Array1] === obj2[prop2Array2]);
-                    //     });
-                    // };
-
-                    // // Remove objects from array1 where both name and age match any object in array2
-                    // var filteredItems = removeObjects(filteredItems1, that.totalTabData, "CHAR_NUM", "CHAR_NUM", "CHAR_VALUE", "REF_CHAR_VALUE");
                     for (var i = 0; i < selectedItemsCount.length; i++) {
                         for (var k = 0; k < filteredItems1.length; k++) {
                             if (selectedItemsCount[i].CHAR_VALUE === selectedItem && selectedItemsCount[i].REF_CHAR_VALUE === filteredItems1[k].CHAR_VALUE) {
@@ -332,7 +286,10 @@ sap.ui.define([
                 }
                 that.TemplateModel.setData({ setOldCharacteristics: filteredItems });
                 sap.ui.getCore().byId("idCharOldSelect").setModel(that.TemplateModel);
-
+                var selectedItemsTab = sap.ui.getCore().byId("idCharOldSelect").getItems();
+                selectedItemsTab.forEach(function(oItems){
+                    oItems.setSelected(false);
+                });
             },
 
             /**On Selection of config product in prod dialog */
@@ -349,15 +306,12 @@ sap.ui.define([
                 that.selectedConfigProduct = selectedItem;
                 sap.ui.getCore().byId("prodSlctListOD").getBinding("items").filter([]);
                 var tableProjectData = that.oGModel.getProperty("/charvalData");
-
-
                 if (tableProjectData.length > 0) {
                     that.totalTabData = tableProjectData.filter(item => item.REF_PRODID === selectedItem && item.PROJECT_ID === that.selectedProject);
                 }
                 else {
                     that.totalTabData = [];
                 }
-
                 sap.ui.core.BusyIndicator.show()
                 this.getOwnerComponent().getModel("BModel").read("/getCharType", {
                     filters: [
@@ -373,18 +327,18 @@ sap.ui.define([
                         ),
                     ],
                     success: function (oData1) {
-                        sap.ui.core.BusyIndicator.hide()
                         if (oData1.results.length > 0) {
                             that.newChars = [];
                             that.newChars = oData1.results;
                             var charNames = that.removeDuplicate(oData1.results, 'CHAR_NAME');
                             that.charModel.setData({ setCharacteristicNames: charNames });
                             sap.ui.getCore().byId("idCharNameSelect").setModel(that.charModel);
+                            sap.ui.core.BusyIndicator.hide()
                         }
                         else {
+                            sap.ui.core.BusyIndicator.hide()
                             MessageToast.show("No Characteristcs available for this product.")
                         }
-                        // sap.ui.core.BusyIndicator.hide();
                     },
                     error: function () {
                         sap.ui.core.BusyIndicator.hide();
@@ -402,24 +356,40 @@ sap.ui.define([
                 sap.ui.getCore().byId("idCharOldSelect").getBinding("items").filter([]);
                 var selectedItems = oEvent.getParameters().selectedItems;
                 var weightage = 100 / selectedItems.length;
+                // selectedItems.forEach(function (oItem) {
+                //     that.oldCharVal.addToken(
+                //         new sap.m.Token({
+                //             key: oItem.getTitle(),
+                //             text: oItem.getTitle(),
+                //             editable: false
+                //         })
+                //     );
+                //     that.intChars = {
+                //         CHAR_VALUE: oItem.getDescription(),
+                //         CHARVAL_DESC: oItem.getTitle(),
+                //         CHARVAL_NUM: oItem.getInfo(),
+                //         WEIGHT: weightage.toFixed(2),
+                //         STATUS: "Active"
+                //     }
+                //     that.charsSelected.push(that.intChars);
+                // });
                 selectedItems.forEach(function (oItem) {
                     that.oldCharVal.addToken(
                         new sap.m.Token({
-                            key: oItem.getTitle(),
-                            text: oItem.getTitle(),
+                            key: oItem.getCells()[0].getTitle(),
+                            text: oItem.getCells()[0].getText(),
                             editable: false
                         })
                     );
                     that.intChars = {
-                        CHAR_VALUE: oItem.getDescription(),
-                        CHARVAL_DESC: oItem.getTitle(),
-                        CHARVAL_NUM: oItem.getInfo(),
+                        CHAR_VALUE:oItem.getCells()[0].getText(),
+                        CHARVAL_DESC: oItem.getCells()[0].getTitle(),
+                        CHARVAL_NUM: oItem.getCells()[1].getText(),
                         WEIGHT: weightage.toFixed(2),
                         STATUS: "Active"
                     }
                     that.charsSelected.push(that.intChars);
                 });
-                // that.byId("idRefAssign").setValidated(true);
             },
             /**Search in CHaracteristic Fragments */
             handleCharSearch: function (oEvent) {
@@ -464,7 +434,7 @@ sap.ui.define([
                                 filters: [
                                     new Filter("CHAR_NAME", FilterOperator.Contains, sQuery),
                                     new Filter("CHAR_VALUE", FilterOperator.Contains, sQuery),
-                                    new Filter("CHAR_DESC", FilterOperator.Contains, sQuery)
+                                    new Filter("CHARVAL_DESC", FilterOperator.Contains, sQuery)
                                 ],
                                 and: false,
                             })
@@ -479,6 +449,7 @@ sap.ui.define([
                 that.byId("idste3Text").setText(that.selectedCharName);
                 that.byId("ConfigProd2").setText(that.selectedConfigProduct);
                 that.byId("STfromDate").setMinDate(new Date());
+                that.byId("idDateRange").setMinDate(new Date());
                 that.tokens = that.byId("idOldCharValue").getTokens();
                 that.byId("idOldChar").removeAllTokens();
                 that.tokens.forEach(function (oItem) {
@@ -493,46 +464,10 @@ sap.ui.define([
                 that.etModel.setData({ charList: that.charsSelected });
                 that.byId("idOldCharList").setModel(that.etModel);
             },
-            /**On Edit pressed in step 3 */
-            // onEditPressed: function () {
-            //     var selectedItems = that.byId("idOldCharList").getSelectedItems();
-            //     if (selectedItems.length === 1) {
-            //         var selectedCharName = selectedItems[0].getCells()[0].getText();
-            //         var selectedCHarDesc = selectedItems[0].getCells()[1].getText();
-            //         var selectedWeight = selectedItems[0].getCells()[3].getText();
-            //         var selectedValidFrom = selectedItems[0].getCells()[4].getText();
-            //         var selectedValidTo = selectedItems[0].getCells()[5].getText();
-            //         var selectedOffset = selectedItems[0].getCells()[6].getText();
-            //         var selectedStatus = selectedItems[0].getCells()[7].getText();
-            //         if (selectedStatus === "Active") {
-            //             sap.ui.getCore().byId("idSwitchBtn").setState(true);
-            //         }
-            //         else {
-            //             sap.ui.getCore().byId("idSwitchBtn").setState(false);
-            //         }
-            //         sap.ui.getCore().byId("idRefText").setValue(selectedCharName);
-            //         sap.ui.getCore().byId("idRefDesc").setValue(selectedCHarDesc);
-            //         sap.ui.getCore().byId("idWeight").setValue(selectedWeight);
-            //         sap.ui.getCore().byId("idValidFrom").setValue(selectedValidFrom);
-            //         sap.ui.getCore().byId("idValidTo").setValue(selectedValidTo);
-            //         sap.ui.getCore().byId("idOffser").setValue(selectedOffset);
-            //         sap.ui.getCore().byId("idOffser").setValueState("None");
-            //         that._valueHelpDialogRefCharval.open();
-            //     }
-            //     else {
-            //         MessageToast.show("Please select only one Item");
-            //     }
-            // },
+
             /**ON Press of Cancel in Ref CharValue Fragment */
             onRefCancel: function () {
                 that._valueHelpDialogRefCharval.close();
-            },
-            /**On Press of Step2 */
-            onStep2Press: function () {
-                that.byId("ConfigProd1").setText(that.selectedConfigProduct);
-                that.byId("idCharValue1").setValue(that.newCharValDescSelected);
-                that.byId("idCharValText1").setText(that.selectedCharName);
-
             },
             /**On Press of multi select in Table step3 */
             onhandlePress: function (oEvent) {
@@ -545,61 +480,9 @@ sap.ui.define([
                     // MessageToast.show("Please select only one Item");
                 }
             },
-            /**On Press of Ok in RefCharVal Fragment */
-            // onOkPress: function () {
-            //     var selectedCHar = sap.ui.getCore().byId("idRefText").getValue();
-            //     var selectedCHarNAME = sap.ui.getCore().byId("idRefDesc").getValue();
-            //     var selectedWeight = sap.ui.getCore().byId("idWeight").getValue();
-            //     var selectedFromDate = sap.ui.getCore().byId("idValidFrom").getValue();
-            //     var selectedToDate = sap.ui.getCore().byId("idValidTo").getValue();
-            //     var selectedOffSet = sap.ui.getCore().byId("idOffser").getValue();
-            //     var selectedStatus = sap.ui.getCore().byId("idSwitchBtn").getState();
-            //     if (selectedStatus === true) {
-            //         var selectedNewStatus = "Active";
-            //     }
-            //     else {
-            //         var selectedNewStatus = "Inactive";
-            //     }
-            //     if (selectedCHar && selectedCHarNAME && selectedWeight && selectedFromDate && selectedToDate && selectedOffSet && selectedNewStatus) {
-            //         if (selectedOffSet > 0) {
-            //             that.charsSelected = that.charsSelected.map(item => {
-            //                 if (item.CHAR_VALUE === selectedCHar && item.CHAR_NAME === selectedCHarNAME) {
-            //                     return {
-            //                         ...item,
-            //                         WEIGHT: selectedWeight,
-            //                         VALIDFROM: selectedFromDate,
-            //                         VALIDTO: selectedToDate,
-            //                         OFFSETDAYS: selectedOffSet,
-            //                         STATUS: selectedNewStatus
-            //                     };
-            //                 } else {
-            //                     return item; // Keep the item unchanged
-            //                 }
-            //             });
-            //             that.etModel.setData({ charList: that.charsSelected });
-            //             that.byId("idOldCharList").setModel(that.etModel);
-            //             that.byId("idOldCharList").removeSelections();
-            //             sap.ui.getCore().byId("idWeight").setValue("100");
-            //             sap.ui.getCore().byId("idValidFrom").setValue();
-            //             sap.ui.getCore().byId("idValidTo").setValue();
-            //             sap.ui.getCore().byId("idOffser").setValue();
-            //             sap.ui.getCore().byId("idOffser").setValueState("None");
-            //             sap.ui.getCore().byId("idSwitchBtn").setState(true);
-            //             sap.ui.getCore().byId("idValidTo").setEnabled(false);
-            //             that._valueHelpDialogRefCharval.close();
-            //         }
-            //         else {
-            //             sap.ui.getCore().byId("idOffser").setValueState("Error");
-            //             MessageToast.show("Offset of Days cannot be 0");
-            //         }
-            //     }
-            //     else {
-            //         MessageToast.show("Please fill in all required fields.");
-            //     }
-            // },
+
             /**On Press of Step 4 */
             onStep4Press: function () {
-                // var object = { LAUNCH: [{ DIMENSIONS: 'LOCATION_ID' }, { DIMENSIONS: 'PRODUCT_ID' }], VALUE: '', ROW: 1 };
                 var object = { LAUNCH: [{ DIMENSIONS: 'Location', VALUE: '', ROW: 1 }, { DIMENSIONS: 'Partial Product', VALUE: '', ROW: 2 }] };
                 that.byId("idNewDimen").setValue(that.newCharValDescSelected);
                 that.byId("idLaunchText").setText(that.selectedCharName);
@@ -750,11 +633,11 @@ sap.ui.define([
             /**On Step 5 Press */
             onStep5Press: function () {
                 sap.ui.core.BusyIndicator.show();
-                
                 that.byId("ConfigProd4").setText(that.selectedConfigProduct);
                 that.byId("idPhaseInChar").setValue(that.newCharValDescSelected);
                 that.byId("idPhaseInText").setText(that.selectedCharName);
                 that.byId("idPhaseinStart").setMinDate(new Date());
+                that.byId("idPhaseInDate").setMinDate(new Date());
                 that.tokens = that.byId("idOldCharValue").getTokens();
                 that.byId("idPhaseinOldChar").removeAllTokens();
                 that.tokens.forEach(function (oItem) {
@@ -782,14 +665,6 @@ sap.ui.define([
             onPhaseCancel: function () {
                 that._valueHelpDialogPhaseInOut.close();
             },
-            /**ON press of add in step 4 table */
-            // onAddPressed: function () {
-            //     var tableData = that.byId("idDimenTable").getModel().getData().dimenList;
-            //     var object = { LAUNCH: [{ DIMENSIONS: 'LOCATION_ID' }, { DIMENSIONS: 'PRODUCT_ID' }], VALUE: '', ROW: tableData.length + 1 };
-            //     tableData.push(object);
-            //     that.byId("idDimenTable").getModel().refresh();
-
-            // },
             /**On Change of Table Item in Phase In */
             onPhaseInChange: function () {
                 var selectedItems = that.byId("idPhaseInTab").getSelectedItems();
@@ -837,6 +712,7 @@ sap.ui.define([
                             oModel.setProperty("/nextButtonVisible", true);
                             oModel.setProperty("/reviewButtonVisible", false);
                             oModel.setProperty("/finishButtonVisible", false);
+                            that.byId("idDateRange").setMinDate(new Date());
                         }
                         else {
                             MessageToast.show("Please select all the required fields");
@@ -862,13 +738,14 @@ sap.ui.define([
                         aItems.forEach(function (oItem) {
                             var aCells = oItem.getCells();
                             aCells.forEach(function (oCell) {
-                                if (oCell instanceof sap.m.Text) {
-                                    if (oCell.getText().trim() === "") { // Check if the text content is empty
-                                        bIsEmpty = true;
-                                        return false; // Break out of inner loop
-                                    }
-                                }
-                                else if (oCell instanceof sap.m.DatePicker) {
+                                // if (oCell instanceof sap.m.Text) {
+                                //     if (oCell.getText().trim() === "") { // Check if the text content is empty
+                                //         bIsEmpty = true;
+                                //         return false; // Break out of inner loop
+                                //     }
+                                // }
+                                // else 
+                                if (oCell instanceof sap.m.DatePicker) {
                                     if (oCell.getDateValue() === null || oCell.getDateValue() === "") {
                                         bIsEmpty = true;
                                         return false;
@@ -892,8 +769,8 @@ sap.ui.define([
                             var sumarray = [], sum = 0;
                             var tabData = that.byId("idOldCharList").getItems();
                             for (var i = 0; i < tabData.length; i++) {
-                                if (tabData[i].getCells()[2].getValue() > 0) {
-                                    sumarray.push(Number(tabData[i].getCells()[2].getValue()));
+                                if (tabData[i].getCells()[1].getValue() > 0) {
+                                    sumarray.push(Number(tabData[i].getCells()[1].getValue()));
                                 }
                                 else {
                                     return MessageToast.show("One or More characteristics weights is zero");
@@ -918,7 +795,7 @@ sap.ui.define([
                     case "Launch Dimension":
                         sap.ui.core.BusyIndicator.show();
                         that.combinedArray = [];
-                var newObject = {}, locArray = [], prodArray = [];
+                        var newObject = {}, locArray = [], prodArray = [];
                         var oTable = this.byId("idDimenTable");
                         var aItems = oTable.getItems();
                         var date = new Date();
@@ -1053,15 +930,10 @@ sap.ui.define([
                                     MessageToast.show("Failed to get Locations");
                                 }
                             });
-
-
-
                         }
-
                         break;
                     default: break;
                 }
-
             },
             onDialogNextButton: function () {
                 that._iSelectedStepIndex = that._oWizard.getSteps()[that._iNewSelectedIndex].getTitle();
@@ -1081,6 +953,8 @@ sap.ui.define([
                         that.tokens = [];
                         that.step5Model.setData({ PhaseInList: [] });
                         that.byId("idPhaseInTab").setModel(that.step5Model);
+                        that.byId("idPhaseInDate").setDateValue();
+                        that.byId("idHistoryDate").setDateValue();                        
                         break;
 
                     case "Launch Dimension":
@@ -1107,6 +981,8 @@ sap.ui.define([
                         that.byId("idOldCharList").setModel(that.etModel);
                         that.prodModel.setData({ setCharacteristics: that.aDistinct })
                         sap.ui.getCore().byId("idCharSelect").setModel(that.prodModel);
+                        that.byId("idDateRange").setFrom();
+                        that.byId("idDateRange").setTo();
                         break;
 
                     default: break;
@@ -1115,8 +991,19 @@ sap.ui.define([
             /**On Change of Date in From Field in RefCharVal Fragment */
             onFromDateChange: function (oEvent) {
                 var selectedDate = oEvent.getSource().getDateValue();
-                // sap.ui.getCore().byId("idValidTo").setMinDate(selectedDate);
-                // sap.ui.getCore().byId("idValidTo").setEnabled(true);
+                var Flag = that.oGModel.getProperty("/setDate");
+                if(Flag === "X"){
+                    var toDate = oEvent.getSource().getParent().getCells()[4].getDateValue();
+                    if(selectedDate > toDate){
+                        oEvent.getSource().getParent().getCells()[4].setMinDate(selectedDate);
+                        oEvent.getSource().getParent().getCells()[4].setDateValue(); 
+                    }
+                    else{
+                        oEvent.getSource().getParent().getCells()[4].setMinDate(selectedDate);                        
+                    }
+                    that.oGModel.setProperty("/setDate","");
+                }
+                else{
                 if (oEvent.getParameters().id.includes("STfromDate")) {
                     oEvent.getSource().getParent().getCells()[4].setEnabled(true);
                     oEvent.getSource().getParent().getCells()[4].setMinDate(selectedDate);
@@ -1136,6 +1023,7 @@ sap.ui.define([
                         }
                     }
                 }
+            }
             },
             /**On Ok press in PhaseInPhaseout Fragment */
             onPhasePress: function () {
@@ -1144,7 +1032,6 @@ sap.ui.define([
                 var selectedProdId = sap.ui.getCore().byId("idProdId").getValue();
                 var selectedProdDesc = sap.ui.getCore().byId("idProdDesc").getValue();
                 var selectedPhaseInDate = sap.ui.getCore().byId("idPhaseInFrom").getValue();
-
                 that.combinedArray = that.combinedArray.map(item => {
                     if (item.LOCATION_ID === selectedLoc && item.LOCATION_DESC === selectedLocDesc && item.PROD_ID === selectedProdId
                         && item.PROD_DESC === selectedProdDesc) {
@@ -1202,14 +1089,18 @@ sap.ui.define([
             clearAllData: function () {
                 /**Clearing data in Step 1 */
                 that.byId("idCharValue").setValue();
+                that.byId("idCharValue").setEnabled(false);
+                that.byId("idOldCharValue").setEnabled(false);
+                that.byId("idOldCharValue").removeAllTokens();
                 that.byId("ConfigProd").setValue();
                 that.byId("idCharValText").setText();
                 that.byId("idCharName").setValue();
                 that.byId("idCharName").setEnabled(false);
                 that.charModel.setData({ setCharacteristicNames: [] });
                 sap.ui.getCore().byId("idCharNameSelect").setModel(that.charModel);
-                // that.prodModel.setData({ setCharacteristics: []})
-                // sap.ui.getCore().byId("idCharSelect").setModel(that.prodModel);
+                that.prodModel.setData({ setCharacteristics: [] })
+                sap.ui.getCore().byId("idCharSelect").setModel(that.prodModel);
+
 
                 /**Clearing data in Step 2 */
                 // that.byId("idCharValue1").setValue();
@@ -1226,6 +1117,8 @@ sap.ui.define([
                 that.etModel.setData({ charList: [] });
                 that.byId("idOldCharList").setModel(that.etModel);
                 sap.ui.getCore().byId("idOffser").setValueState("None");
+                that.byId("idDateRange").setFrom();
+                that.byId("idDateRange").setTo();
 
                 /**Clearing data in Step 4 */
                 that.byId("idNewDimen").setValue();
@@ -1247,6 +1140,8 @@ sap.ui.define([
                 sap.ui.getCore().byId("idPhaseInFrom").setValue();
                 that.step5Model.setData({ PhaseInList: [] });
                 that.byId("idPhaseInTab").setModel(that.step5Model);
+                that.byId("idPhaseInDate").setDateValue();
+                        that.byId("idHistoryDate").setDateValue();
             },
             /**On Input Change in RefCharVal fragment to support only numerics */
             onInputChange: function (oEvent) {
@@ -1310,12 +1205,12 @@ sap.ui.define([
                             REF_PRODID: that.selectedConfigProduct,
                             CHAR_NUM: that.newCharNumSelected,
                             CHAR_VALUE: that.newCharValueSelected,
-                            CHARVAL_DESC : that.newCharValDescSelected,
+                            CHARVAL_DESC: that.newCharValDescSelected,
                             REF_CHAR_VALUE: tableItemsStep3[j].getCells()[0].getText(),
-                            REF_CHARVALUE_DESC : tableItemsStep3[j].getCells()[0].getTitle(),
-                            WEIGHT: parseInt(tableItemsStep3[j].getCells()[2].getValue()),
-                            VALID_FROM: tableItemsStep3[j].getCells()[3].getDateValue(),
-                            VALID_TO: tableItemsStep3[j].getCells()[4].getDateValue(),
+                            REF_CHARVALUE_DESC: tableItemsStep3[j].getCells()[0].getTitle(),
+                            WEIGHT: parseInt(tableItemsStep3[j].getCells()[1].getValue()),
+                            VALID_FROM: tableItemsStep3[j].getCells()[2].getDateValue(),
+                            VALID_TO: tableItemsStep3[j].getCells()[3].getDateValue(),
                             DIMENSION: JSON.stringify(dimeArray)
                         }
                         finalArray.push(object);
@@ -1352,7 +1247,6 @@ sap.ui.define([
                 that.allCharacterstics = [], that.aDistinct = [];
                 that.allCharacterstics = that.newChars;
                 var allChars = that.newChars.filter(a => a.CHAR_NAME === selectedName && a.CHAR_NUM === selectedNum);
-                // that.aDistinct = that.removeDuplicate(that.allCharacterstics, 'CHAR_NAME');
                 that.aDistinct = that.totalTabData;
                 that.aDistinct = that.getUnqiueChars(allChars, that.aDistinct, "CHAR_NUM", "CHAR_VALUE", "CHAR_NUM", "REF_CHAR_VALUE");
                 that.aDistinct = that.aDistinct.filter(obj => !obj.hasOwnProperty("PROJECT_ID"));
@@ -1371,6 +1265,37 @@ sap.ui.define([
                 var aData = that.step5Model.getData().PhaseInList;
                 aData.splice(selectedIndex, 1);
                 that.step5Model.refresh();
+            },
+
+            /**On Change of Date Range in Step Reference Details */
+            onDateRangeSelection: function(oEvent){
+                var FromDate = oEvent.getSource().getFrom();
+                var ToDate = oEvent.getSource().getTo();
+                var items = that.byId("idOldCharList").getItems();
+                that.oGModel.setProperty("/setDate","X");
+                for(var k=0;k<items.length;k++){
+                items[k].getCells()[2].setDateValue(FromDate);
+                items[k].getCells()[3].setMinDate(FromDate);
+                items[k].getCells()[3].setDateValue(ToDate);
+                items[k].getCells()[3].setEnabled(true);
+                }
+            },
+
+            /**On Change of History Consideration/phase-in Date in Step4 */
+            onDateChange:function(oEvent){
+                var selectedDate = oEvent.getSource().getDateValue();
+                var sID = oEvent.getSource().sId;
+                var tabItems = that.byId("idPhaseInTab").getItems();
+                if(sID.includes("HistoryDate")){                
+                for(var s=0;s<tabItems.length;s++){
+                    tabItems[s].getCells()[4].setDateValue(selectedDate); 
+                }
+            }
+            else{
+                for(var s=0;s<tabItems.length;s++){
+                    tabItems[s].getCells()[5].setDateValue(selectedDate); 
+                }
+            }
             }
         });
     });

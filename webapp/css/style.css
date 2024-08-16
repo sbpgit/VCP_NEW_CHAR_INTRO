@@ -79,3 +79,25 @@ margin-left:50px !important;
 .buttonSpace{
     margin-left:5px !important;
 }
+
+.sapUiSizeCompact .sapUiFormContainerTitle>.sapUiFormTitle {
+    height: 0rem !important;
+    line-height: 0rem !important;
+}
+
+.clssBold{
+    font-weight:bold !important
+}
+
+.IconClass1{
+    margin-left:900px !important;
+}
+
+.IconClass2{
+    margin-left:850px !important;
+}
+
+.dateClass{
+    margin-top: 10px !important;
+}
+
