@@ -353,8 +353,9 @@ sap.ui.define([
             handleOldCharSelection: function (oEvent) {
                 that.charsSelected = [], that.intChars = {};
                 that.oldCharVal.removeAllTokens();
-                sap.ui.getCore().byId("idCharOldSelect").getBinding("items").filter([]);
-                var selectedItems = oEvent.getParameters().selectedItems;
+                sap.ui.getCore().byId("idCharOldSelect").getBinding("items").filter(that.charsSelected);
+                // var selectedItems = oEvent.getParameters().selectedItems;
+                var selectedItems = oEvent.getParameter("selectedContexts");
                 var weightage = 100 / selectedItems.length;
                 // selectedItems.forEach(function (oItem) {
                 //     that.oldCharVal.addToken(
@@ -373,22 +374,22 @@ sap.ui.define([
                 //     }
                 //     that.charsSelected.push(that.intChars);
                 // });
-                selectedItems.forEach(function (oItem) {
+                selectedItems.forEach(function (oItem) {                  
                     that.oldCharVal.addToken(
                         new sap.m.Token({
-                            key: oItem.getCells()[0].getText(),
-                            text: oItem.getCells()[0].getTitle(),
+                            key: oItem.getModel().getProperty(oItem.sPath).CHAR_VALUE,
+                            text:  oItem.getModel().getProperty(oItem.sPath).CHARVAL_DESC,
                             editable: false
                         })
                     );
                     that.intChars = {
-                        CHAR_VALUE: oItem.getCells()[0].getText(),
-                        CHARVAL_DESC: oItem.getCells()[0].getTitle(),
-                        CHARVAL_NUM: oItem.getCells()[1].getText(),
+                        CHAR_VALUE: oItem.getModel().getProperty(oItem.sPath).CHAR_VALUE,
+                        CHARVAL_DESC: oItem.getModel().getProperty(oItem.sPath).CHARVAL_DESC,
+                        CHARVAL_NUM: oItem.getModel().getProperty(oItem.sPath).CHARVAL_NUM,
                         WEIGHT: weightage.toFixed(2),
                         STATUS: "Active"
                     }
-                    that.charsSelected.push(that.intChars);
+                    that.charsSelected.push(that.intChars);                
                 });
             },
             /**Search in CHaracteristic Fragments */
@@ -611,13 +612,14 @@ sap.ui.define([
             },
             /**On Selecting Productt in Step4 Launch Dimension */
             handleProdSelection: function (oEvent) {
+                sap.ui.getCore().byId("idProdSelect").getBinding("items").filter([]);
                 that.oSource.removeAllTokens();
-                var selectedItem = oEvent.getParameters().selectedItems;
+                var selectedItem = oEvent.getParameter("selectedContexts");
                 selectedItem.forEach(function (oItem) {
                     that.oSource.addToken(
                         new sap.m.Token({
-                            key: oItem.getCells()[0].getText(),
-                            text: oItem.getCells()[0].getTitle(),
+                            key:  oItem.getModel().getProperty(oItem.sPath).PRODUCT_ID,
+                            text:  oItem.getModel().getProperty(oItem.sPath).PROD_DESC,
                             editable: false
                         })
                     );
@@ -626,12 +628,13 @@ sap.ui.define([
             /**On Selecting Location in Step4 Launch Dimension */
             handleLocSelection: function (oEvent) {
                 that.oSource.removeAllTokens();
-                var selectedItem = oEvent.getParameters().selectedItems;
+                sap.ui.getCore().byId("idLocSelect").getBinding("items").filter([]);
+                var selectedItem = oEvent.getParameter("selectedContexts");
                 selectedItem.forEach(function (oItem) {
                     that.oSource.addToken(
                         new sap.m.Token({
-                            key: oItem.getCells()[0].getText(),
-                            text: oItem.getCells()[0].getTitle(),
+                            key:  oItem.getModel().getProperty(oItem.sPath).LOCATION_ID,
+                            text:  oItem.getModel().getProperty(oItem.sPath).LOCATION_DESC,
                             editable: false
                         })
                     );
@@ -938,6 +941,10 @@ sap.ui.define([
                                 }
                             });
                         }
+                        else if(items[0].getCells()[1].getTokens().length> 0 && items[1].getCells()[1].getTokens().length === 0 || 
+                        items[0].getCells()[1].getTokens().length === 0 && items[1].getCells()[1].getTokens().length > 0){
+                            MessageToast.show("Please select Location/Product")
+                        }
                         sap.ui.core.BusyIndicator.hide();
                         break;
                     default: break;
@@ -1171,6 +1178,8 @@ sap.ui.define([
             /**On Press of Finish in Step 6 */
             handleWizardSubmit: function () {
                 var oTable = this.byId("idPhaseInTab");
+                that.byId("Step5Search").setValue();
+                oTable.getBinding("items").filter([]);
                 var aItems = oTable.getItems();
                 var bIsEmpty = false;
                 aItems.forEach(function (oItem) {
@@ -1306,6 +1315,28 @@ sap.ui.define([
                         tabItems[s].getCells()[5].setDateValue(selectedDate);
                     }
                 }
+            },
+            /**Search in Step5 */
+            onStep5Search:function(oEvent){
+                var sQuery = oEvent.getParameter("value") || oEvent.getParameter("newValue"),
+                sId = oEvent.getParameter("id"),
+                oFilters = [];
+            // Check if search filter is to be applied
+            sQuery = sQuery ? sQuery.trim() : "";
+                if (sQuery !== "") {
+                    oFilters.push(
+                        new Filter({
+                            filters: [
+                                new Filter("PROD_DESC", FilterOperator.Contains, sQuery),
+                                new Filter("PRODUCT_ID", FilterOperator.Contains, sQuery),
+                                new Filter("LOCATION_DESC", FilterOperator.Contains, sQuery),
+                                new Filter("LOCATION_ID", FilterOperator.Contains, sQuery)
+                            ],
+                            and: false,
+                        })
+                    );
+                }
+                that.byId("idPhaseInTab").getBinding("items").filter(oFilters);
             }
         });
     });

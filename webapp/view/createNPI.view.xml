@@ -197,8 +197,9 @@
                               mode="Delete" rememberSelections="false" selectionChange="onPhaseInChange" delete="onStep5delete">
                                                        <headerToolbar>
 			                    <OverflowToolbar>
-				                    <!-- <ToolbarSpacer/> -->
-                                <HBox class="IconClass2">
+                                <SearchField width="300px" id="Step5Search" liveChange="onStep5Search" change="onStep5Search" placeholder="Location/Product"></SearchField>
+				                    <ToolbarSpacer/>
+                                <HBox class="">
                                     <Label text="History Consideration Date :" class="dateClass"/>                                    
                                     <DatePicker id="idHistoryDate"  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" 
                                     change="onDateChange" maxDate="{HISTORY_CONSIDERATION}"/>
