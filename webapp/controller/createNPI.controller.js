@@ -354,26 +354,8 @@ sap.ui.define([
                 that.charsSelected = [], that.intChars = {};
                 that.oldCharVal.removeAllTokens();
                 sap.ui.getCore().byId("idCharOldSelect").getBinding("items").filter(that.charsSelected);
-                // var selectedItems = oEvent.getParameters().selectedItems;
                 var selectedItems = oEvent.getParameter("selectedContexts");
                 var weightage = 100 / selectedItems.length;
-                // selectedItems.forEach(function (oItem) {
-                //     that.oldCharVal.addToken(
-                //         new sap.m.Token({
-                //             key: oItem.getTitle(),
-                //             text: oItem.getTitle(),
-                //             editable: false
-                //         })
-                //     );
-                //     that.intChars = {
-                //         CHAR_VALUE: oItem.getDescription(),
-                //         CHARVAL_DESC: oItem.getTitle(),
-                //         CHARVAL_NUM: oItem.getInfo(),
-                //         WEIGHT: weightage.toFixed(2),
-                //         STATUS: "Active"
-                //     }
-                //     that.charsSelected.push(that.intChars);
-                // });
                 selectedItems.forEach(function (oItem) {                  
                     that.oldCharVal.addToken(
                         new sap.m.Token({
@@ -811,6 +793,7 @@ sap.ui.define([
                         var date = new Date();
                         var previousDate = date.getDate() - 1;
                         date = date.setDate(previousDate);
+                        that.byId("idHistoryDate").setMaxDate(new Date(date));
                         var items = that.byId("idDimenTable").getItems();
                         if (items[0].getCells()[1].getTokens().length > 0 && items[1].getCells()[1].getTokens().length > 0) {
                             var locItems = items[0].getCells()[1].getTokens();

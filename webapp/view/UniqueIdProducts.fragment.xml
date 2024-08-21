@@ -1,0 +1,18 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" header="false">	
+	<TableSelectDialog id="idUniqueProds" title="" search="handleCharSearch" liveChange="handleCharSearch" rememberSelections="true"
+		confirm="handleUnqiueProdSele" cancel="handleClose"
+		items="{/setUniqueProds}" multiSelect="true" contentWidth="300px">
+			<columns>
+			<Column width="auto" hAlign="Left">
+				<header>
+					<Text text="Products" />
+				</header>
+			</Column>
+			</columns>
+			<ColumnListItem vAlign="Middle">
+			<cells>
+			<ObjectIdentifier title="{PROD_DESC}" text="{PRODUCT_ID}" ></ObjectIdentifier>
+			</cells>
+			</ColumnListItem>
+		</TableSelectDialog>
+</core:FragmentDefinition>

@@ -202,7 +202,7 @@
                                 <HBox class="">
                                     <Label text="History Consideration Date :" class="dateClass"/>                                    
                                     <DatePicker id="idHistoryDate"  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" 
-                                    change="onDateChange" maxDate="{HISTORY_CONSIDERATION}"/>
+                                    change="onDateChange"/>
                                     </HBox>  
                                      <HBox>
                                     <Label text="Phase-In Start :" class="dateClass"/>                                    
