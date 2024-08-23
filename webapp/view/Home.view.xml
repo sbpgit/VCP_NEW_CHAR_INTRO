@@ -144,7 +144,7 @@
             
 			<ToolbarSpacer/>
             <Button text="Maintain Unique ID's" press="onShowUniqueIds" tooltip="Show Unique ID's" />
-            <Button text="Generate Unique ID's" press="onGenerateUniqueIds" tooltip="Generate Unique ID's" />
+            <Button text="Generate Unique ID's" press="onGenerateUniqueIds" tooltip="Generate Unique ID's" id="idGenUID"/>
 				                   
 	</OverflowToolbar></footer>
     </Page>

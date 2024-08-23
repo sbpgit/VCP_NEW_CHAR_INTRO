@@ -111,7 +111,8 @@ sap.ui.define([
                         filters: oFilter,
                         success: function (oData) {
                             if (oData.results.length > 0) {
-
+                                that.oGModel.setProperty("/TotalChatData", oData.results);
+                                that.byId("idGenUID").setEnabled(true)
                                 that.tabData = oData.results;
                                 that.tabData.forEach(function (oItem) {
                                     if (oItem.ACTIVE === true) {
@@ -125,6 +126,7 @@ sap.ui.define([
                                 that.custModel.setData({ configProdResults: that.tabData });
                                 that.byId("idOrderList").setModel(that.custModel);
                             } else {
+                                that.byId("idGenUID").setEnabled(false);
                                 that.tabData = oData.results;
                                 that.custModel.setData({ configProdResults: that.tabData });
                                 that.byId("idOrderList").setModel(that.custModel);
@@ -383,11 +385,12 @@ sap.ui.define([
             onGenerateUniqueIds: function () {
                 sap.ui.core.BusyIndicator.show();
                 var object = {}, ArrayProds = [];
-                var tableItems = that.byId("idOrderList").getItems();
+                // var tableItems = that.byId("idOrderList").getItems();
+                var tableItems = that.oGModel.getProperty( "/TotalChatData");
                 tableItems.forEach(function (oItems) {
                     object = {
-                        PROD_DESC: oItems.getCells()[0].getTitle(),
-                        PRODUCT_ID: oItems.getCells()[0].getText()
+                        PROD_DESC: oItems.PROD_DESC,
+                        PRODUCT_ID: oItems.REF_PRODID
                     }
                     ArrayProds.push(object);
                     object={};
@@ -403,72 +406,72 @@ sap.ui.define([
                 var check = new Set();
                 return array.filter(obj => !check.has(obj[key]) && check.add(obj[key]));
             },
-            newGenUnique: function () {
-                that.selectProject = that.oGModel.getProperty('/selectedProject');
-                that.selectProduct = that.byId("idConfProd").getValue();
-                var tableItems = that.oTable.getModel().oData.configProdResults;
-                if (that.selectProject && that.selectProduct) {
-                    var filteredData = tableItems.filter(a => a.PROJECT_ID === that.selectProject && a.REF_PRODID === that.selectProduct);
-                    if (filteredData.length > 0) {
-                        this.getOwnerComponent().getModel("BModel").read("/getTmpUIDHeader", {
-                            filters: [
-                                new Filter(
-                                    "PRODUCT_ID",
-                                    FilterOperator.EQ,
-                                    that.selectProduct
-                                ),
-                                new Filter(
-                                    "PROJECT_ID",
-                                    FilterOperator.EQ,
-                                    that.selectProject
-                                ),
-                            ],
-                            success: function (oData1) {
-                                if (oData1.results.length > 0) {
-                                    MessageBox.information("Temporary unique Ids already Exists. Would you like to create new?", {
-                                        actions: ["Yes", MessageBox.Action.CLOSE],
-                                        emphasizedAction: "Yes",
-                                        onClose: function (sAction) {
-                                            if (sAction === "Yes") {
+            // newGenUnique: function () {
+            //     that.selectProject = that.oGModel.getProperty('/selectedProject');
+            //     that.selectProduct = that.byId("idConfProd").getValue();
+            //     var tableItems = that.oTable.getModel().oData.configProdResults;
+            //     if (that.selectProject && that.selectProduct) {
+            //         var filteredData = tableItems.filter(a => a.PROJECT_ID === that.selectProject && a.REF_PRODID === that.selectProduct);
+            //         if (filteredData.length > 0) {
+            //             this.getOwnerComponent().getModel("BModel").read("/getTmpUIDHeader", {
+            //                 filters: [
+            //                     new Filter(
+            //                         "PRODUCT_ID",
+            //                         FilterOperator.EQ,
+            //                         that.selectProduct
+            //                     ),
+            //                     new Filter(
+            //                         "PROJECT_ID",
+            //                         FilterOperator.EQ,
+            //                         that.selectProject
+            //                     ),
+            //                 ],
+            //                 success: function (oData1) {
+            //                     if (oData1.results.length > 0) {
+            //                         MessageBox.information("Temporary unique Ids already Exists. Would you like to create new?", {
+            //                             actions: ["Yes", MessageBox.Action.CLOSE],
+            //                             emphasizedAction: "Yes",
+            //                             onClose: function (sAction) {
+            //                                 if (sAction === "Yes") {
 
-                                                that.generateUniqueIds();
-                                            }
-                                            else {
+            //                                     that.generateUniqueIds();
+            //                                 }
+            //                                 else {
 
-                                            }
-                                        },
-                                        dependentOn: that.getView()
-                                    });
-                                }
-                                else {
-                                    that.flag = "";
-                                    that.generateUniqueIds();
-                                }
-                            },
-                            error: function () {
-                                MessageToast.show("Failed to get temporary unique details");
-                            }
-                        });
-                    }
-                    else {
-                        MessageToast.show("Selected Product & Project combination doesn't have any records. Please choose a different Product/Project combination");
-                    }
-                }
-                else {
-                    MessageToast.show("Please select configurable product");
-                }
-            },
+            //                                 }
+            //                             },
+            //                             dependentOn: that.getView()
+            //                         });
+            //                     }
+            //                     else {
+            //                         that.flag = "";
+            //                         that.generateUniqueIds();
+            //                     }
+            //                 },
+            //                 error: function () {
+            //                     MessageToast.show("Failed to get temporary unique details");
+            //                 }
+            //             });
+            //         }
+            //         else {
+            //             MessageToast.show("Selected Product & Project combination doesn't have any records. Please choose a different Product/Project combination");
+            //         }
+            //     }
+            //     else {
+            //         MessageToast.show("Please select configurable product");
+            //     }
+            // },
             generateUniqueIds: function () {
                 // Define the URL and request body
-                const data = {
-                    PRODUCT_ID: JSON.stringify(that.selectedProds),
-                    PROJECT_ID: that.selectProject
+                var data = {
+                    PROJECT_ID: that.oGModel.getProperty('/selectedProject'),
+                    PRODUCT_ID: JSON.stringify(that.selectedProds)                   
                 };
                 var aScheduleSEDT = {};
                 // Get Job Schedule Start/End Date/Time
                 aScheduleSEDT = that.getScheduleSEDT();
                 var dCurrDateTime = new Date().getTime();
-                var actionText = "/v2/catalog/generateTempUID";
+                var actionText = "/catalog/generateTempUID";
                 var JobName = "Temporary Unique ID generation" + dCurrDateTime;
                 sap.ui.core.BusyIndicator.show();
                 var finalList = {
@@ -711,6 +714,36 @@ sap.ui.define([
                 },
                 dependentOn: that.getView()
             });
+            },
+            /**On Press of Edit in Table */
+            onCharValEdit:function(oEvent){
+                that.oGModel.setProperty("/setEdit","X");
+                var selectedItems = oEvent.getSource().getBindingContext().getObject();
+                this.getOwnerComponent().getModel("BModel").read("/getNPICharData", {
+                    method: "GET",
+                    filters: [
+                        new Filter("REF_PRODID",FilterOperator.EQ,selectedItems.REF_PRODID),
+                        new Filter("PROJECT_ID",FilterOperator.EQ,selectedItems.PROJECT_ID),
+                        new Filter("CHAR_VALUE",FilterOperator.EQ,selectedItems.CHAR_VALUE),
+                        new Filter("REF_CHAR_VALUE",FilterOperator.EQ,selectedItems.REF_CHAR_VALUE)
+                    ],
+                    success: function (oData) {
+                        if(oData.results.length>0){
+                            if (that._valueHelpDialogProd) {
+                                that._valueHelpDialogProd.destroy(true);
+                                that._valueHelpDialogProd = "";
+                            }
+                            that.oGModel.setProperty("/dimensionData",oData.results);
+                            that.oGModel.setProperty("/projectDetails", oData.results[0].PROJECT_ID);
+                            var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+                        oRouter.navTo("CreateWizard", {}, true);
+                        }
+                    },
+                    error: function () {
+                        sap.ui.core.BusyIndicator.hide();
+                        MessageToast.show("Failed to get dimension details");
+                    },
+                });
             }
         });
     });
