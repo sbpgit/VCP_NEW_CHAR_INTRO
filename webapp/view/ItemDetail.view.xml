@@ -2,17 +2,22 @@
     xmlns="sap.m"
     xmlns:l="sap.ui.layout"
     xmlns:core="sap.ui.core" controllerName="vcpapp.vcpnpicharvalue.controller.ItemDetail"
-    xmlns:html="http://www.w3.org/1999/xhtml">
+    >
     <Page id="page1" showHeader="false" showFooter="true">
         <content>
         <!-- <HBox>
         <OverflowToolbar> -->
-        <Toolbar >
-                        <Label text= "Temp UID -" class="boldClass" labelFor="TmpUID" />
+        <Toolbar height="80px">
+                    <VBox >
+                    <HBox >
+                        <Label text= "Temp UID -" class="clssBold" labelFor="TmpUID" />
                         <Text id="TmpUID" text=""  class="sapUiSmallMarginBeginEnd"/> 
-
-                        <Label text= "Ref UID -" class="boldClass" labelFor="RefUID" />
-                        <Text id="RefUID" text="" />
+                    </HBox>
+                    <HBox >
+                        <Label text= "Ref UID -" class="clssBold" labelFor="RefUID" />
+                        <Text id="RefUID" text="" class="sapUiSmallMarginBeginEnd"/>
+                    </HBox>
+                    </VBox>
 
                         <!-- <FlexBox justifyContent="End">
                         <items>

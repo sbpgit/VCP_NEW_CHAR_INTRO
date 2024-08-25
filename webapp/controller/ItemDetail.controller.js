@@ -39,6 +39,7 @@ sap.ui.define(
                 this.oCharModel.setSizeLimit(1000);
             },
             onAfterRendering: function () {
+                this.bus.publish("flexible", "buttonVisible");
                 that.oGModel = that.getOwnerComponent().getModel("oGModel");
                 sap.ui.core.BusyIndicator.show();
                 var srefUniqId = that.oGModel.getProperty("/RefuniqId");

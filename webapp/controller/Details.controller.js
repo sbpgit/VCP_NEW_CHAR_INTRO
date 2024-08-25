@@ -46,6 +46,7 @@ sap.ui.define(
           this.bus.subscribe("nav", "expandBegin", this.expandBegin, this);
 
           this.bus.subscribe("data", "back", this.onNavback, this);
+          this.bus.subscribe("flexible", "buttonVisible", this.buttonVisible, this);
   
           this.oFlexibleColumnLayout = this.byId("fcl");
           this.getRouter()
@@ -105,14 +106,18 @@ sap.ui.define(
         onAfterRendering: function () {
           that = this;
           that.oGModel = this.getOwnerComponent().getModel("oGModel");
-          // that.proj = that.oGModel.getProperty("/selectedProject");
+          that.proj = that.oGModel.getProperty("/selectedProject");
+          // this.getView().byId("fcl").mAggregations._midColumnBackArrow.setVisible(false);
           // if(that.proj !== "" && that.proj !== undefined && that.proj !== null){
+
+
+          that.byId("idDetailTitle").setText(that.proj + " - Temporary Unique ID Maintenance");
 
           
           var oViewModel = this.getModel("appView");
           /**  Removing the arrow button inbetween pages(ItemMaster and ItemDetail)*/
-          if (this.getView().byId("fcl").mAggregations._midColumnForwardArrow !== undefined) {
-            this.getView().byId("fcl").mAggregations._midColumnForwardArrow.setVisible(false);
+          if (this.getView().byId("fcl").mAggregations._beginColumnBackArrow !== undefined) {
+            this.getView().byId("fcl").mAggregations._beginColumnBackArrow.setVisible(false);
           }
           //   this.getView().byId("fcl").mAggregations._midColumnNav.setVisible(false)
           /* Menu button option for Device and Desktop*/
@@ -243,13 +248,13 @@ sap.ui.define(
             this.oFlexibleColumnLayout.toBeginColumnPage(aPages[0]);
             aPages[0].onAfterRendering();
           }
-          var params = that.getOwnerComponent().oComponentData.startupParameters;
-          that.oGModel = this.getOwnerComponent().getModel("oGModel");
-          if (params.PRODUCT_ID && params.PROJECT_ID) {
-              that.oGModel.setProperty("/SelectedProducted",params.PRODUCT_ID[0]);
-              that.oGModel.setProperty("/SelectedProjected",params.PROJECT_ID[0]);
-              that.oGModel.setProperty("/SelectedFlag",params.Flag[0]);
-          }
+          // var params = that.getOwnerComponent().oComponentData.startupParameters;
+          // that.oGModel = this.getOwnerComponent().getModel("oGModel");
+          // if (params.PRODUCT_ID && params.PROJECT_ID) {
+          //     that.oGModel.setProperty("/SelectedProducted",params.PRODUCT_ID[0]);
+          //     that.oGModel.setProperty("/SelectedProjected",params.PROJECT_ID[0]);
+          //     that.oGModel.setProperty("/SelectedFlag",params.Flag[0]);
+          // }
         },
         onNavback:function(){
           that.bus.publish("data", "Destroy");
@@ -267,22 +272,22 @@ sap.ui.define(
             this.getModel("appView").setProperty("/expanded", true);
           }
         },
-        onNavPress: function () {
-          if (sap.ushell && sap.ushell.Container && sap.ushell.Container.getService) {
-            var oCrossAppNavigator = sap.ushell.Container.getService("CrossApplicationNavigation");
-            // generate the Hash to display 
-            var hash = (oCrossAppNavigator && oCrossAppNavigator.hrefForExternal({
-              target: {
-                semanticObject: "VCPDocument",
-                action: "Display"
-              }
-            })) || "";
-            //Generate a  URL for the second application
-            var url = window.location.href.split('#')[0] + hash;
-            //Navigate to second app
-            sap.m.URLHelper.redirect(url, true);
-          }
+        buttonVisible:function(){
+          that.byId("fcl").mAggregations._beginColumnBackArrow.setVisible(true);
+          that.byId("fcl").mAggregations._beginColumnBackArrow.setIcon("sap-icon://decline");
+          // that.byId("fcl").mAggregations._midColumnForwardArrow.attachBrowserEvent("click", that.exitScreen.bind(that));
+          that.byId("fcl").mAggregations._beginColumnBackArrow.attachPress("click", that.exitScreen.bind(that));
+        },
+        exitScreen:function(){
+          that.byId("fcl").mAggregations._beginColumnBackArrow.setVisible(false);
+          this.oFlexibleColumnLayout.setLayout(sap.f.LayoutType.OneColumn);
+        
+            
         }
+
+
+
+
       });
     }
   );

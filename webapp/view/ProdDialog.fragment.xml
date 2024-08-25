@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<SelectDialog id="prodSlctListOD" title="Configurable Product" rememberSelections="false" search="handleCharSearch" liveChange="handleCharSearch"
+	<SelectDialog id="prodSlctListOD" initialFocus="SearchField"  title="Configurable Product" rememberSelections="false" search="handleCharSearch" liveChange="handleCharSearch"
 		confirm="handleSelection" cancel="handleClose" multiSelect="false"  contentWidth="420px" items="{/configProdRes}" 
          growing="false">
 		<StandardListItem title="{PROD_DESC}" description="{PRODUCT_ID}" type="Active"/>

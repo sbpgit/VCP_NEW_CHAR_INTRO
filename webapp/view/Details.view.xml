@@ -1,4 +1,4 @@
-<mvc:View controllerName="vcpapp.vcpnpicharvalue.controller.Details" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.f">
+<mvc:View controllerName="vcpapp.vcpnpicharvalue.controller.Details" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.f">
     <Page id="pageId" showHeader="true">
         <customHeader>
             <Bar>
@@ -6,7 +6,7 @@
             <Button icon="sap-icon://nav-back" press="onNavback" type="Transparent"/>
             </contentLeft>
                 <contentMiddle>
-                    <Title text="Temporary Unique ID Maintenance" class="boldText1" />
+                    <Title id="idDetailTitle" text="Temporary Unique ID Maintenance" class="boldText1" />
                 </contentMiddle>
                 <contentRight>
                     <Button class="hdrBtnMarginHdr" icon="sap-icon://sys-help" id="idNav" press="onNavPress" type="Emphasized" tooltip="Help Document" />
@@ -14,7 +14,7 @@
             </Bar>
         </customHeader>
         <content>
-            <f:FlexibleColumnLayout id="fcl" />
+            <f:FlexibleColumnLayout id="fcl" ></f:FlexibleColumnLayout>
         </content>
     </Page>
 </mvc:View>
