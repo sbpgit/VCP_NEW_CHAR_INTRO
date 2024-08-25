@@ -7,7 +7,7 @@
 		confirm="handleProdSelection" cancel="handleClose"
 		items="{/setProds}" multiSelect="true" contentWidth="300px">
 			<columns>
-			<Column width="auto" hAlign="Center">
+			<Column width="auto" hAlign="Left">
 				<header>
 					<Text text="Partial Products" />
 				</header>

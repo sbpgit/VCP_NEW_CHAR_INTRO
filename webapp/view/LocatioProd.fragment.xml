@@ -7,7 +7,7 @@
 		confirm="handleLocSelection" cancel="handleClose"
 		items="{/setLocation}" multiSelect="true" contentWidth="300px">
 			<columns>
-			<Column width="auto" hAlign="Center">
+			<Column width="auto" hAlign="Left">
 				<header>
 					<Text text="Location" />
 				</header>

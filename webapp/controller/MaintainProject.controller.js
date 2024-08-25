@@ -265,6 +265,7 @@ sap.ui.define([
                         if (tableSelectedItem.length > 0) {
                             that.oGModel.setProperty('/selectedProject', tableSelectedItem[0].getCells()[0].getTitle());
                             that.oGModel.setProperty('/selectedProjectDesc', tableSelectedItem[0].getCells()[1].getValue());
+                            that.oGModel.setProperty('/selectedProjStatus', tableSelectedItem[0].getCells()[2].getState());
                         }
                         else {
                             that.oGModel.setProperty('/selectedProject', '');

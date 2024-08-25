@@ -1,7 +1,7 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
 	<TableSelectDialog id="idDimensions" title="Dimensions" search="handleCharSearch" liveChange="handleCharSearch" rememberSelections="false"
 		confirm="" cancel="handleClose" 
-		items="{/setDimensions}" multiSelect="false" contentWidth="700px" contentHeight="auto">
+		items="{/setDimensions}" multiSelect="false" contentWidth="700px" contentHeight="auto" titleAlignment="Center">
 			<columns>
 			<Column width="auto" hAlign="Center">
 				<header>

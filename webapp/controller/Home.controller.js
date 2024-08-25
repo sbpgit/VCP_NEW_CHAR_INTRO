@@ -57,6 +57,17 @@ sap.ui.define([
                 that.byId("idConfProd").setValue();
                 var selectedProject = that.oGModel.getProperty("/selectedProject");
                 var selectedProjectDesc = that.oGModel.getProperty("/selectedProjectDesc");
+                var status = that.oGModel.getProperty("/selectedProjStatus");
+                if(status){
+                    that.byId("idCharValRep").setEnabled(false);
+                    that.byId("idGenUID").setEnabled(false);
+                    that.byId("idMaintainUID").setEnabled(false);
+                }
+                else{
+                    that.byId("idCharValRep").setEnabled(true);
+                    that.byId("idGenUID").setEnabled(true);
+                    that.byId("idMaintainUID").setEnabled(true);
+                }
                 if (selectedProject === undefined || selectedProject === "") {
                     that.onBackToMPD();
                 } else {
@@ -112,14 +123,16 @@ sap.ui.define([
                         success: function (oData) {
                             if (oData.results.length > 0) {
                                 that.oGModel.setProperty("/TotalChatData", oData.results);
+                                if(!status && oData.results.length>0){
                                 that.byId("idGenUID").setEnabled(true)
+                                }
                                 that.tabData = oData.results;
                                 that.tabData.forEach(function (oItem) {
-                                    if (oItem.ACTIVE === true) {
-                                        oItem.ACTIVE = "Active";
+                                    if (status) {
+                                        oItem.ACTIVE = false;
                                     }
                                     else {
-                                        oItem.ACTIVE = "InActive";
+                                        oItem.ACTIVE = true;
                                     }
 
                                 });
