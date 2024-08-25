@@ -131,11 +131,11 @@ sap.ui.define([
                     that.oDetails = [], that.intChars = {}, that.charsSelected = [];
                     that.oDetails = that.oGModel.getProperty("/dimensionData");
                     that.byId("ConfigProd").setValue(that.oDetails[0].REF_PRODID);
-                    that.byId("ConfigProd").setEditable(false);
+                    that.byId("ConfigProd").setEnabled(false);
                     that.byId("idCharName").setValue(that.oDetails[0].CHAR_NAME);
-                    that.byId("idCharName").setEditable(false);
+                    that.byId("idCharName").setEnabled(false);
                     that.byId("idCharValue").setValue(that.oDetails[0].CHAR_VALUE);
-                    that.byId("idCharValue").setEditable(false);
+                    that.byId("idCharValue").setEnabled(false);
                     that.oldCharVal.addToken(
                         new sap.m.Token({
                             key: that.oDetails[0].REF_CHAR_VALUE,
@@ -143,12 +143,14 @@ sap.ui.define([
                             editable: false
                         })
                     );
-                    that.newCharValDescSelected = that.oDetails[0].CHAR_VALUE;
+                    that.newCharValDescSelected = that.oDetails[0].CHARVAL_DESC;
                     that.selectedCharName = that.oDetails[0].CHAR_NAME;
                     that.selectedConfigProduct = that.oDetails[0].REF_PRODID;
+                    that.newCharNumSelected = that.oDetails[0].CHAR_NUM;
+                    that.newCharValueSelected = that.oDetails[0].CHAR_VALUE;
                     that.intChars = {
-                        CHAR_VALUE: that.oDetails[0].CHAR_VALUE,
-                        CHARVAL_DESC: that.oDetails[0].CHARVAL_DESC,
+                        REF_CHAR_VALUE: that.oDetails[0].REF_CHAR_VALUE,
+                        REFCHARVAL_DESC: that.oDetails[0].REF_CHARVALUE_DESC,
                         CHARVAL_NUM: that.oDetails[0].CHARVAL_NUM,
                         WEIGHT: that.oDetails[0].WEIGHT.toFixed(2),
                         FROM_DATE: that.oDetails[0].VALID_FROM.toISOString().slice(0,10),
@@ -156,7 +158,7 @@ sap.ui.define([
                     }
                     that.charsSelected.push(that.intChars);
 
-                    that.byId("idOldCharValue").setEditable(false);
+                    that.byId("idOldCharValue").setEnabled(false);
                     var oModel = new JSONModel(),
                         oInitialModelState = Object.assign({}, oData);
                     oModel.setData(oInitialModelState);
@@ -168,6 +170,7 @@ sap.ui.define([
                     that.handleButtonsVisibility();
                 }
                 else {
+                    // that.byId("ConfigProd").setEnabled(false);
                     sap.ui.core.BusyIndicator.show();
                     this.getOwnerComponent().getModel("BModel").read("/getProducts", {
                         method: "GET",
@@ -241,6 +244,7 @@ sap.ui.define([
                 return uniqueObjects;
             },
             onBack: function () {
+                that.oGModel.setProperty("/setEdit","X");
                 that._oWizard.discardProgress(that._oWizard.getSteps()[0]);
                 that.clearAllData();
                 this.getView().getModel().setData(Object.assign({}, oData));
@@ -288,6 +292,15 @@ sap.ui.define([
                     that._valueHelpDialogCharacter.open();
                 }
                 else if (sId.includes("idOldCharValue")) {
+                    var tokens = that.byId("idOldCharValue").getTokens();
+                    var items = sap.ui.getCore().byId("idCharOldSelect").getItems();
+                    for(var i=0; i<tokens.length;i++){
+                        for(var k=0;k<items.length;k++){
+                            if(tokens[i].getKey()===items[k].getCells()[0].getText()){
+                                items[k].setSelected(true);
+                            }
+                        }
+                    }
                     that._valueHelpDialogOldCharacter.open();
                 }
             },
@@ -295,8 +308,7 @@ sap.ui.define([
             handleCharSelection: function (oEvent) {
                 sap.ui.getCore().byId("idCharSelect").getBinding("items").filter([]);
                 that.oldCharVal.removeAllTokens();
-                that.TemplateModel.setData({ setOldCharacteristics: [] });
-                sap.ui.getCore().byId("idCharOldSelect").setModel(that.TemplateModel);
+               
                 // sap.ui.getCore().byId("idCharOldSelect").clearSelection();
                 var selectedItem = oEvent.getParameters().selectedItem.getDescription();
                 that.newCharValueSelected = selectedItem;
@@ -325,12 +337,9 @@ sap.ui.define([
                 else {
                     var filteredItems = that.allCharacterstics.filter(item => item.CHAR_VALUE !== selectedItem && item.CHAR_NUM === that.newCharNumSelected && item.CLASS_NUM === that.selectedClassNum);
                 }
-                that.TemplateModel.setData({ setOldCharacteristics: filteredItems });
+                that.TemplateModel.setData({ setOldCharacteristics:filteredItems });
                 sap.ui.getCore().byId("idCharOldSelect").setModel(that.TemplateModel);
-                var selectedItemsTab = sap.ui.getCore().byId("idCharOldSelect").getItems();
-                selectedItemsTab.forEach(function (oItems) {
-                    oItems.setSelected(false);
-                });
+                
             },
 
             /**On Selection of config product in prod dialog */
@@ -406,8 +415,8 @@ sap.ui.define([
                         })
                     );
                     that.intChars = {
-                        CHAR_VALUE: oItem.getModel().getProperty(oItem.sPath).CHAR_VALUE,
-                        CHARVAL_DESC: oItem.getModel().getProperty(oItem.sPath).CHARVAL_DESC,
+                        REF_CHAR_VALUE: oItem.getModel().getProperty(oItem.sPath).CHAR_VALUE,
+                        REFCHARVAL_DESC: oItem.getModel().getProperty(oItem.sPath).CHARVAL_DESC,
                         CHARVAL_NUM: oItem.getModel().getProperty(oItem.sPath).CHARVAL_NUM,
                         WEIGHT: weightage.toFixed(2),
                         STATUS: "Active"
@@ -572,7 +581,7 @@ sap.ui.define([
                                 that.locDetails = oData1.results;
                                 that.locModel.setData({ setLocation: that.locDetails });
                                 sap.ui.getCore().byId("idLocSelect").setModel(that.locModel);                                
-                                if(that.oFlag === "X"){
+                                // if(that.oFlag === "X"){
                                     var table = that.byId("idDimenTable").getItems();
                                     var locItems = sap.ui.getCore().byId("idLocSelect").getItems();
                                     var tableLocTokens = table[0].getCells()[1].getTokens();
@@ -584,7 +593,7 @@ sap.ui.define([
                                            
                                         }
                                     }
-                                }
+                                // }
                                 sap.ui.core.BusyIndicator.hide();
                             }
                             else {
@@ -617,7 +626,7 @@ sap.ui.define([
                                 that.prods = oData1.results;
                                 that.prodModel.setData({ setProds: that.prods });
                                 sap.ui.getCore().byId("idProdSelect").setModel(that.prodModel);
-                                if(that.oFlag === "X"){
+                                // if(that.oFlag === "X"){
                                     var table = that.byId("idDimenTable").getItems();
                                     var prodItems = sap.ui.getCore().byId("idProdSelect").getItems();
                                     var tableProdTokens = table[1].getCells()[1].getTokens();
@@ -629,7 +638,7 @@ sap.ui.define([
                                            
                                         }
                                     }
-                                }
+                                // }
                                 sap.ui.core.BusyIndicator.hide();
                             }
                             else {
@@ -1166,6 +1175,7 @@ sap.ui.define([
                 that.byId("idOldCharValue").setEnabled(false);
                 that.byId("idOldCharValue").removeAllTokens();
                 that.byId("ConfigProd").setValue();
+                that.byId("ConfigProd").setEnabled(true);
                 that.byId("idCharValText").setText();
                 that.byId("idCharName").setValue();
                 that.byId("idCharName").setEnabled(false);
@@ -1305,6 +1315,7 @@ sap.ui.define([
                                 that.getView().getModel().setData(Object.assign({}, oData));
                                 that.onBack();
                                 setTimeout(function () { MessageToast.show(oData1.saveNPICharValDetails) }, 1000);
+                                
                             }
                             else {
                                 MessageToast.show(oData1.saveNPICharValDetails);
@@ -1334,7 +1345,8 @@ sap.ui.define([
                 that.byId("idOldCharValue").setEnabled(false);
                 that.byId("idOldCharValue").removeAllTokens();
                 that.byId("idCharName").setValue(selectedName);
-
+                that.TemplateModel.setData({ setOldCharacteristics: [] });
+                sap.ui.getCore().byId("idCharOldSelect").setModel(that.TemplateModel);
             },
             /**On press of delete in Table in step5 */
             onStep5delete: function (oEvent) {

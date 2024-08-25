@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" header="false">	
-	<TableSelectDialog id="idCharOldSelect" title="" search="handleCharSearch" liveChange="handleCharSearch" rememberSelections="true"
+	<TableSelectDialog id="idCharOldSelect" title="" search="handleCharSearch" liveChange="handleCharSearch" rememberSelections="false"
 		confirm="handleOldCharSelection" cancel="handleClose"
 		items="{/setOldCharacteristics}" multiSelect="true" contentWidth="300px">
 			<columns>

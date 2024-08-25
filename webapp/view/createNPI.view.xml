@@ -113,7 +113,7 @@
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                            <ObjectIdentifier title="{CHARVAL_DESC}" text="{CHAR_VALUE}" />    
+                                            <ObjectIdentifier title="{REFCHARVAL_DESC}" text="{REF_CHAR_VALUE}" />    
                                             <!-- <Text text="{CHARVAL_NUM}" /> -->
                                             <Input value="{WEIGHT}" liveChange="onInputChange" textAlign="Right"/>
                                             <DatePicker id="STfromDate"  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange" value="{FROM_DATE}"/>

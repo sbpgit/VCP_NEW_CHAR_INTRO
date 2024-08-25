@@ -571,6 +571,7 @@ sap.ui.define([
                 var selectedProject = that.oGModel.getProperty("/selectedProject");
                 that.oGModel.setProperty("/charvalData", that.tabData);
                 that.oGModel.setProperty("/projectDetails", selectedProject);
+                that.oGModel.setProperty("/setEdit","");
                 if (this._valueHelpDialogProd) {
                     that._valueHelpDialogProd.destroy(true);
                     that._valueHelpDialogProd = "";
