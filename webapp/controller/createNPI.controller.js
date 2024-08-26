@@ -60,6 +60,7 @@ sap.ui.define([
             },
 
             onAfterRendering: function () {
+                that.totalTabData = [];
                 that.tokens, that.oFlag;
                 that.newCharNum = that.byId("idCharValue");
                 that.oldCharVal = that.byId("idOldCharValue");
@@ -154,7 +155,8 @@ sap.ui.define([
                         CHARVAL_NUM: that.oDetails[0].CHARVAL_NUM,
                         WEIGHT: that.oDetails[0].WEIGHT.toFixed(2),
                         FROM_DATE: that.oDetails[0].VALID_FROM.toISOString().slice(0,10),
-                        TO_DATE: that.oDetails[0].VALID_TO.toISOString().slice(0,10)
+                        TO_DATE: that.oDetails[0].VALID_TO.toISOString().slice(0,10),
+                        STATUS: false
                     }
                     that.charsSelected.push(that.intChars);
 
@@ -419,7 +421,7 @@ sap.ui.define([
                         REFCHARVAL_DESC: oItem.getModel().getProperty(oItem.sPath).CHARVAL_DESC,
                         CHARVAL_NUM: oItem.getModel().getProperty(oItem.sPath).CHARVAL_NUM,
                         WEIGHT: weightage.toFixed(2),
-                        STATUS: "Active"
+                        STATUS: true
                     }
                     that.charsSelected.push(that.intChars);
                 });
@@ -859,7 +861,17 @@ sap.ui.define([
                                 oModel.setProperty("/finishButtonVisible", false);
                             }
                             else {
+                                if(that.oFlag === "X"){
+                                    that._oWizard.nextStep();
+                                    that._iNewSelectedIndex++
+                                    oModel.setProperty("/nextButtonVisible", true);
+                                    oModel.setProperty("/backButtonVisible", true);
+                                    oModel.setProperty("/reviewButtonVisible", false);
+                                    oModel.setProperty("/finishButtonVisible", false);
+                                }
+                                else{
                                 return MessageToast.show("Sum of weights not equal to 100");
+                                }
                             }
                         }
                         break;
