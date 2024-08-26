@@ -44,6 +44,7 @@ sap.ui.define([
 
             onAfterRendering: function () {
                 that.selectedProdID='';
+                that.TokenProducts = [];
                 this.i18n = this.getResourceBundle();
                 var oFilters=[];
                 if (!this._valueHelpDialogProd) {
@@ -95,8 +96,16 @@ sap.ui.define([
                 that.mainArray = [];
                 
                 // var selectedProd = that.byId("idConfigProd").getValue();
-                var selectedProd = that.selectedProdID;
+                
                 var selectedProj = that.proj;
+
+                if(that.TokenProducts.length > 0){
+                    var ProdTok = JSON.stringify(that.TokenProducts)
+                } else {
+                    var ProdTok =  [];
+                }
+
+               
                 
                 if (selectedProj) {
                     that.byId("newTabSearch").setValue();
@@ -109,7 +118,7 @@ sap.ui.define([
                         method: "GET",
                         urlParameters: {
                             PROJECT_ID: selectedProj,
-                            PRODUCT_ID: selectedProd
+                            PRODUCT_ID: ProdTok
                         },
                         success: function (oData) {
                             if(oData.results[0].UID !== "[]"){
@@ -181,6 +190,7 @@ sap.ui.define([
 
                             })
                         );
+                        that.TokenProducts.push(oItem.getDescription());
                     });
                 sap.ui.getCore().byId("prodSlctListOD").getBinding("items").filter([]);
                 sap.ui.getCore().byId("prodSlctListOD").clearSelection();
