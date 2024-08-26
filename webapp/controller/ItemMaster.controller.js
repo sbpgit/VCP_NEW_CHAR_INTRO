@@ -24,6 +24,7 @@ sap.ui.define([
                 //     viewName: this.getView().getProperty("viewName"),
                 // });
                 this.bus.subscribe("data", "RefreshData", this.RefreshItems, this);
+                this.bus.subscribe("data", "removeSelection", this.removeSelection, this);
                 that.oGModel = this.getOwnerComponent().getModel("oGModel");
                 that.tabModel = new JSONModel();
                 that.projModel = new JSONModel();
@@ -251,7 +252,12 @@ sap.ui.define([
                 that.byId("newTabSearch").setValue();
                 that.byId("CharSearch").setValue();
                 that.byId("idTempDetails").getBinding("items").filter([]);
+                that.bus.publish("data", "EmptyData");
                 that.onGetData();
+            },
+
+            removeSelection :function(){
+                that.byId("idTempDetails").removeSelection();
             },
             /**
                  * Called when it routes to a page containing the item details.

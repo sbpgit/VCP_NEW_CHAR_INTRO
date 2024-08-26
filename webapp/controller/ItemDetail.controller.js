@@ -97,6 +97,8 @@ sap.ui.define(
 
                 that.byId("TmpUID").setText("");
                 that.byId("RefUID").setText("");
+                that.byId("idCharSearch").setValue("");
+                that.byId("idMatvarItem").getBinding("items").filter(data);
             }
 
 

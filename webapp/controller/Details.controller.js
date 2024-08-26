@@ -275,12 +275,14 @@ sap.ui.define(
         buttonVisible:function(){
           that.byId("fcl").mAggregations._beginColumnBackArrow.setVisible(true);
           that.byId("fcl").mAggregations._beginColumnBackArrow.setIcon("sap-icon://decline");
+          that.byId("fcl").mAggregations._beginColumnBackArrow.setTooltip("Expand Unique ID's");
           // that.byId("fcl").mAggregations._midColumnForwardArrow.attachBrowserEvent("click", that.exitScreen.bind(that));
           that.byId("fcl").mAggregations._beginColumnBackArrow.attachPress("click", that.exitScreen.bind(that));
         },
         exitScreen:function(){
           that.byId("fcl").mAggregations._beginColumnBackArrow.setVisible(false);
           this.oFlexibleColumnLayout.setLayout(sap.f.LayoutType.OneColumn);
+          that.bus.publish("data", "removeSelection");
         
             
         }
