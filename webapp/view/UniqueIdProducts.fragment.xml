@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" header="false">	
-	<TableSelectDialog id="idUniqueProds" title="" search="handleCharSearch" liveChange="handleCharSearch" rememberSelections="true"
+	<TableSelectDialog id="idUniqueProds" title="" search="handleCharSearch" liveChange="handleCharSearch" rememberSelections="false"
 		confirm="handleUnqiueProdSele" cancel="handleClose"
 		items="{/setUniqueProds}" multiSelect="true" contentWidth="300px">
 			<columns>

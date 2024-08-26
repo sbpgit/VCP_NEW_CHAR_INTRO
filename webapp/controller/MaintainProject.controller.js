@@ -91,7 +91,7 @@ sap.ui.define([
                 }
                 else {
                     projDetTable.forEach(function (oItem) {
-                        var item = oItem.getCells()[0].getText().slice(4)
+                        var item = oItem.getCells()[0].getTitle().slice(4)
                         that.projArray.push(item)
                     });
                     var maxNumber = that.maxNumber(that.projArray);
@@ -200,15 +200,9 @@ sap.ui.define([
                         FLAG: 'C'
                     },
                     success: function (oData) {
-                        if (oData.saveProjDetails.includes("Successfully")) {
-                            MessageToast.show("Project Saved Successfully");
-                            that.onProjCancel();
-                            that.onAfterRendering();
-                        }
-                        else {
-                            MessageToast.show("Error while saving project.")
-                        }
-
+                        MessageToast.show(oData.saveProjDetails);
+                        that.onProjCancel();
+                        that.onAfterRendering();
                         sap.ui.core.BusyIndicator.hide();
                     },
                     error: function () {
@@ -425,21 +419,21 @@ sap.ui.define([
             onDeleteProjectPress: function (oEvent) {
                 sap.ui.core.BusyIndicator.show();
                 var selectedProject = oEvent.getSource().getBindingContext().getObject().PROJECT_ID;
+                var object = {}, finalArray = [];
+                object = {
+                    PROJECT_ID: selectedProject
+                }
+                finalArray.push(object);
                 this.getOwnerComponent().getModel("BModel").callFunction("/saveProjDetails", {
                     method: "GET",
                     urlParameters: {
-                        NEWPROJDET: JSON.stringify(selectedProject),
+                        NEWPROJDET: JSON.stringify(finalArray),
                         FLAG: 'D'
                     },
                     success: function (oData) {
-                        sap.ui.core.BusyIndicator.hide();
-                        if (oData.saveProjDetails.includes("Successfully")) {
-                            MessageToast.show("Project deleted.");
-                        }
-                        else {
-                            MessageToast.show("Error while deleting Project.")
-                        }
+                        MessageToast.show(oData.saveProjDetails);
                         that.onAfterRendering();
+                        sap.ui.core.BusyIndicator.hide();
                     },
                     error: function () {
                         sap.ui.core.BusyIndicator.hide();

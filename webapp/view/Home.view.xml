@@ -48,7 +48,7 @@
                                     <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Reference Char Value" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Center" width="15%" vAlign="Middle">
                                         <Text text="Char Name" />
                                     </Column>
                                       <Column hAlign="End" width="auto" vAlign="Middle">
