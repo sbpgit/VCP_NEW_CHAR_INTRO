@@ -61,7 +61,7 @@ sap.ui.define([
                 if(status){
                     that.byId("idCharValRep").setEnabled(false);
                     that.byId("idGenUID").setEnabled(false);
-                    that.byId("idMaintainUID").setEnabled(false);
+                    // that.byId("idMaintainUID").setEnabled(false);
                 }
                 else{
                     that.byId("idCharValRep").setEnabled(true);

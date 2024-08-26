@@ -130,19 +130,19 @@ sap.ui.define([
                             // that.itemData = that.headerData[1];
                             that.genFlag = oData.results[0].GenFlag;
                             that.oGModel.setProperty("/genFlag", that.genFlag);
-                            if (oData.results[0].GenFlag === "X") {
-                                // that.oGModel.setProperty("/delFlag", true);
-                                    that.byId("idGen").setEnabled(true);
-                                    that.byId("idGen").setVisible(true);
-                                    that.byId("idSave").setEnabled(false);
-                                    that.byId("idSave").setVisible(false);
-                            } else {
-                                // that.oGModel.setProperty("/delFlag", false);
-                                    that.byId("idSave").setEnabled(true);
-                                    that.byId("idSave").setVisible(true);
-                                    that.byId("idGen").setEnabled(false);
-                                    that.byId("idGen").setVisible(false);
-                            }
+                            // if (oData.results[0].GenFlag === "X") {
+                            //     // that.oGModel.setProperty("/delFlag", true);
+                            //         that.byId("idGen").setEnabled(true);
+                            //         that.byId("idGen").setVisible(true);
+                            //         that.byId("idSave").setEnabled(false);
+                            //         that.byId("idSave").setVisible(false);
+                            // } else {
+                            //     // that.oGModel.setProperty("/delFlag", false);
+                            //         that.byId("idSave").setEnabled(true);
+                            //         that.byId("idSave").setVisible(true);
+                            //         that.byId("idGen").setEnabled(false);
+                            //         that.byId("idGen").setVisible(false);
+                            // }
                             that.HeaderData = JSON.parse(oData.results[0].UID);
 
                             that.HeaderData = that.HeaderData.sort((a, b) => parseInt(a.TMP_UNIQUE_ID.match(/\d+/g)[0]) - parseInt(b.TMP_UNIQUE_ID.match(/\d+/g)[0]));
@@ -163,7 +163,13 @@ sap.ui.define([
                             MessageToast.show("Temporary Unique Id's are not yet generated for this combination.");;
                             that.bus.publish("data", "EmptyData");
                         }
-                            
+                        var status = that.oGModel.getProperty("/selectedProjStatus");
+                        if(status){
+                            that.byId("idSave").setVisible(false);
+                        }
+                        else{
+                            that.byId("idSave").setVisible(true);
+                        }
                         
 
                         },
