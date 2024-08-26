@@ -44,7 +44,7 @@ sap.ui.define([
 
             onAfterRendering: function () {
                 that.selectedProdID='';
-                that.TokenProducts = [];
+                
                 this.i18n = this.getResourceBundle();
                 var oFilters=[];
                 if (!this._valueHelpDialogProd) {
@@ -58,7 +58,8 @@ sap.ui.define([
                 
                 that.proj = that.oGModel.getProperty("/selectedProject");
 
-                that.byId("idConfigProd").setValue();
+                that.byId("idConfigProd").removeAllTokens();
+                that.TokenProducts = [];
                 if(that.proj !== "" && that.proj !== undefined && that.proj !== null){
                 this.getOwnerComponent().getModel("BModel").read("/getProducts", {
                     method: "GET",
@@ -158,7 +159,8 @@ sap.ui.define([
                         }
                         else{
                             sap.ui.core.BusyIndicator.hide();
-                            MessageToast.show("Temporary Unique Id's are not yet generated for this combination.")
+                            MessageToast.show("Temporary Unique Id's are not yet generated for this combination.");;
+                            that.bus.publish("data", "EmptyData");
                         }
                             
                         
@@ -181,6 +183,7 @@ sap.ui.define([
                 
 
                 that.byId("idConfigProd").removeAllTokens();
+                that.TokenProducts = [];
                 selectedItem.forEach(function (oItem) {
                     that.byId("idConfigProd").addToken(
                             new sap.m.Token({
@@ -242,7 +245,8 @@ sap.ui.define([
             },
             /**On Reset Press */
             onResetData: function () {
-                that.byId("idConfigProd").setValue("");
+                that.byId("idConfigProd").removeAllTokens();
+                that.TokenProducts = [];
                 // that.byId("idProjDet").setValue("");
                 that.byId("newTabSearch").setValue();
                 that.byId("CharSearch").setValue();
