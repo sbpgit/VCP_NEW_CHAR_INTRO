@@ -114,8 +114,8 @@
                                             <Text text= "{PRODUCT_ID}" />
                                              <Text text= "{PARTIAL_PROD}" />
                                             <Input value= "{WEIGHTAGE}" liveChange="onInputChange" textAlign="Right" />
-                                            <DatePicker value= "{VALID_FROM}" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange" />
-                                            <DatePicker value= "{VALID_TO}" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onToDateChange"/>
+                                            <DatePicker id="fromDate" value= "{VALID_FROM}" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange" />
+                                            <DatePicker id="toDate" value= "{VALID_TO}" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onToDateChange"/>
                                             <Button id="idDel" icon="sap-icon://delete" press="onDeleteUID" visible="{oGModel>/delFlag}" />
                                         </cells>
                                     </ColumnListItem>
@@ -131,7 +131,7 @@
     <OverflowToolbar>
                 <ToolbarSpacer/>
                 <Button id="idGen" text="Save" enabled="false" press="onGeneratePress" visible="false" type="Emphasized"/>
-                <Button id="idSave" text="Save" enabled="false" press="onGeneratePress" visible="false" type="Emphasized"/>
+                <Button id="idSave" text="Save" enabled="true" press="onGeneratePress" visible="false" type="Emphasized"/>
                 <!-- <Button text="Cancel"/> -->
             </OverflowToolbar>
             </footer>

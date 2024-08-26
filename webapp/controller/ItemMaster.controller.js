@@ -59,6 +59,9 @@ sap.ui.define([
                 
                 that.proj = that.oGModel.getProperty("/selectedProject");
 
+
+
+
                 that.byId("idConfigProd").removeAllTokens();
                 that.TokenProducts = [];
                 if(that.proj !== "" && that.proj !== undefined && that.proj !== null){
@@ -166,9 +169,12 @@ sap.ui.define([
                         var status = that.oGModel.getProperty("/selectedProjStatus");
                         if(status){
                             that.byId("idSave").setVisible(false);
+                            that.oGModel.setProperty("/delFlag", false);
                         }
                         else{
                             that.byId("idSave").setVisible(true);
+                            that.oGModel.setProperty("/delFlag", true);
+
                         }
                         
 
