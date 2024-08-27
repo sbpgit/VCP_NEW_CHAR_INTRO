@@ -18,7 +18,7 @@
 				<ux:subSections>
 					<ux:ObjectPageSubSection id="idObjPageSubSec">
 						<ux:blocks>
-                        	<IconTabBar id="idIconTabBarInlineMode"	headerMode="Inline" class="sapUiResponsiveContentPadding" >
+                        	<IconTabBar id="idIconTabBarInlineMode"	headerMode="Inline" class="sapUiResponsiveContentPadding" select="onTabIconSelected">
 		<items>
 		<IconTabFilter	text="Characteristic Value Replacement"	key="CVP">
 				<Table id="idOrderList" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
@@ -38,29 +38,29 @@
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
                                         <Text text="Config Product" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="New Characteristic Value" />
                                     </Column>                             
                                     
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Reference Char Value" />
                                     </Column>
-                                    <Column hAlign="Center" width="15%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="15%" vAlign="Middle">
                                         <Text text="Char Name" />
                                     </Column>
                                       <Column hAlign="End" width="auto" vAlign="Middle">
                                         <Text text="Weight in %" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Valid From" />
                                     </Column> 
-                                     <Column hAlign="Center" width="auto" vAlign="Middle">
+                                     <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Valid To" />
                                     </Column> 
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="" />
                                     </Column>                                
                                 </columns>
@@ -72,8 +72,8 @@
                                             <ObjectIdentifier title="{REF_CHARVALUE_DESC}" text ="{REF_CHAR_VALUE}"/>
                                             <ObjectIdentifier title="{REF_CHAR_DESC}" text= "{REF_CHAR_NAME}" />   
                                             <Text text= "{WEIGHT}"/>
-                                            <Text text= "{path:'VALID_FROM', type:'sap.ui.model.type.Date', formatOptions : { pattern:'MM/dd/yyyy',style:'medium', UTC: false}}"/>
-                                            <Text text= "{path:'VALID_TO', type:'sap.ui.model.type.Date', formatOptions : { pattern:'MM/dd/yyyy',style:'medium', UTC: false}}"/>
+                                            <Text text= "{path:'VALID_FROM', type:'sap.ui.model.type.Date', formatOptions : { pattern:'YYYY-MM-dd',style:'medium', UTC: false}}"/>
+                                            <Text text= "{path:'VALID_TO', type:'sap.ui.model.type.Date', formatOptions : { pattern:'YYYY-MM-dd',style:'medium', UTC: false}}"/>
                                             <HBox>
                                             <Button  press="onCharValEdit" tooltip="Edit" icon="sap-icon://edit" enabled="{ACTIVE}"/>
                                             <Button  press="onCharValCopy" tooltip="Copy" icon="sap-icon://copy" class="buttonSpace" enabled="{ACTIVE}"/>
@@ -91,28 +91,34 @@
                               mode="None"   selectionChange="onhandlePress" rememberSelections="false"> 
                               <headerToolbar>
 			                    <OverflowToolbar>
-                                <SearchField id="newPhaseSearch" search="oHomesearch" liveChange="oHomesearch" width="50vh" placeholder="Ref Product ID/Char Num/Location/Product ID" />
+                                  <HBox >
+                                    <Label text="Config Product" class="sapUiTinyMarginTop sapUiTinyMarginEnd"/>
+                                    <Input id="idConfProd1" width="250px" placeholder="Configurable Product" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp" />
+                                </HBox>
+                               <SearchField id="newPhaseSearch" search="oHomesearch" liveChange="oHomesearch" width="50vh" placeholder="Ref Product ID/Char Num/Location/Product ID" />
+				                    <Button text="Reset Data" class="hom1" type="Transparent" press="onResetData" tooltip="Reset" />
+                                
 				                    <ToolbarSpacer/>
                                     <Button text="Phase-Out" press="onPhaseOutPress" tooltip="Add Phase-Out Details" />
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
-                                        <Text text="Reference Product ID" />
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
+                                        <Text text="Configurable Product" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
                                         <Text text="Char Num" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
                                         <Text text="Char Value" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
-                                        <Text text="Location Id" />
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
+                                        <Text text="Location" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
-                                        <Text text="Product Id" />
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
+                                        <Text text="Product" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Phase Out Start" />
                                     </Column>                        
                                 </columns>
@@ -124,7 +130,7 @@
                                             <Text text= "{CHAR_VALUE}" />
                                             <Text text= "{LOCATION_ID}" />
                                             <Text text= "{PRODUCT_ID}" />
-                                            <Text text= "{path:'PHASE_OUT_START', type:'sap.ui.model.type.Date', formatOptions : {pattern:'MM/dd/yyyy', style:'medium', UTC: true}}" />                                            
+                                            <Text text= "{path:'PHASE_OUT_START', type:'sap.ui.model.type.Date', formatOptions : {pattern:'YYYY-MM-dd', style:'medium', UTC: true}}" />                                            
                                         </cells>
                                     </ColumnListItem>
                                 </items>

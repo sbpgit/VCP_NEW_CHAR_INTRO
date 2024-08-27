@@ -20,11 +20,17 @@
 						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
 						<f:content>
-                            <Label text="Configurable Product"/>
-                            <Text text="" id="idConfigTextPhase"/>
-							<Label text="Characteristic Value" required="true"/>
+                            <Label text="Configurable Product" required="true"/>
+                             <Input id="ConfigProdPhase" value="" width="300px" placeholder="Configurable Product" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelpPhase" />
+							 <Label text="Characteristic Name" required="true"/>
+                            <HBox>
+							<Input id="idCharNamePhase" value="" placeholder="Characteristic Name" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelpPhase"
+								width="300px" enabled="false"/>
+                                </HBox>
+                            <Label text="Characteristic Value" required="true"/>
 							<MultiInput id="idCharValuePhase" value="" placeholder="Characteristic Value" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelpPhase"
-								width="300px"/>
+								width="300px" enabled="false"/>
+
 						</f:content>
 					</f:SimpleForm>
     </WizardStep>
@@ -45,10 +51,10 @@
                               mode="None"    rememberSelections="false" items="{path:'/dimenListPhase'}" >
                                                          
                                 <columns>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Launch Dimension" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
                                         <Text text="Dimension Values" />
                                     </Column>                            
                                 </columns>
@@ -85,19 +91,19 @@
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Location Id" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Location Desc" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Product Id" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
                                         <Text text="Product Desc" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
                                         <Text text="Phase-Out Date" />
                                     </Column> 
                                 </columns>

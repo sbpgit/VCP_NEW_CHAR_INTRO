@@ -23,31 +23,31 @@
                                 </OverflowToolbar>
                               </headerToolbar>                            
                                 <columns>
-                                    <Column hAlign="Center" width="10%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="10%" vAlign="Middle">
                                         <Text text="Project ID" />
                                     </Column>
-                                    <Column hAlign="Center" width="10%" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="10%" vAlign="Middle" >
                                         <Text text="Project Details" />
                                     </Column>
-                                    <Column hAlign="Center" width="10%" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="10%" vAlign="Middle" >
                                         <Text text="Project Active Status" />
                                     </Column>
-                                    <Column hAlign="Center" width="10%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="10%" vAlign="Middle">
                                         <Text text="Project Release Date" />
                                     </Column>
-                                    <Column hAlign="Center" width="12%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="12%" vAlign="Middle">
                                         <Text text="Created By" />
                                     </Column>
-                                    <Column hAlign="Center" width="10%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="10%" vAlign="Middle">
                                         <Text text="Created Date" />
                                     </Column>
-                                    <Column hAlign="Center" width="12%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="12%" vAlign="Middle">
                                         <Text text="Changed By" />
                                     </Column>
-                                    <Column hAlign="Center" width="10%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="10%" vAlign="Middle">
                                         <Text text="Changed Date" />
                                     </Column>
-                                    <Column hAlign="Center" width="5%" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="5%" vAlign="Middle" >
                                         <Text text="" />
                                     </Column>                                                    
                                 </columns>
@@ -55,7 +55,7 @@
                                     <ColumnListItem>
                                         <cells>
                                             <ObjectIdentifier title="{PROJECT_ID}"/>    
-                                            <Input value="{PROJECT_DET}" liveChange="onInputPress"/>
+                                            <Input value="{PROJECT_DET}" liveChange="onInputPress" enabled="{STATE}"/>
                                              <Switch state="{PROJ_STATUS}" change="onStateChange" enabled="{STATE}" customTextOff="No" customTextOn="Yes"></Switch>
                                             <Text text= "{path:'RELEASE_DATE', type:'sap.ui.model.type.Date', formatOptions : { pattern:'YYYY-MM-dd',style:'medium', UTC: true}}" />
                                             <Text text= "{CREATED_BY}" />

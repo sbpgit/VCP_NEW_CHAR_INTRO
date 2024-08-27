@@ -88,25 +88,25 @@
 				                    <!-- <ToolbarSpacer/> -->
                                     <HBox class="IconClass1">
                                     <Label text="Valid From To Valid To :" class="dateClass"/>
-                                    <DateRangeSelection id="idDateRange" delimiter="To" dateValue="" secondDateValue="" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"
+                                    <DateRangeSelection id="idDateRange" delimiter="To" dateValue="" secondDateValue="" valueFormat="YYYY-MM-dd" displayFormat="YYYY-MM-dd"
 								change="onDateRangeSelection" maxDate="" class="disabledInput" width="350px" minDate=""/>
                                     </HBox>
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Reference Characteristic Value" />
                                     </Column>
-                                    <!-- <Column hAlign="Center" width="auto" vAlign="Middle" visible="false">
+                                    <!-- <Column hAlign="Begin" width="auto" vAlign="Middle" visible="false">
                                         <Text text="Ref Char Name " />
                                     </Column> -->
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
                                         <Text text="Weight in %" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Valid From" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Valid To" />
                                     </Column>
                                 </columns>
@@ -151,10 +151,10 @@
                               updateFinished="onDimeTabFinish" 
                               mode="None"    rememberSelections="false" items="{path:'/dimenList'}"  >
                                 <columns>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Launch Dimension" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
                                         <Text text="Dimension Values" />
                                     </Column>                            
                                 </columns>
@@ -212,22 +212,22 @@
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Location" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Location Desc" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Product" />
                                     </Column>
-                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
                                         <Text text="Product Desc" />
                                     </Column>
-                                     <Column hAlign="Center" width="20%" vAlign="Middle" >
+                                     <Column hAlign="Begin" width="20%" vAlign="Middle" >
                                         <Text text="History Consideration Date" />
                                     </Column>
-                                    <Column hAlign="Center" width="20%" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="20%" vAlign="Middle" >
                                         <Text text="Phase-In Start" />
                                     </Column> 
                                 </columns>
