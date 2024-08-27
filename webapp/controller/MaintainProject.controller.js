@@ -218,6 +218,7 @@ sap.ui.define([
                 if (switchState === true) {
                     var object1 = {}, finalArray1 = [];
                     var projID = oEvent.getSource().getParent().getBindingContext().getObject().PROJECT_ID;
+                        that.oGModel.setProperty('/projActive',projID);
                     var projDetails = oEvent.getSource().getParent().getBindingContext().getObject().PROJECT_DET;
                     var projStatus = true;
                     var releaseDate = new Date();
@@ -225,7 +226,7 @@ sap.ui.define([
                         USER: that.oGModel.getProperty("/User"),
                         PROJECT_ID: projID,
                         PROJECT_DET: projDetails,
-                        PROJ_STATUS: projStatus,
+                        PROJECT_STATUS: projStatus,
                         RELEASE_DATE: releaseDate,
                         CHANGED_DATE: releaseDate
                     }
@@ -238,8 +239,14 @@ sap.ui.define([
                         },
                         success: function (oData) {
                             MessageToast.show(oData.saveProjDetails);
-                            that.onAfterRendering();
+                            // that.onAfterRendering();
+                            // sap.ui.core.BusyIndicator.hide();
+                            if(oData.saveProjDetails.includes("Successfully updated Project")){
+                                that.generateUniqueIds();
+                            } else {
+                                that.onAfterRendering();
                             sap.ui.core.BusyIndicator.hide();
+                            }
                         },
                         error: function () {
                             sap.ui.core.BusyIndicator.hide();
@@ -247,6 +254,97 @@ sap.ui.define([
                         },
                     });
                 }
+
+            },
+
+
+            generateUniqueIds: function () {
+                // Define the URL and request body
+                sap.ui.core.BusyIndicator.show();
+                var data = {
+                    PROJECT_ID: that.oGModel.getProperty('/projActive'),
+                    PRODUCT_ID: "",
+                    PROJ_ACTIVE: "X"
+                };
+                var aScheduleSEDT = {};
+                // Get Job Schedule Start/End Date/Time
+                aScheduleSEDT = that.getScheduleSEDT();
+                var dCurrDateTime = new Date().getTime();
+                var actionText = "/catalog/generateTempUID";
+                var JobName = "Unique ID generation" + dCurrDateTime;
+                sap.ui.core.BusyIndicator.show();
+                var finalList = {
+                    name: JobName,
+                    description: "Unique ID generation",
+                    action: encodeURIComponent(actionText),
+                    active: true,
+                    httpMethod: "POST",
+                    startTime: aScheduleSEDT.djSdate,
+                    endTime: aScheduleSEDT.djEdate,
+                    createdAt: aScheduleSEDT.djSdate,
+                    schedules: [{
+                        data: data,
+                        cron: "",
+                        time: aScheduleSEDT.oneTime,
+                        active: true,
+                        startTime: aScheduleSEDT.dsSDate,
+                        endTime: aScheduleSEDT.dsEDate,
+                    }]
+                };
+                this.getOwnerComponent().getModel("JModel").callFunction("/addMLJob", {
+                    method: "GET",
+                    urlParameters: {
+                        jobDetails: JSON.stringify(finalList),
+                    },
+                    success: function (oData) {
+                        sap.m.MessageToast.show("Project activation started. Please wait for sometime to generate Unique Id's");
+                        sap.ui.core.BusyIndicator.hide();
+                        that.onAfterRendering();
+                        // that.onResetData();
+
+                    },
+                    error: function (error) {
+                        sap.ui.core.BusyIndicator.hide();
+                        sap.m.MessageToast.show("Service Connectivity Issue!");
+                    },
+                });
+            },
+            getScheduleSEDT: function () {
+                var aScheduleSEDT = {};
+                var dDate = new Date();
+                // 07-09-2022-1                
+                var idSchTime = dDate.setSeconds(dDate.getSeconds() + 20);
+                // 07-09-2022-1
+                var idSETime = dDate.setHours(dDate.getHours() + 2);
+                idSchTime = new Date(idSchTime);
+                idSETime = new Date(idSETime);
+                //var onetime = idSchTime;
+                var djSdate = new Date(),
+                    djEdate = idSETime,
+                    dsSDate = new Date(),
+                    dsEDate = idSETime,
+                    tjStime,
+                    tjEtime,
+                    tsStime,
+                    tsEtime;
+
+                djSdate = djSdate.toISOString().split("T");
+                tjStime = djSdate[1].split(":");
+                djEdate = djEdate.toISOString().split("T");
+                tjEtime = djEdate[1].split(":");
+                dsSDate = dsSDate.toISOString().split("T");
+                tsStime = dsSDate[1].split(":");
+                dsEDate = dsEDate.toISOString().split("T");
+                tsEtime = dsEDate[1].split(":");
+
+                var dDate = new Date().toLocaleString().split(" ");
+                aScheduleSEDT.djSdate = djSdate[0] + " " + tjStime[0] + ":" + tjStime[1] + " " + "+0000";
+                aScheduleSEDT.djEdate = djEdate[0] + " " + tjEtime[0] + ":" + tjEtime[1] + " " + "+0000";
+                aScheduleSEDT.dsSDate = dsSDate[0] + " " + tsStime[0] + ":" + tsStime[1] + " " + "+0000";
+                aScheduleSEDT.dsEDate = dsEDate[0] + " " + tsEtime[0] + ":" + tsEtime[1] + " " + "+0000";
+                aScheduleSEDT.oneTime = idSchTime;
+
+                return aScheduleSEDT;
 
             },
             /**On Press of NPI */

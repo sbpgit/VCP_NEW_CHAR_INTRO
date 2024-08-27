@@ -105,85 +105,90 @@ sap.ui.define([
                 var selectedProj = that.proj;
 
                 if(that.TokenProducts.length > 0){
-                    var ProdTok = JSON.stringify(that.TokenProducts)
+                    var ProdToken = JSON.stringify(that.TokenProducts)
                 } else {
-                    var ProdTok =  [];
+                    var ProdToken =  [];
                 }
 
-               
-                
-                if (selectedProj) {
-                    that.byId("newTabSearch").setValue();
-                    that.byId("CharSearch").setValue();
-                    that.tabModel = new JSONModel();
-                    that.tabModel.setSizeLimit(10000);
-                    that.byId("idTempDetails").setModel(that.tabModel);
-                    sap.ui.core.BusyIndicator.show();
-                    this.getOwnerComponent().getModel("BModel").callFunction("/tmpuniqueid", {
-                        method: "GET",
-                        urlParameters: {
-                            PROJECT_ID: selectedProj,
-                            PRODUCT_ID: ProdTok
-                        },
-                        success: function (oData) {
-                            if(oData.results[0].UID !== "[]"){
-                            that.headerData = [], that.itemData = [], that.genFlag;
-                            // that.headerData= JSON.parse(oData.tmpuniqueid);
-                            // that.oGModel.setProperty("/uniqueData",that.headerData);
-                            // that.itemData = that.headerData[1];
-                            that.genFlag = oData.results[0].GenFlag;
-                            that.oGModel.setProperty("/genFlag", that.genFlag);
-                            // if (oData.results[0].GenFlag === "X") {
-                            //     // that.oGModel.setProperty("/delFlag", true);
-                            //         that.byId("idGen").setEnabled(true);
-                            //         that.byId("idGen").setVisible(true);
-                            //         that.byId("idSave").setEnabled(false);
-                            //         that.byId("idSave").setVisible(false);
-                            // } else {
-                            //     // that.oGModel.setProperty("/delFlag", false);
-                            //         that.byId("idSave").setEnabled(true);
-                            //         that.byId("idSave").setVisible(true);
-                            //         that.byId("idGen").setEnabled(false);
-                            //         that.byId("idGen").setVisible(false);
-                            // }
-                            that.HeaderData = JSON.parse(oData.results[0].UID);
-
-                            that.HeaderData = that.HeaderData.sort((a, b) => parseInt(a.TMP_UNIQUE_ID.match(/\d+/g)[0]) - parseInt(b.TMP_UNIQUE_ID.match(/\d+/g)[0]));
-
-                            sap.ui.core.BusyIndicator.hide();
-                            // that.tabModel.setData({ tempDetails: finalData });
-                            that.tabModel.setData({ tempDetails:  that.HeaderData});
-                            that.byId("idTempDetails").setModel(that.tabModel);
-
-                            if (oData.results[0].UID.length > 0) {
-                                that.byId("idTempDetails").getItems()[0].setSelected(true);
-                                that.onHandleSelect();
-                                // that.byId("idTempDetails").selectedItem()
-                            }
-                        }
-                        else{
-                            sap.ui.core.BusyIndicator.hide();
-                            MessageToast.show("Temporary Unique Id's are not yet generated for this combination.");;
-                            that.bus.publish("data", "EmptyData");
-                        }
-                        var status = that.oGModel.getProperty("/selectedProjStatus");
+                var status = that.oGModel.getProperty("/selectedProjStatus");
                         if(status){
+                            var flag = "X";
                             that.byId("idSave").setVisible(false);
                             that.oGModel.setProperty("/delFlag", false);
                         }
                         else{
+                            var flag = "";
                             that.byId("idSave").setVisible(true);
                             that.oGModel.setProperty("/delFlag", true);
 
                         }
-                        
 
-                        },
-                        error: function (oData) {
-                            sap.ui.core.BusyIndicator.hide();
-                            MessageToast.show("Failed to get details");
-                        },
-                    });
+                        that.byId("newTabSearch").setValue();
+                        that.byId("CharSearch").setValue();
+                        that.tabModel = new JSONModel();
+                        that.tabModel.setSizeLimit(10000);
+                        that.byId("idTempDetails").setModel(that.tabModel);
+                        sap.ui.core.BusyIndicator.show();
+                        
+                        sap.ui.core.BusyIndicator.show();
+                
+                if (selectedProj) {
+
+                        this.getOwnerComponent().getModel("BModel").callFunction("/tmpuniqueid", {
+                            method: "GET",
+                            urlParameters: {
+                                PROJECT_ID: selectedProj,
+                                PRODUCT_ID: ProdToken,
+                                FLAG: flag
+                            },
+                            success: function (oData) {
+                                if(oData.results[0].UID !== "[]"){
+                                that.headerData = [], that.itemData = [], that.genFlag;                                
+                                that.HeaderData = JSON.parse(oData.results[0].UID);   
+                                var status = that.oGModel.getProperty("/selectedProjStatus");
+                                if(status){
+                                    that.byId("idTempDetails").getColumns()[0].setVisible(false);
+                                    that.byId("idTempDetails").getColumns()[2].setVisible(false);
+                                    that.byId("idTempDetails").getColumns()[5].setVisible(false);
+                                    that.byId("idTempDetails").getColumns()[6].setVisible(false);
+                                    that.byId("idTempDetails").getColumns()[12].setVisible(false);
+
+                                    that.HeaderData = that.HeaderData.sort((a, b) => a.UNIQUE_ID - b.UNIQUE_ID);
+                                } else {
+                                    that.byId("idTempDetails").getColumns()[1].setVisible(false);
+                                    that.byId("idTempDetails").getColumns()[3].setVisible(false);
+                                    that.byId("idTempDetails").getColumns()[7].setVisible(false);
+                                    that.byId("idTempDetails").getColumns()[8].setVisible(false);
+                                    that.byId("idTempDetails").getColumns()[9].setVisible(false);
+
+                                    that.HeaderData = that.HeaderData.sort((a, b) => a.TMP_UNIQUE_ID - b.TMP_UNIQUE_ID);
+
+                                }
+                            
+    
+                                sap.ui.core.BusyIndicator.hide();
+                                that.tabModel.setData({ tempDetails:  that.HeaderData});
+                                that.byId("idTempDetails").setModel(that.tabModel);
+    
+                                if (oData.results[0].UID.length > 0) {
+                                    that.byId("idTempDetails").getItems()[0].setSelected(true);
+                                    that.onHandleSelect();
+                                }
+                            }
+                            else{
+                                sap.ui.core.BusyIndicator.hide();
+                                MessageToast.show("Temporary Unique Id's are not yet generated for this combination.");;
+                                that.bus.publish("data", "EmptyData");
+                            }
+                            
+                            },
+                            error: function (oData) {
+                                sap.ui.core.BusyIndicator.hide();
+                                MessageToast.show("Failed to get details");
+                            },
+                        });
+
+                   
                 }
                 else {
 
@@ -276,19 +281,33 @@ sap.ui.define([
                  */
             onHandleSelect: function (oEvent) {
                 // oGModel = that.getModel("oGModel");
+                var status = that.oGModel.getProperty("/selectedProjStatus");
                 if (oEvent) {
                     var sSelItem = oEvent.getSource().getSelectedItem().getBindingContext().getObject();
-                    that.oGModel.setProperty("/RefuniqId", sSelItem.REF_UNIQUE_ID);
-                    that.oGModel.setProperty("/uniqId", sSelItem.TMP_UNIQUE_ID);
-                    that.oGModel.setProperty("/uniqueItemData", sSelItem.CONFIG);
+                    if(status){
+                        that.oGModel.setProperty("/RefuniqId", sSelItem.REF_UNIQUE_ID);
+                        that.oGModel.setProperty("/uniqId", sSelItem.UNIQUE_ID);
+                        that.oGModel.setProperty("/uniqueItemData", sSelItem.CONFIG);
+                    } else {
+                        that.oGModel.setProperty("/RefuniqId", sSelItem.REF_UNIQUE_ID);
+                        that.oGModel.setProperty("/uniqId", sSelItem.TMP_UNIQUE_ID);
+                        that.oGModel.setProperty("/uniqueItemData", sSelItem.CONFIG);
+                    }
                 }
                 else {
-                    // var sSelItem = that.oGModel.getProperty("/uniqueData")[0];
                     var sItem = that.byId("idTempDetails").getSelectedItems()[0].getBindingContext().getObject();
                     var sSelItem = that.byId("idTempDetails").getItems()[0].getCells();
-                    that.oGModel.setProperty("/RefuniqId", parseInt(sSelItem[1].getTitle()));
-                    that.oGModel.setProperty("/uniqId", sSelItem[0].getText());
+                    
                     that.oGModel.setProperty("/uniqueItemData", sItem.CONFIG);
+                    if(status){
+                        that.oGModel.setProperty("/RefuniqId", parseInt(sSelItem[2].getTitle()));
+                        that.oGModel.setProperty("/uniqId", sSelItem[1].getText());
+                    } else {
+                        // var sSelItem = that.oGModel.getProperty("/uniqueData")[0];
+                        
+                        that.oGModel.setProperty("/RefuniqId", parseInt(sSelItem[2].getTitle()));
+                        that.oGModel.setProperty("/uniqId", sSelItem[0].getText());
+                    }
                 }
                 // Calling Item Detail page
                 that.getOwnerComponent().runAsOwner(function () {

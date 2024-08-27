@@ -509,7 +509,8 @@ sap.ui.define([
                 // Define the URL and request body
                 var data = {
                     PROJECT_ID: that.oGModel.getProperty('/selectedProject'),
-                    PRODUCT_ID: JSON.stringify(that.selectedProds)
+                    PRODUCT_ID: JSON.stringify(that.selectedProds),
+                    PROJ_ACTIVE: ""
                 };
                 var aScheduleSEDT = {};
                 // Get Job Schedule Start/End Date/Time
@@ -631,14 +632,8 @@ sap.ui.define([
                     that._valueHelpDialogProd.destroy(true);
                     that._valueHelpDialogProd = "";
                 }
-                if (this._valueHelpDialogProd) {
-                    that._valueHelpDialogProd.destroy(true);
-                    that._valueHelpDialogProd = "";
-                }
-                if (this._valueHelpDialogProd) {
-                    that._valueHelpDialogProd.destroy(true);
-                    that._valueHelpDialogProd = "";
-                }
+                that.oGModel.setProperty("/charValTab",charValData );
+               that.oGModel.setProperty("/phaseOutTab",phaseOutData );
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
                 oRouter.navTo("PhaseOutWizard", {}, true);
             },

@@ -85,8 +85,9 @@
                               mode="None"   selectionChange="onhandlePress" rememberSelections="false"> 
                               <headerToolbar>
 			                    <OverflowToolbar>
-				                    <!-- <ToolbarSpacer/> -->
-                                    <HBox class="IconClass1">
+				                    <ToolbarSpacer/>
+                                    <!-- <HBox class="IconClass1"> -->
+                                    <HBox >
                                     <Label text="Valid From To Valid To :" class="dateClass"/>
                                     <DateRangeSelection id="idDateRange" delimiter="To" dateValue="" secondDateValue="" valueFormat="YYYY-MM-dd" displayFormat="YYYY-MM-dd"
 								change="onDateRangeSelection" maxDate="" class="disabledInput" width="350px" minDate=""/>
