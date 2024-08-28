@@ -23,28 +23,28 @@
                                 </OverflowToolbar>
                               </headerToolbar>                            
                                 <columns>
-                                    <Column hAlign="Begin" width="10%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="7%" vAlign="Middle">
                                         <Text text="Project ID" />
                                     </Column>
-                                    <Column hAlign="Begin" width="10%" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="18%" vAlign="Middle" >
                                         <Text text="Project Details" />
                                     </Column>
-                                    <Column hAlign="Begin" width="10%" vAlign="Middle" >
+                                    <Column hAlign="Center" width="10%" vAlign="Middle" >
                                         <Text text="Project Active Status" />
                                     </Column>
-                                    <Column hAlign="Begin" width="10%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="8%" vAlign="Middle">
                                         <Text text="Project Release Date" />
                                     </Column>
-                                    <Column hAlign="Begin" width="12%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="14%" vAlign="Middle">
                                         <Text text="Created By" />
                                     </Column>
-                                    <Column hAlign="Begin" width="10%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="8%" vAlign="Middle">
                                         <Text text="Created Date" />
                                     </Column>
-                                    <Column hAlign="Begin" width="12%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="14%" vAlign="Middle">
                                         <Text text="Changed By" />
                                     </Column>
-                                    <Column hAlign="Begin" width="10%" vAlign="Middle">
+                                    <Column hAlign="Begin" width="8%" vAlign="Middle">
                                         <Text text="Changed Date" />
                                     </Column>
                                     <Column hAlign="Begin" width="5%" vAlign="Middle" >

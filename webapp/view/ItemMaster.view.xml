@@ -11,18 +11,6 @@
 					<ux:ObjectPageSubSection id="idObjPageSubSec">
 						<ux:blocks>
 
-                        
-
-
-
-
-
-
-
-
-
-
-
                          <Table id="idTempDetails" growing="true"  growingDirection="Downwards" growingThreshold="500" 
                               updateFinished="onTableUpdate" items="{path: '/tempDetails'}"  itemPress="onHandleSelect"  
                               mode="SingleSelectMaster"   selectionChange="onHandleSelect" rememberSelections="false"> 

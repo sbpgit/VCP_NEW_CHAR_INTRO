@@ -273,6 +273,14 @@ sap.ui.define([
                     that._valueHelpDialogProd.destroy(true);
                     that._valueHelpDialogProd = "";
                 }
+                if (this._valueHelpCharName) {
+                    that._valueHelpCharName.destroy(true);
+                    that._valueHelpCharName = "";
+                }
+                if (this._valueHelpCharName) {
+                    that._valueHelpCharName.destroy(true);
+                    that._valueHelpCharName = "";
+                }
                 sap.ui.core.BusyIndicator.hide();
             },
             /**Remoing duplicates function */
@@ -1018,6 +1026,16 @@ sap.ui.define([
                         else if (items[0].getCells()[1].getTokens().length > 0 && items[1].getCells()[1].getTokens().length === 0 ||
                             items[0].getCells()[1].getTokens().length === 0 && items[1].getCells()[1].getTokens().length > 0) {
                             MessageToast.show("Please select Location/Product")
+                        }
+                        var tabItems = that.byId("idPhaseInTab").getItems();
+                        for(var i=0;i<that.oDetails.length;i++){
+                            for(var k=0;k<tabItems.length;k++){
+                                if(tabItems[k].getCells()[0].getText()===that.oDetails[i].LOCATION_ID
+                            && tabItems[k].getCells()[2].getText()===that.oDetails[i].PRODUCT_ID){
+                                tabItems[k].getCells()[4].setDateValue(new Date(that.oDetails[i].HISTORY_DATE));
+                                tabItems[k].getCells()[5].setDateValue(new Date(that.oDetails[i].PHASE_IN_START));
+                            }
+                            }
                         }
                         sap.ui.core.BusyIndicator.hide();
                         break;

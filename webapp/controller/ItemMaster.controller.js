@@ -152,6 +152,11 @@ sap.ui.define([
                                     that.byId("idTempDetails").getColumns()[5].setVisible(false);
                                     that.byId("idTempDetails").getColumns()[6].setVisible(false);
                                     that.byId("idTempDetails").getColumns()[12].setVisible(false);
+                                    that.byId("idTempDetails").getColumns()[1].setVisible(true);
+                                    that.byId("idTempDetails").getColumns()[3].setVisible(true);
+                                    that.byId("idTempDetails").getColumns()[7].setVisible(true);
+                                    that.byId("idTempDetails").getColumns()[8].setVisible(true);
+                                    that.byId("idTempDetails").getColumns()[9].setVisible(true);
 
                                     that.HeaderData = that.HeaderData.sort((a, b) => a.UNIQUE_ID - b.UNIQUE_ID);
                                 } else {
@@ -160,6 +165,11 @@ sap.ui.define([
                                     that.byId("idTempDetails").getColumns()[7].setVisible(false);
                                     that.byId("idTempDetails").getColumns()[8].setVisible(false);
                                     that.byId("idTempDetails").getColumns()[9].setVisible(false);
+                                    that.byId("idTempDetails").getColumns()[0].setVisible(true);
+                                    that.byId("idTempDetails").getColumns()[2].setVisible(true);
+                                    that.byId("idTempDetails").getColumns()[5].setVisible(true);
+                                    that.byId("idTempDetails").getColumns()[6].setVisible(true);
+                                    that.byId("idTempDetails").getColumns()[12].setVisible(true);
 
                                     that.HeaderData = that.HeaderData.sort((a, b) => a.TMP_UNIQUE_ID - b.TMP_UNIQUE_ID);
 
@@ -251,6 +261,7 @@ sap.ui.define([
                                     new Filter("UNIQUE_DESC", FilterOperator.Contains, sQuery),
                                     new Filter("REF_UNIQUE_ID", FilterOperator.EQ, sQuery),
                                     new Filter("TMP_UNIQUE_ID", FilterOperator.EQ, sQuery),
+                                    new Filter("UNIQUE_ID", FilterOperator.EQ, sQuery),
                                     new Filter("PRODUCT_ID", FilterOperator.Contains, sQuery),
                                     new Filter("PARTIAL_PROD", FilterOperator.Contains, sQuery),
                                 ],

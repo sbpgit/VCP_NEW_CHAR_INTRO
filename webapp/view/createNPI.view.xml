@@ -127,7 +127,7 @@
     </WizardStep>
     <!-- /Step 4 in Wizard/ -->
     <WizardStep id="idLaunchDet" title="Launch Dimension" validated="true" activate="onStep4Press">
-    <f:SimpleForm id="idDimensions" editable="true" layout="ResponsiveGridLayout" abelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12"
+    <f:SimpleForm id="idDimensions" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12"
 						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
 						<f:content>
@@ -173,7 +173,7 @@
     </WizardStep>
     <!-- /Step 5 in Wizard/ -->
     <WizardStep id="idPhaseIn" title="Phase-In Details New Characteristic Value" validated="true" activate="onStep5Press">
-    <f:SimpleForm id="idPhasein" editable="true" layout="ResponsiveGridLayout" abelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12"
+    <f:SimpleForm id="idPhasein" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12"
 						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
 						<f:content>

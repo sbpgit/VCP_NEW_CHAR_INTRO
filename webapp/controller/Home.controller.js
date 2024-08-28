@@ -61,12 +61,13 @@ sap.ui.define([
                 if (status) {
                     that.byId("idCharValRep").setEnabled(false);
                     that.byId("idGenUID").setEnabled(false);
-                    // that.byId("idMaintainUID").setEnabled(false);
+                    that.byId("idPhaseOutBtn").setEnabled(false);
                 }
                 else {
                     that.byId("idCharValRep").setEnabled(true);
                     that.byId("idGenUID").setEnabled(true);
                     that.byId("idMaintainUID").setEnabled(true);
+                    that.byId("idPhaseOutBtn").setEnabled(true);
                 }
                 if (selectedProject === undefined || selectedProject === "") {
                     that.onBackToMPD();
@@ -271,9 +272,13 @@ sap.ui.define([
                             new Filter({
                                 filters: [
                                     new Filter("CHAR_VALUE", FilterOperator.Contains, sQuery),
+                                    new Filter("CHARVAL_DESC", FilterOperator.Contains, sQuery),
                                     new Filter("REF_PRODID", FilterOperator.Contains, sQuery),
+                                    new Filter("PROD_DESC", FilterOperator.Contains, sQuery),
                                     new Filter("REF_CHAR_VALUE", FilterOperator.Contains, sQuery),
-                                    new Filter("REF_CHAR_NAME", FilterOperator.Contains, sQuery)
+                                    new Filter("REF_CHARVALUE_DESC", FilterOperator.Contains, sQuery),
+                                    new Filter("REF_CHAR_NAME", FilterOperator.Contains, sQuery),
+                                    new Filter("REF_CHAR_DESC", FilterOperator.Contains, sQuery)
                                 ],
                                 and: false,
                             })
@@ -301,10 +306,15 @@ sap.ui.define([
                             new Filter({
                                 filters: [
                                     new Filter("REF_PRODID", FilterOperator.Contains, sQuery),
+                                    new Filter("REF_PROD_DESC", FilterOperator.Contains, sQuery),
                                     new Filter("CHAR_NUM", FilterOperator.Contains, sQuery),
+                                    new Filter("CHARNUM_DESC", FilterOperator.Contains, sQuery),
                                     new Filter("LOCATION_ID", FilterOperator.Contains, sQuery),
                                     new Filter("PRODUCT_ID", FilterOperator.Contains, sQuery),
-                                    new Filter("CHAR_VALUE", FilterOperator.Contains, sQuery)
+                                    new Filter("LOCATION_DESC", FilterOperator.Contains, sQuery),
+                                    new Filter("PRODUCT_DESC", FilterOperator.Contains, sQuery),
+                                    new Filter("CHAR_VALUE", FilterOperator.Contains, sQuery),
+                                    new Filter("CHARVAL_DESC", FilterOperator.Contains, sQuery)
                                 ],
                                 and: false,
                             })
@@ -627,6 +637,8 @@ sap.ui.define([
             /**onPress of Phase out button */
             onPhaseOutPress: function () {
                 var selectedProject = that.oGModel.getProperty("/selectedProject");
+                var charValData = that.byId("idOrderList").getModel().oData.configProdResults
+                var phaseOutData = that.byId("idPhaseOutList").getModel().oData.phaseOutDet;
                 that.oGModel.setProperty("/projectDetails", selectedProject);
                 if (this._valueHelpDialogProd) {
                     that._valueHelpDialogProd.destroy(true);
@@ -755,7 +767,8 @@ sap.ui.define([
                     that.selectedProds.push(oItem.getModel().getProperty(oItem.sPath).PRODUCT_ID);
                 });
                 sap.ui.core.BusyIndicator.hide();
-                MessageBox.information("Temporary unique Ids already Exists. Would you like to create new?", {
+                // MessageBox.information("Temporary unique Ids already Exists. Would you like to create new?", {
+                    MessageBox.information("Temporary Unique Id's will be replaced if already exists. Would you like to continue?", {
                     actions: ["Yes", MessageBox.Action.CLOSE],
                     emphasizedAction: "Yes",
                     onClose: function (sAction) {

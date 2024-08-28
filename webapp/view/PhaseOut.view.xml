@@ -16,18 +16,18 @@
     <Wizard id="PhaseOutWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" renderMode="Page" showNextButton="false" complete="">
     <!-- /Step 1 in Wizard/ -->
     <WizardStep id="idWizardStep1" title="Characteristic Value Selection" validated="true" activate="" >
-    <f:SimpleForm id="idCharSelectionPhase" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
+    <f:SimpleForm id="idCharSelectionPhase" editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="2" labelSpanM="2" labelSpanS="2"
 						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
 						<f:content>
-                            <Label text="Configurable Product" required="true"/>
+                            <Label text="Configurable Product" required="true" class="clssBold"/>
                              <Input id="ConfigProdPhase" value="" width="300px" placeholder="Configurable Product" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelpPhase" />
-							 <Label text="Characteristic Name" required="true"/>
+							 <Label text="Characteristic Name" required="true" class="clssBold"/>
                             <HBox>
 							<Input id="idCharNamePhase" value="" placeholder="Characteristic Name" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelpPhase"
 								width="300px" enabled="false"/>
                                 </HBox>
-                            <Label text="Characteristic Value" required="true"/>
+                            <Label text="Characteristic Value" required="true" class="clssBold"/>
 							<MultiInput id="idCharValuePhase" value="" placeholder="Characteristic Value" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelpPhase"
 								width="300px" enabled="false"/>
 
@@ -36,14 +36,18 @@
     </WizardStep>
     <!-- /Step2 in Wizard-->
      <WizardStep id="idLaunchDetPhase" title="Launch Dimension" validated="true" activate="onStep2Phase">
-    <f:SimpleForm id="idDimensionsPhase" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
-						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+    <f:SimpleForm id="idDimensionsPhase" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12"
+						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
 						<f:content>
-							<Label text="Configurable Product" required="false"/>
+                        <core:Title text="" id="core1"/>
+							<Label text="Configurable Product" required="false" class="clssBold"/>
                             <Text text="" id="idConfigPhase"/>
-							<Label text="Characteristic Value" required="false"/>
-							<MultiInput id="idOldDimenPhase" value="" editable="false" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
+                             <Label text="Characteristic Name" class="clssBold"/>
+                            <Text text="" id="idCharNameStep2" class="newClass"/>
+                            <core:Title text="" id="core2" />
+							<Label text="Characteristic Value" required="false" class="clssBold"/>
+							<MultiInput id="idOldDimenPhase" value="" enabled="false" type="Text" placeholder="Characteristic Value" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
                         </f:content>
 					</f:SimpleForm>
                     <Table id="idDimenTablePhase" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
@@ -51,10 +55,10 @@
                               mode="None"    rememberSelections="false" items="{path:'/dimenListPhase'}" >
                                                          
                                 <columns>
-                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
+                                    <Column hAlign="Center" width="auto" vAlign="Middle">
                                         <Text text="Launch Dimension" />
                                     </Column>
-                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
+                                    <Column hAlign="Center" width="auto" vAlign="Middle" >
                                         <Text text="Dimension Values" />
                                     </Column>                            
                                 </columns>
@@ -71,15 +75,18 @@
     </WizardStep>
     <!-- /Step 3 in WIzard/ -->
     <WizardStep id="idPhaseOut3" title="Phase-Out Details Characteristic Value" validated="true" activate="onStep3Phase">
-    <f:SimpleForm id="idPhaseOut" editable="true" layout="ResponsiveGridLayout" labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="2"
-						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+    <f:SimpleForm id="idPhaseOut" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12"
+						adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="1"
 						singleContainerFullSize="false" ariaLabelledBy="Title1">
 						<f:content>
-							<Label text="Configurable Product" required="false"/>
-							<Input id="idPhaseOutProd" value="" placeholder="" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp"
-								width="300px" editable="false"/>                                
-							<Label text="Characteristic Value" required="false"/>
-							<MultiInput id="idPhaseOutNew" value="" editable="false" type="Text" placeholder="" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
+                         <core:Title text="" id="core3"/>
+							<Label text="Configurable Product" required="false" class="clssBold"/>
+                            <Text text="" id="idPhaseOutProd"/>
+							 <Label text="Characteristic Name" class="clssBold"/>
+                            <Text text="" id="idCharNameStep3" class="newClass"/> 
+                              <core:Title text="" id="core4"/>                        
+							<Label text="Characteristic Value" required="false" class="clssBold"/>
+							<MultiInput id="idPhaseOutNew" value="" enabled="false" type="Text" placeholder="" width="300px" valueHelpRequest="handleValueHelp" showValueHelp="true" valueHelpOnly="true" />
                         </f:content>
 					</f:SimpleForm>
                     <Table id="idPhaseOutTab" growing="true"  growingDirection="Downwards" growingThreshold="1000" 
@@ -88,6 +95,11 @@
                             <headerToolbar>
 			                    <OverflowToolbar>
 				                    <ToolbarSpacer/>
+                                    <HBox>
+                                    <Label text="Phase-Out Date :" class="dateClass"/>                                    
+                                    <DatePicker id="idPhaseOutDate"  displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" 
+                                    change="onDateChangePhase" />
+                                    </HBox>    
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
@@ -128,7 +140,7 @@
 					<Button text="Previous Step" visible="{/backButtonVisible}" press="onDialogBackButton1" />
 					<Button text="Next Step" type="Emphasized" enabled="{/nextButtonEnabled}" visible="{/nextButtonVisible}" press="onDialogNextButton1" />		
 					<Button text="Finish" type="Emphasized" visible="{/finishButtonVisible}" press="handleWizardSubmit1" />
-					<Button	text="Cancel" type="Transparent" press="handleWizardCancel1"/>
+					<!-- <Button	text="Cancel" type="Transparent" press="handleWizardCancel1"/> -->
 				</OverflowToolbar>
     </footer>
     </Page>

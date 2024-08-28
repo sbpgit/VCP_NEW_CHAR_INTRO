@@ -31,36 +31,36 @@
                                     <Label text="Config Product" class="sapUiTinyMarginTop sapUiTinyMarginEnd"/>
                                     <Input id="idConfProd" width="250px" placeholder="Configurable Product" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp" />
                                 </HBox>
-                                <SearchField id="newCharSearch" search="oHomesearch" liveChange="oHomesearch" width="50vh" placeholder="New Char Value/Product/Ref Char Value" />
+                                <SearchField id="newCharSearch" search="oHomesearch" liveChange="oHomesearch" width="50vh" placeholder="Product/New Char Value/Ref Char Value" />
 				                    <Button text="Reset Data" class="hom1" type="Transparent" press="onResetData" tooltip="Reset" />
                                     <ToolbarSpacer/>
                                     <Button text="Characteristic Value Replacement" press="onCharValRep" tooltip="Add New Char Value" id="idCharValRep" />
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
-                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
+                                    <Column hAlign="Begin" width="12.5%" vAlign="Middle" >
                                         <Text text="Config Product" />
                                     </Column>
-                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="12.5%" vAlign="Middle">
                                         <Text text="New Characteristic Value" />
                                     </Column>                             
                                     
-                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
-                                        <Text text="Reference Char Value" />
+                                    <Column hAlign="Begin" width="12.5%" vAlign="Middle">
+                                        <Text text="Reference Characteristic Value" />
                                     </Column>
-                                    <Column hAlign="Begin" width="15%" vAlign="Middle">
-                                        <Text text="Char Name" />
+                                    <Column hAlign="Center" width="16%" vAlign="Middle">
+                                        <Text text="Characteristic Name" />
                                     </Column>
-                                      <Column hAlign="End" width="auto" vAlign="Middle">
+                                      <Column hAlign="End" width="9%" vAlign="Middle">
                                         <Text text="Weight in %" />
                                     </Column>
-                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="12.5%" vAlign="Middle">
                                         <Text text="Valid From" />
                                     </Column> 
-                                     <Column hAlign="Begin" width="auto" vAlign="Middle">
+                                     <Column hAlign="Begin" width="12.5%" vAlign="Middle">
                                         <Text text="Valid To" />
                                     </Column> 
-                                    <Column hAlign="Begin" width="auto" vAlign="Middle">
+                                    <Column hAlign="Begin" width="12.5%" vAlign="Middle">
                                         <Text text="" />
                                     </Column>                                
                                 </columns>
@@ -76,7 +76,7 @@
                                             <Text text= "{path:'VALID_TO', type:'sap.ui.model.type.Date', formatOptions : { pattern:'YYYY-MM-dd',style:'medium', UTC: false}}"/>
                                             <HBox>
                                             <Button  press="onCharValEdit" tooltip="Edit" icon="sap-icon://edit" enabled="{ACTIVE}"/>
-                                            <Button  press="onCharValCopy" tooltip="Copy" icon="sap-icon://copy" class="buttonSpace" enabled="{ACTIVE}"/>
+                                            <!-- <Button  press="onCharValCopy" tooltip="Copy" icon="sap-icon://copy" class="buttonSpace" enabled="{ACTIVE}"/> -->
                                             <Button  press="onCharValDelete" tooltip="Delete" icon="sap-icon://delete" class="buttonSpace" enabled="{ACTIVE}"/>
                                             </HBox>
                                         </cells>
@@ -95,22 +95,16 @@
                                     <Label text="Config Product" class="sapUiTinyMarginTop sapUiTinyMarginEnd"/>
                                     <Input id="idConfProd1" width="250px" placeholder="Configurable Product" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="handleValueHelp" />
                                 </HBox>
-                               <SearchField id="newPhaseSearch" search="oHomesearch" liveChange="oHomesearch" width="50vh" placeholder="Ref Product ID/Char Num/Location/Product ID" />
+                               <SearchField id="newPhaseSearch" search="oHomesearch" liveChange="oHomesearch" width="50vh" placeholder="Product/Location/Char Name/Char Value" />
 				                    <Button text="Reset Data" class="hom1" type="Transparent" press="onResetData" tooltip="Reset" />
                                 
 				                    <ToolbarSpacer/>
-                                    <Button text="Phase-Out" press="onPhaseOutPress" tooltip="Add Phase-Out Details" />
+                                    <Button text="Phase-Out" press="onPhaseOutPress" tooltip="Add Phase-Out Details" id="idPhaseOutBtn" />
 			                    </OverflowToolbar>
 		                      </headerToolbar>                             
                                 <columns>
                                     <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Configurable Product" />
-                                    </Column>
-                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
-                                        <Text text="Char Num" />
-                                    </Column>
-                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
-                                        <Text text="Char Value" />
                                     </Column>
                                     <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Location" />
@@ -118,6 +112,12 @@
                                     <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Product" />
                                     </Column>
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
+                                        <Text text="Characteristic Name" />
+                                    </Column>
+                                    <Column hAlign="Begin" width="auto" vAlign="Middle" >
+                                        <Text text="Characteristic Value" />
+                                    </Column>                                    
                                     <Column hAlign="Begin" width="auto" vAlign="Middle">
                                         <Text text="Phase Out Start" />
                                     </Column>                        
@@ -125,11 +125,11 @@
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                            <Text text="{REF_PRODID}" />    
-                                            <Text text="{CHAR_NUM}" />
-                                            <Text text= "{CHAR_VALUE}" />
-                                            <Text text= "{LOCATION_ID}" />
-                                            <Text text= "{PRODUCT_ID}" />
+                                            <ObjectIdentifier title="{REF_PROD_DESC}" text="{REF_PRODID}" />
+                                            <ObjectIdentifier title="{LOCATION_DESC}" text= "{LOCATION_ID}" />
+                                            <ObjectIdentifier title="{PRODUCT_DESC}" text= "{PRODUCT_ID}" />    
+                                            <ObjectIdentifier title="{CHARNUM_DESC}" text="{CHAR_NUM}" />
+                                            <ObjectIdentifier title="{CHARVAL_DESC}" text= "{CHAR_VALUE}" />                                            
                                             <Text text= "{path:'PHASE_OUT_START', type:'sap.ui.model.type.Date', formatOptions : {pattern:'YYYY-MM-dd', style:'medium', UTC: true}}" />                                            
                                         </cells>
                                     </ColumnListItem>
