@@ -708,7 +708,7 @@ sap.ui.define([
                     onClose: function (sAction) {
                         if (sAction === "Yes") {
                             sap.ui.core.BusyIndicator.show();
-                            // that.generateUniqueIds();
+                            that.generateUniqueIds();
                         }
                     },
                     dependentOn: that.getView()
