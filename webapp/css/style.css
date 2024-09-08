@@ -99,5 +99,19 @@ margin-left:50px !important;
 
 .dateClass{
     margin-top: 10px !important;
+    padding-left: 550px !important;
+    font-weight:bold !important
+}
+
+.dateClass1{
+    margin-top: 10px !important;
+    padding-left: 20px !important;
+    font-weight:bold !important
+}
+
+.dateClass2{
+    margin-top: 10px !important;
+    padding-left: 877px !important;
+    font-weight:bold !important
 }
 

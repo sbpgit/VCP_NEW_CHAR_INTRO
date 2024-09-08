@@ -161,11 +161,29 @@ sap.ui.define([
                             }
                             that.phaseOutModel.setData({ phaseOutDet: that.tabPhaseData });
                             that.byId("idPhaseOutList").setModel(that.phaseOutModel);
-                            sap.ui.core.BusyIndicator.hide()
+                            // sap.ui.core.BusyIndicator.hide()
                         },
                         error: function () {
                             sap.ui.core.BusyIndicator.hide();
                             MessageToast.show("Failed to get phaseout details");
+                        },
+                    });
+
+                    this.getOwnerComponent().getModel("BModel").callFunction("/getTMPGenCount", {
+                        method: "GET",
+                        urlParameters: {
+                            PROJECT_ID: (selectedProject),
+                        },
+                        success: function (oData) {
+                            that.temUniqueIds = [];
+                            if ((JSON.parse(oData.getTMPGenCount)).length > 0) {
+                                that.temUniqueIds = JSON.parse(oData.getTMPGenCount);
+                            }                          
+                            sap.ui.core.BusyIndicator.hide()
+                        },
+                        error: function () {
+                            sap.ui.core.BusyIndicator.hide();
+                            MessageToast.show("Failed to get temporary unique id's");
                         },
                     });
                 }
@@ -247,6 +265,7 @@ sap.ui.define([
                     that.byId("idOrderList").getBinding("items").filter([]);
                     that.custModel.setData({ configProdResults: that.tabData });
                     that.byId("idOrderList").setModel(that.custModel);
+                    
                 }
                 else {
                     that.byId("idConfProd1").setValue("");
@@ -439,7 +458,6 @@ sap.ui.define([
             onGenerateUniqueIds: function () {
                 sap.ui.core.BusyIndicator.show();
                 var object = {}, ArrayProds = [];
-                // var tableItems = that.byId("idOrderList").getItems();
                 var tableItems = that.oGModel.getProperty("/TotalChatData");
                 tableItems.forEach(function (oItems) {
                     object = {
@@ -460,61 +478,6 @@ sap.ui.define([
                 var check = new Set();
                 return array.filter(obj => !check.has(obj[key]) && check.add(obj[key]));
             },
-            // newGenUnique: function () {
-            //     that.selectProject = that.oGModel.getProperty('/selectedProject');
-            //     that.selectProduct = that.byId("idConfProd").getValue();
-            //     var tableItems = that.oTable.getModel().oData.configProdResults;
-            //     if (that.selectProject && that.selectProduct) {
-            //         var filteredData = tableItems.filter(a => a.PROJECT_ID === that.selectProject && a.REF_PRODID === that.selectProduct);
-            //         if (filteredData.length > 0) {
-            //             this.getOwnerComponent().getModel("BModel").read("/getTmpUIDHeader", {
-            //                 filters: [
-            //                     new Filter(
-            //                         "PRODUCT_ID",
-            //                         FilterOperator.EQ,
-            //                         that.selectProduct
-            //                     ),
-            //                     new Filter(
-            //                         "PROJECT_ID",
-            //                         FilterOperator.EQ,
-            //                         that.selectProject
-            //                     ),
-            //                 ],
-            //                 success: function (oData1) {
-            //                     if (oData1.results.length > 0) {
-            //                         MessageBox.information("Temporary unique Ids already Exists. Would you like to create new?", {
-            //                             actions: ["Yes", MessageBox.Action.CLOSE],
-            //                             emphasizedAction: "Yes",
-            //                             onClose: function (sAction) {
-            //                                 if (sAction === "Yes") {
-
-            //                                     that.generateUniqueIds();
-            //                                 }
-            //                                 else {
-
-            //                                 }
-            //                             },
-            //                             dependentOn: that.getView()
-            //                         });
-            //                     }
-            //                     else {
-            //                         that.flag = "";
-            //                         that.generateUniqueIds();
-            //                     }
-            //                 },
-            //                 error: function () {
-            //                     MessageToast.show("Failed to get temporary unique details");
-            //                 }
-            //             });
-            //         }
-            //         else {
-            //             MessageToast.show("Selected Product & Project combination doesn't have any records. Please choose a different Product/Project combination");
-            //         }
-            //     }
-            //     else {
-            //         MessageToast.show("Please select configurable product");
-            //     }
-            // },
             generateUniqueIds: function () {
                 // Define the URL and request body
                 var data = {
@@ -554,9 +517,9 @@ sap.ui.define([
                     },
                     success: function (oData) {
                         sap.m.MessageToast.show("Temporary Unique Id's creation started. Please wait for sometime to create combination Unique Id's");
-                        sap.ui.core.BusyIndicator.hide();
+                        that.temUniqueIds=[];
                         that.onResetData();
-
+                        sap.ui.core.BusyIndicator.hide();                    
                     },
                     error: function (error) {
                         sap.ui.core.BusyIndicator.hide();
@@ -686,44 +649,6 @@ sap.ui.define([
             },
             /**On Press of delete in Home Char Value Delete */
             onCharValDelete: function (oEvent) {
-                // if (!this.oApproveDialog) {
-                //     this.oApproveDialog = new sap.m.Dialog({
-                //         type: DialogType.Message,
-                //         title: "Confirm",
-                //         content: new Text({ text: "Deletion of Characteristic value will lead to deletion of all Temporary ID's created.Are you sure to delete?" }),
-                //         beginButton: new sap.m.Button({
-                //             type: ButtonType.Emphasized,
-                //             text: "Yes",
-                //             press: function () {
-                //                 that.getOwnerComponent().getModel("JModel").callFunction("/removeNPIChar", {
-                //                     method: "GET",
-                //                     // urlParameters: {
-                //                     //     PROJECT_ID : oEvent.getSource().getBindingContext().getObject().PROJECT_ID,
-                //                     //     REF_PRODID : oEvent.getSource().getBindingContext().getObject().REF_PRODID,
-                //                     //     CHAR_VALUE : oEvent.getSource().getBindingContext().getObject().CHAR_VALUE,
-                //                     //     REF_CHAR_VALUE: oEvent.getSource().getBindingContext().getObject().REF_CHAR_VALUE;
-                //                     // },
-                //                     success: function (oData) {
-                //                         sap.ui.core.BusyIndicator.hide();
-                //                         that.onAfterRendering();                
-                //                     },
-                //                     error: function (error) {
-                //                         sap.ui.core.BusyIndicator.hide();
-                //                         sap.m.MessageToast.show("Service Connectivity Issue!");
-                //                     },
-                //                 });
-                //                 this.oApproveDialog.close();
-                //             }.bind(this)
-                //         }),
-                //         endButton: new Button({
-                //             text: "No",
-                //             press: function () {
-                //                 this.oApproveDialog.close();
-                //             }.bind(this)
-                //         })
-                //     });
-                // }
-                // this.oApproveDialog.open();
                 var text = "Deletion of Characteristic value will lead to deletion of all Temporary ID's created.Are you sure to delete?";
                 sap.m.MessageBox.show(
                     text, {
@@ -767,18 +692,28 @@ sap.ui.define([
                     that.selectedProds.push(oItem.getModel().getProperty(oItem.sPath).PRODUCT_ID);
                 });
                 sap.ui.core.BusyIndicator.hide();
-                // MessageBox.information("Temporary unique Ids already Exists. Would you like to create new?", {
-                    MessageBox.information("Temporary Unique Id's will be replaced if already exists. Would you like to continue?", {
+                if(that.temUniqueIds.length === 0){
+                    sap.ui.core.BusyIndicator.show();
+                            that.generateUniqueIds();
+                }
+                else{
+                    var newElements=[];
+                    that.temUniqueIds.forEach(function(oItem){
+                        newElements.push(oItem.PRODUCT_ID)
+                    })
+                    var text = "Temporary Unique Id's already exists for Products- "+ newElements.join(",")+". Would you like to continue?"
+                    MessageBox.information(text, {
                     actions: ["Yes", MessageBox.Action.CLOSE],
                     emphasizedAction: "Yes",
                     onClose: function (sAction) {
                         if (sAction === "Yes") {
                             sap.ui.core.BusyIndicator.show();
-                            that.generateUniqueIds();
+                            // that.generateUniqueIds();
                         }
                     },
                     dependentOn: that.getView()
                 });
+            }
             },
             /**On Press of Edit in Table */
             onCharValEdit: function (oEvent) {

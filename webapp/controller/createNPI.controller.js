@@ -154,8 +154,8 @@ sap.ui.define([
                         REFCHARVAL_DESC: that.oDetails[0].REF_CHARVALUE_DESC,
                         CHARVAL_NUM: that.oDetails[0].CHARVAL_NUM,
                         WEIGHT: that.oDetails[0].WEIGHT.toFixed(2),
-                        FROM_DATE: that.oDetails[0].VALID_FROM.toISOString().slice(0,10),
-                        TO_DATE: that.oDetails[0].VALID_TO.toISOString().slice(0,10),
+                        FROM_DATE: that.oDetails[0].VALID_FROM.toISOString().slice(0, 10),
+                        TO_DATE: that.oDetails[0].VALID_TO.toISOString().slice(0, 10),
                         STATUS: false
                     }
                     that.charsSelected.push(that.intChars);
@@ -246,7 +246,7 @@ sap.ui.define([
                 return uniqueObjects;
             },
             onBack: function () {
-                that.oGModel.setProperty("/setEdit","X");
+                that.oGModel.setProperty("/setEdit", "X");
                 that._oWizard.discardProgress(that._oWizard.getSteps()[0]);
                 that.clearAllData();
                 this.getView().getModel().setData(Object.assign({}, oData));
@@ -304,9 +304,9 @@ sap.ui.define([
                 else if (sId.includes("idOldCharValue")) {
                     var tokens = that.byId("idOldCharValue").getTokens();
                     var items = sap.ui.getCore().byId("idCharOldSelect").getItems();
-                    for(var i=0; i<tokens.length;i++){
-                        for(var k=0;k<items.length;k++){
-                            if(tokens[i].getKey()===items[k].getCells()[0].getText()){
+                    for (var i = 0; i < tokens.length; i++) {
+                        for (var k = 0; k < items.length; k++) {
+                            if (tokens[i].getKey() === items[k].getCells()[0].getText()) {
                                 items[k].setSelected(true);
                             }
                         }
@@ -318,8 +318,6 @@ sap.ui.define([
             handleCharSelection: function (oEvent) {
                 sap.ui.getCore().byId("idCharSelect").getBinding("items").filter([]);
                 that.oldCharVal.removeAllTokens();
-               
-                // sap.ui.getCore().byId("idCharOldSelect").clearSelection();
                 var selectedItem = oEvent.getParameters().selectedItem.getDescription();
                 that.newCharValueSelected = selectedItem;
                 var selectedID = oEvent.getParameters().selectedItem.getTitle();
@@ -330,7 +328,6 @@ sap.ui.define([
                 that.newCharNum.setValue(selectedID);
                 that.byId("idCharValText").setText(that.mewCharDescp);
                 that.oldCharVal.setEnabled(true);
-                // var selectedItemsCount = that.totalTabData.filter(item=>item.CHAR_VALUE === selectedItem);
                 var selectedItemsCount = that.totalTabData.filter(item => item.CHAR_NUM === that.newCharNumSelected);
                 if (selectedItemsCount.length > 0) {
                     var filteredItems1 = that.getUnqiueChars(that.allCharacterstics, selectedItemsCount, "CHAR_NUM", "CHAR_VALUE", "CHAR_NUM", "CHAR_VALUE");
@@ -347,9 +344,9 @@ sap.ui.define([
                 else {
                     var filteredItems = that.allCharacterstics.filter(item => item.CHAR_VALUE !== selectedItem && item.CHAR_NUM === that.newCharNumSelected && item.CLASS_NUM === that.selectedClassNum);
                 }
-                that.TemplateModel.setData({ setOldCharacteristics:filteredItems });
+                that.TemplateModel.setData({ setOldCharacteristics: filteredItems });
                 sap.ui.getCore().byId("idCharOldSelect").setModel(that.TemplateModel);
-                
+
             },
 
             /**On Selection of config product in prod dialog */
@@ -407,8 +404,6 @@ sap.ui.define([
                 });
 
             },
-
-
             /**On Selection of chars in Old Char Value */
             handleOldCharSelection: function (oEvent) {
                 that.charsSelected = [], that.intChars = {};
@@ -520,14 +515,12 @@ sap.ui.define([
                 }
                 else {
                     that.byId("idEditButton").setEnabled(false);
-                    // MessageToast.show("Please select only one Item");
                 }
             },
 
             /**On Press of Step 4 */
             onStep4Press: function () {
-                var object = { LAUNCH: [{ DIMENSIONS: 'Location', VALUE: [], ROW: 1 }, { DIMENSIONS: 'Partial Product', VALUE: [], ROW: 2 }] };
-                
+                var object = { LAUNCH: [{ DIMENSIONS: 'Locations', VALUE: [], ROW: 1 }, { DIMENSIONS: 'Products', VALUE: [], ROW: 2 }] };
                 that.byId("idNewDimen").setValue(that.newCharValDescSelected);
                 that.byId("idLaunchText").setText(that.selectedCharName);
                 that.byId("ConfigProd3").setText(that.selectedConfigProduct);
@@ -571,38 +564,40 @@ sap.ui.define([
             },
             /**On select of value help in table in step4*/
             handleValueHelpTable: function (oEvent) {
+                var oFilters = [];
                 sap.ui.core.BusyIndicator.show();
-                that.oSource = oEvent.getSource();                
+                that.oSource = oEvent.getSource();
                 var selectedKey = oEvent.getSource().getEventingParent().getCells()[0].getText();
-                if (selectedKey === "Location") {
+                if (selectedKey === "Locations") {
                     sap.ui.getCore().byId("idLocSelect").setVisible(true);
                     sap.ui.getCore().byId("idProdSelect").setVisible(false);
-                    this.getOwnerComponent().getModel("BModel").read("/getLocProd", {
-                        filters: [
-                            new Filter(
-                                "PRODUCT_ID",
-                                FilterOperator.EQ,
-                                that.selectedConfigProduct
-                            ),
-                        ],
+                    var dimTab = that.byId("idDimenTable").getItems()[1].getCells()[1].getTokens();
+                    oFilters.push(new Filter("REF_PRODID", FilterOperator.EQ, that.selectedConfigProduct));
+                    if (dimTab.length > 0) {
+                        for (var i = 0; i < dimTab.length; i++) {
+                            oFilters.push(new Filter("PRODUCT_ID", FilterOperator.EQ, dimTab[i].getKey()))
+                        }
+                    }
+                    this.getOwnerComponent().getModel("BModel").read("/getfactorylocdesc", {
+                        filters: oFilters,
                         success: function (oData1) {
                             if (oData1.results.length > 0) {
                                 that.locDetails = [];
-                                that.locDetails = oData1.results;
+                                that.locDetails = that.removeDuplicate(oData1.results, "DEMAND_DESC");
                                 that.locModel.setData({ setLocation: that.locDetails });
-                                sap.ui.getCore().byId("idLocSelect").setModel(that.locModel);                                
+                                sap.ui.getCore().byId("idLocSelect").setModel(that.locModel);
                                 // if(that.oFlag === "X"){
-                                    var table = that.byId("idDimenTable").getItems();
-                                    var locItems = sap.ui.getCore().byId("idLocSelect").getItems();
-                                    var tableLocTokens = table[0].getCells()[1].getTokens();
-                                    for(var i=0;i<locItems.length;i++){
-                                        for(var k=0;k<tableLocTokens.length;k++){
-                                            if(tableLocTokens[k].getKey() === locItems[i].getCells()[0].getText()){
-                                                locItems[i].setSelected(true);
-                                            }
-                                           
+                                var table = that.byId("idDimenTable").getItems();
+                                var locItems = sap.ui.getCore().byId("idLocSelect").getItems();
+                                var tableLocTokens = table[0].getCells()[1].getTokens();
+                                for (var i = 0; i < locItems.length; i++) {
+                                    for (var k = 0; k < tableLocTokens.length; k++) {
+                                        if (tableLocTokens[k].getKey() === locItems[i].getCells()[0].getText()) {
+                                            locItems[i].setSelected(true);
                                         }
+
                                     }
+                                }
                                 // }
                                 sap.ui.core.BusyIndicator.hide();
                             }
@@ -620,34 +615,36 @@ sap.ui.define([
                     that._valueHelpDialogLocProd.open();
                 }
                 else {
+                    oFilters = [];
                     sap.ui.getCore().byId("idLocSelect").setVisible(false);
                     sap.ui.getCore().byId("idProdSelect").setVisible(true);
-                    this.getOwnerComponent().getModel("BModel").read("/getPartialProd", {
-                        filters: [
-                            new Filter(
-                                "REF_PRODID",
-                                FilterOperator.EQ,
-                                that.selectedConfigProduct
-                            ),
-                        ],
+                    var dimTab = that.byId("idDimenTable").getItems()[0].getCells()[1].getTokens();
+                    oFilters.push(new Filter("REF_PRODID", FilterOperator.EQ, that.selectedConfigProduct));
+                    if (dimTab.length > 0) {
+                        for (var i = 0; i < dimTab.length; i++) {
+                            oFilters.push(new Filter("DEMAND_LOC", FilterOperator.EQ, dimTab[i].getKey()))
+                        }
+                    }
+                    this.getOwnerComponent().getModel("BModel").read("/getfactorylocdesc", {
+                        filters: oFilters,
                         success: function (oData1) {
                             if (oData1.results.length > 0) {
                                 that.prods = [];
-                                that.prods = oData1.results;
+                                that.prods = that.removeDuplicate(oData1.results, "PRODUCT_ID");
                                 that.prodModel.setData({ setProds: that.prods });
                                 sap.ui.getCore().byId("idProdSelect").setModel(that.prodModel);
                                 // if(that.oFlag === "X"){
-                                    var table = that.byId("idDimenTable").getItems();
-                                    var prodItems = sap.ui.getCore().byId("idProdSelect").getItems();
-                                    var tableProdTokens = table[1].getCells()[1].getTokens();
-                                    for(var i=0;i<prodItems.length;i++){
-                                        for(var k=0;k<tableProdTokens.length;k++){
-                                            if(tableProdTokens[k].getKey() === prodItems[i].getCells()[0].getText()){
-                                                prodItems[i].setSelected(true);
-                                            }
-                                           
+                                var table = that.byId("idDimenTable").getItems();
+                                var prodItems = sap.ui.getCore().byId("idProdSelect").getItems();
+                                var tableProdTokens = table[1].getCells()[1].getTokens();
+                                for (var i = 0; i < prodItems.length; i++) {
+                                    for (var k = 0; k < tableProdTokens.length; k++) {
+                                        if (tableProdTokens[k].getKey() === prodItems[i].getCells()[0].getText()) {
+                                            prodItems[i].setSelected(true);
                                         }
+
                                     }
+                                }
                                 // }
                                 sap.ui.core.BusyIndicator.hide();
                             }
@@ -703,6 +700,7 @@ sap.ui.define([
             },
             /**On Selecting Productt in Step4 Launch Dimension */
             handleProdSelection: function (oEvent) {
+                that.prodSelection = []; var object = {};
                 sap.ui.getCore().byId("idProdSelect").getBinding("items").filter([]);
                 that.oSource.removeAllTokens();
                 var selectedItem = oEvent.getParameter("selectedContexts");
@@ -714,21 +712,49 @@ sap.ui.define([
                             editable: false
                         })
                     );
+                    object = {
+                        FACTORY_LOC: oItem.getModel().getProperty(oItem.sPath).FACTORY_LOC,
+                        LOCATION_DESC: oItem.getModel().getProperty(oItem.sPath).LOCATION_DESC,
+                        PLAN_LOC: oItem.getModel().getProperty(oItem.sPath).PLAN_LOC,
+                        PLANLOC_DESC: oItem.getModel().getProperty(oItem.sPath).PLANLOC_DESC,
+                        DEMAND_LOC: oItem.getModel().getProperty(oItem.sPath).DEMAND_LOC,
+                        DEMAND_DESC: oItem.getModel().getProperty(oItem.sPath).DEMAND_DESC,
+                        PRODUCT_ID: oItem.getModel().getProperty(oItem.sPath).PRODUCT_ID,
+                        PROD_DESC: oItem.getModel().getProperty(oItem.sPath).PROD_DESC,
+                        REF_PRODID: oItem.getModel().getProperty(oItem.sPath).REF_PRODID,
+                    }
+                    that.prodSelection.push(object);
+                    object = {};
                 });
             },
             /**On Selecting Location in Step4 Launch Dimension */
             handleLocSelection: function (oEvent) {
+                that.locSelection = [];
+                var object = {};
                 that.oSource.removeAllTokens();
                 sap.ui.getCore().byId("idLocSelect").getBinding("items").filter([]);
                 var selectedItem = oEvent.getParameter("selectedContexts");
                 selectedItem.forEach(function (oItem) {
                     that.oSource.addToken(
                         new sap.m.Token({
-                            key: oItem.getModel().getProperty(oItem.sPath).LOCATION_ID,
-                            text: oItem.getModel().getProperty(oItem.sPath).LOCATION_DESC,
+                            key: oItem.getModel().getProperty(oItem.sPath).DEMAND_LOC,
+                            text: oItem.getModel().getProperty(oItem.sPath).DEMAND_DESC,
                             editable: false
                         })
                     );
+                    object = {
+                        FACTORY_LOC: oItem.getModel().getProperty(oItem.sPath).FACTORY_LOC,
+                        LOCATION_DESC: oItem.getModel().getProperty(oItem.sPath).LOCATION_DESC,
+                        PLAN_LOC: oItem.getModel().getProperty(oItem.sPath).PLAN_LOC,
+                        PLANLOC_DESC: oItem.getModel().getProperty(oItem.sPath).PLANLOC_DESC,
+                        DEMAND_LOC: oItem.getModel().getProperty(oItem.sPath).DEMAND_LOC,
+                        DEMAND_DESC: oItem.getModel().getProperty(oItem.sPath).DEMAND_DESC,
+                        PRODUCT_ID: oItem.getModel().getProperty(oItem.sPath).PRODUCT_ID,
+                        PROD_DESC: oItem.getModel().getProperty(oItem.sPath).PROD_DESC,
+                        REF_PRODID: oItem.getModel().getProperty(oItem.sPath).REF_PRODID,
+                    }
+                    that.locSelection.push(object);
+                    object = {};
                 });
             },
             /**On Step 5 Press */
@@ -869,7 +895,7 @@ sap.ui.define([
                                 oModel.setProperty("/finishButtonVisible", false);
                             }
                             else {
-                                if(that.oFlag === "X"){
+                                if (that.oFlag === "X") {
                                     that._oWizard.nextStep();
                                     that._iNewSelectedIndex++
                                     oModel.setProperty("/nextButtonVisible", true);
@@ -877,8 +903,8 @@ sap.ui.define([
                                     oModel.setProperty("/reviewButtonVisible", false);
                                     oModel.setProperty("/finishButtonVisible", false);
                                 }
-                                else{
-                                return MessageToast.show("Sum of weights not equal to 100");
+                                else {
+                                    return MessageToast.show("Sum of weights not equal to 100");
                                 }
                             }
                         }
@@ -886,7 +912,6 @@ sap.ui.define([
                     case "Launch Dimension":
                         sap.ui.core.BusyIndicator.show();
                         that.combinedArray = [];
-                        var newObject = {}, locArray = [], prodArray = [];
                         var oTable = this.byId("idDimenTable");
                         var aItems = oTable.getItems();
                         var date = new Date();
@@ -897,33 +922,23 @@ sap.ui.define([
                         if (items[0].getCells()[1].getTokens().length > 0 && items[1].getCells()[1].getTokens().length > 0) {
                             var locItems = items[0].getCells()[1].getTokens();
                             var prodItems = items[1].getCells()[1].getTokens();
-                            if (locItems.length > 0) {
-                                for (var i = 0; i < locItems.length; i++) {
-                                    newObject = {
-                                        LOCATION_ID: locItems[i].getKey(),
-                                        LOCATION_DESC: locItems[i].getText(),
-                                        HISTORY_CONSIDERATION: new Date(date),
-                                        PHASE_IN: ''
-                                    }
-                                    locArray.push(newObject);
+                            if(that.oFlag === "X"){
+                                var newObject={};
+                                for(var i=0;i<that.oDetails.length;i++){
+                                newObject = {
+                                    DEMAND_LOC : that.oDetails[i].LOCATION_ID,
+                                    DEMAND_DESC: that.oDetails[i].LOCATION_DESC,
+                                    PRODUCT_ID: that.oDetails[i].PRODUCT_ID,
+                                    PROD_DESC: that.oDetails[i].PRODUCT_DESC
                                 }
+                                that.combinedArray.push(newObject);
+                                newObject={};
                             }
-                            if (prodItems.length > 0) {
-                                for (var i = 0; i < prodItems.length; i++) {
-                                    newObject = {
-                                        PROD_ID: prodItems[i].getKey(),
-                                        PROD_DESC: prodItems[i].getText()
-                                    }
-                                    prodArray.push(newObject);
-                                }
                             }
-                            if (locArray.length > 0 && prodArray.length > 0) {
-
-                                locArray.forEach(item1 => {
-                                    prodArray.forEach(item2 => {
-                                        that.combinedArray.push({ ...item1, ...item2 });
-                                    });
-                                });
+                            else if (locItems.length > 0 && prodItems.length > 0) {
+                                that.locSelection.forEach(function (oItem) {
+                                    that.combinedArray.push(...that.prodSelection.filter(item => item.DEMAND_LOC === oItem.DEMAND_LOC));
+                                })
                             }
                             that.step5Model.setData({ PhaseInList: that.combinedArray });
                             that.byId("idPhaseInTab").setModel(that.step5Model);
@@ -936,12 +951,12 @@ sap.ui.define([
                             sap.ui.core.BusyIndicator.hide();
                         }
                         else if (items[0].getCells()[1].getTokens().length === 0 && items[1].getCells()[1].getTokens().length === 0) {
-                            var newObject = {}, locArray = [], prodArray = [];
+
                             that.combinedArray = [];
-                            this.getOwnerComponent().getModel("BModel").read("/getLocProd", {
+                            this.getOwnerComponent().getModel("BModel").read("/getfactorylocdesc", {
                                 filters: [
                                     new Filter(
-                                        "PRODUCT_ID",
+                                        "REF_PRODID",
                                         FilterOperator.EQ,
                                         that.selectedConfigProduct
                                     ),
@@ -949,10 +964,10 @@ sap.ui.define([
                                 success: function (oData1) {
                                     if (oData1.results.length > 0) {
                                         that.locDetails1 = [];
-                                        that.locDetails1 = oData1.results;
+                                        that.locDetails1 = that.removeDuplicate(oData1.results, "DEMAND_LOC");
                                         sap.ui.getCore().byId("idLocSelect").setVisible(false);
                                         sap.ui.getCore().byId("idProdSelect").setVisible(true);
-                                        that.getOwnerComponent().getModel("BModel").read("/getPartialProd", {
+                                        that.getOwnerComponent().getModel("BModel").read("/getfactorylocdesc", {
                                             filters: [
                                                 new Filter(
                                                     "REF_PRODID",
@@ -963,32 +978,12 @@ sap.ui.define([
                                             success: function (oData2) {
                                                 if (oData2.results.length > 0) {
                                                     that.prods1 = [];
-                                                    that.prods1 = oData2.results;
-                                                    for (var i = 0; i < that.locDetails1.length; i++) {
-                                                        newObject = {
-                                                            LOCATION_ID: that.locDetails1[i].LOCATION_ID,
-                                                            LOCATION_DESC: that.locDetails1[i].LOCATION_DESC,
-                                                            HISTORY_CONSIDERATION: new Date(date),
-                                                            PHASE_IN: ''
-                                                        }
-                                                        locArray.push(newObject);
-                                                    }
+                                                    that.prods1 = oData1.results;
 
-                                                    for (var i = 0; i < that.prods1.length; i++) {
-                                                        newObject = {
-                                                            PROD_ID: that.prods1[i].PRODUCT_ID,
-                                                            PROD_DESC: that.prods1[i].PROD_DESC
-                                                        }
-                                                        prodArray.push(newObject);
-                                                    }
-
-                                                    if (locArray.length > 0 && prodArray.length > 0) {
-
-                                                        locArray.forEach(item1 => {
-                                                            prodArray.forEach(item2 => {
-                                                                that.combinedArray.push({ ...item1, ...item2 });
-                                                            });
-                                                        });
+                                                    if (that.locDetails1.length > 0 && that.prods1.length > 0) {
+                                                        that.locDetails1.forEach(function (oItem) {
+                                                            that.combinedArray.push(...that.prods1.filter(item => item.DEMAND_LOC === oItem.DEMAND_LOC));
+                                                        })
                                                     }
                                                     that.step5Model.setData({ PhaseInList: that.combinedArray });
                                                     that.byId("idPhaseInTab").setModel(that.step5Model);
@@ -1028,13 +1023,13 @@ sap.ui.define([
                             MessageToast.show("Please select Location/Product")
                         }
                         var tabItems = that.byId("idPhaseInTab").getItems();
-                        for(var i=0;i<that.oDetails.length;i++){
-                            for(var k=0;k<tabItems.length;k++){
-                                if(tabItems[k].getCells()[0].getText()===that.oDetails[i].LOCATION_ID
-                            && tabItems[k].getCells()[2].getText()===that.oDetails[i].PRODUCT_ID){
-                                tabItems[k].getCells()[4].setDateValue(new Date(that.oDetails[i].HISTORY_DATE));
-                                tabItems[k].getCells()[5].setDateValue(new Date(that.oDetails[i].PHASE_IN_START));
-                            }
+                        for (var i = 0; i < that.oDetails.length; i++) {
+                            for (var k = 0; k < tabItems.length; k++) {
+                                if (tabItems[k].getCells()[0].getText() === that.oDetails[i].LOCATION_ID
+                                    && tabItems[k].getCells()[2].getText() === that.oDetails[i].PRODUCT_ID) {
+                                    tabItems[k].getCells()[4].setDateValue(new Date(that.oDetails[i].HISTORY_DATE));
+                                    tabItems[k].getCells()[5].setDateValue(new Date(that.oDetails[i].PHASE_IN_START));
+                                }
                             }
                         }
                         sap.ui.core.BusyIndicator.hide();
@@ -1301,7 +1296,7 @@ sap.ui.define([
                     return MessageToast.show("At least one of the row's data is empty/ phase-in date is empty. Please fill in all the details.");
                 }
                 else {
-                   
+
                     var object = {}, finalArray = [], dimenObject = {}, dimeArray = [];
                     for (var i = 0; i < aItems.length; i++) {
                         dimenObject = {
@@ -1345,7 +1340,7 @@ sap.ui.define([
                                 that.getView().getModel().setData(Object.assign({}, oData));
                                 that.onBack();
                                 setTimeout(function () { MessageToast.show(oData1.saveNPICharValDetails) }, 1000);
-                                
+
                             }
                             else {
                                 MessageToast.show(oData1.saveNPICharValDetails);

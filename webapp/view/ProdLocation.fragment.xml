@@ -9,7 +9,7 @@
 			<columns>
 			<Column width="auto" hAlign="Left">
 				<header>
-					<Text text="Partial Products" />
+					<Text text="Products" />
 				</header>
 			</Column>
 			</columns>

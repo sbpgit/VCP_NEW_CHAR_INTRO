@@ -15,7 +15,7 @@
 			</columns>
 			<ColumnListItem vAlign="Middle">
 			<cells>
-			<ObjectIdentifier title="{LOCATION_DESC}" text="{LOCATION_ID}" ></ObjectIdentifier>
+			<ObjectIdentifier title="{DEMAND_DESC}" text="{DEMAND_LOC}" ></ObjectIdentifier>
 			</cells>
 			</ColumnListItem>
 		</TableSelectDialog>

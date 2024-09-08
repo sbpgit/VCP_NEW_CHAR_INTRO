@@ -122,9 +122,9 @@
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                            <Text text="{LOCATION_ID}"/>
-                                            <Text text="{LOCATION_DESC}" />
-                                            <Text text="{PROD_ID}"/>
+                                            <Text text="{DEMAND_LOC}"/>
+                                            <Text text="{DEMAND_DESC}" />
+                                            <Text text="{PRODUCT_ID}"/>
                                             <Text text="{PROD_DESC}" />
                                            <DatePicker displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" />
                                           
