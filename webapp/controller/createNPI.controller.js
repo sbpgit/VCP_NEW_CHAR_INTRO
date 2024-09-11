@@ -1020,6 +1020,7 @@ sap.ui.define([
                         }
                         else if (items[0].getCells()[1].getTokens().length > 0 && items[1].getCells()[1].getTokens().length === 0 ||
                             items[0].getCells()[1].getTokens().length === 0 && items[1].getCells()[1].getTokens().length > 0) {
+                                sap.ui.core.BusyIndicator.hide();
                             MessageToast.show("Please select Location/Product")
                         }
                         var tabItems = that.byId("idPhaseInTab").getItems();

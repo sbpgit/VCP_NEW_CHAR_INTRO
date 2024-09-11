@@ -213,10 +213,34 @@ sap.ui.define([
             },
             /**On change of switch button in Maintain projects view */
             onStateChange: function (oEvent) {
-                // sap.ui.core.BusyIndicator.show();
+                sap.ui.core.BusyIndicator.show();
                 var switchState = oEvent.getSource().getState();
+                var selectedProject = oEvent.getSource().getBindingContext().getObject().PROJECT_ID;
                 if (switchState === true) {
-                    this._handleMessageBoxOpen("Are you sure you want to activate the project?", "warning", oEvent);
+                    this.getOwnerComponent().getModel("BModel").callFunction("/getCopyUID", {
+                        method: "GET",
+                        urlParameters: {
+                            PROJECT_ID: (selectedProject)
+                        },
+                        success: function (oData) {
+                            if ((JSON.parse(oData.getCopyUID)).length > 0) {
+                                var newElements = [];
+                                (JSON.parse(oData.getCopyUID)).forEach(function (oItem) {
+                                    newElements.push(oItem.PRODUCT_ID)
+                                })
+                                sap.ui.core.BusyIndicator.hide();
+                                that._handleMessageBoxOpen(newElements.join(",")+" \n \n These product(s) have duplicate configuration. Do you still want to actiavte the project?","warning",oEvent);
+                            }
+                            else {
+                                sap.ui.core.BusyIndicator.hide();
+                                that._handleMessageBoxOpen("Are you sure you want to activate the project?", "warning", oEvent);
+                            }
+                        },
+                        error: function () {
+                            sap.ui.core.BusyIndicator.hide();
+                            MessageToast.show("Failed to get details");
+                        },
+                    });
                 }
             },
 
