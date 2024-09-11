@@ -79,6 +79,9 @@
                                      <Column hAlign="Center" width="150px" vAlign="Middle">
                                         <Text text="Valid To" />
                                     </Column>   
+                                    <Column hAlign="Center" width="150px" vAlign="Middle">
+                                        <Text text="Copy of UID" />
+                                    </Column>  
                                     <Column hAlign="Center" vAlign="Middle" width="auto">
                                         <Text text="" />
                                     </Column>                            
@@ -100,6 +103,7 @@
 
                                             <DatePicker id="fromDate" value= "{VALID_FROM}" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange" />
                                             <DatePicker id="toDate" value= "{VALID_TO}" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onToDateChange"/>
+                                            <Text text= "{COPY_UID}" />
                                             <Button id="idDel" icon="sap-icon://delete" press="onDeleteUID"  />
                                             <!-- <Button id="idDel" icon="sap-icon://delete" press="onDeleteUID" visible="{oGModel>/delFlag}" /> -->
                                         </cells>
