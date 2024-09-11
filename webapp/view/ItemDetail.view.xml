@@ -59,6 +59,9 @@
                             <!-- <Column hAlign="Left" visible="false">
                                 <Text text=""/>
                             </Column> -->
+                             <Column hAlign="Left" >
+                                <Text text="REF Char Value" />
+                            </Column>
                         </columns>
                         <items>
                             <ColumnListItem>
@@ -69,6 +72,7 @@
                                     <ObjectIdentifier title="{CHAR_VALUE}" text="{CHARVAL_DESC}" />
                                     <!-- <Text text="{CHARVAL_NUM}" /> -->
                                     <!-- <Button text="{path:'OFLAG', formatter: '.formatter.getStatus'}" icon="sap-icon://decline" press="onTabDel"/> -->
+                                    <ObjectIdentifier title="{REF_CHAR_VALUE}" text="{REF_CHARVAL_DESC}" />
                                     </cells>
                             </ColumnListItem>
                         </items>
