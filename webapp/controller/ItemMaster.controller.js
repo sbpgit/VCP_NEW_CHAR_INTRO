@@ -152,6 +152,7 @@ sap.ui.define([
                                     that.byId("idTempDetails").getColumns()[5].setVisible(false);
                                     that.byId("idTempDetails").getColumns()[6].setVisible(false);
                                     that.byId("idTempDetails").getColumns()[12].setVisible(false);
+                                    that.byId("idTempDetails").getColumns()[13].setVisible(false);
                                     that.byId("idTempDetails").getColumns()[1].setVisible(true);
                                     that.byId("idTempDetails").getColumns()[3].setVisible(true);
                                     that.byId("idTempDetails").getColumns()[7].setVisible(true);
@@ -170,6 +171,7 @@ sap.ui.define([
                                     that.byId("idTempDetails").getColumns()[5].setVisible(true);
                                     that.byId("idTempDetails").getColumns()[6].setVisible(true);
                                     that.byId("idTempDetails").getColumns()[12].setVisible(true);
+                                    that.byId("idTempDetails").getColumns()[13].setVisible(true);
 
                                     that.HeaderData = that.HeaderData.sort((a, b) => a.TMP_UNIQUE_ID - b.TMP_UNIQUE_ID);
 
