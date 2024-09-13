@@ -11,7 +11,7 @@
 					<ux:ObjectPageSubSection id="idObjPageSubSec">
 						<ux:blocks>
 
-                         <Table id="idTempDetails" growing="true"  growingDirection="Downwards" growingThreshold="500" 
+                         <Table id="idTempDetails" growingScrollToLoad="true"  growing="true"
                               updateFinished="onTableUpdate" items="{path: '/tempDetails'}"  itemPress="onHandleSelect"  
                               mode="SingleSelectMaster"   selectionChange="onHandleSelect" rememberSelections="false"> 
                               <headerToolbar>
@@ -30,6 +30,7 @@
                                         <HBox >
                                         <Button text="Go" class="sapUiTinyMarginTop sapUiSmallMarginBeginEnd" type="Emphasized" press="onGetData" tooltip="Get data based on filters" />
                                         <Button text="Reset" type="Transparent" press="onResetData" tooltip="Reset" class="sapUiTinyMarginTop"/>
+                                        <CheckBox text="Show Copy UID's" selected="false" select="onCheckChange" class="sapUiTinyMarginTop" />
                                         </HBox>
                                     </VBox>
 			                    </OverflowToolbar>
@@ -103,7 +104,7 @@
 
                                             <DatePicker id="fromDate" value= "{VALID_FROM}" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onFromDateChange" />
                                             <DatePicker id="toDate" value= "{VALID_TO}" displayFormat="YYYY-MM-dd" valueFormat="YYYY-MM-dd" class="disabledInput" change="onToDateChange"/>
-                                            <Text text= "{COPY_UID}" />
+                                            <Text text= "{=${COPY_UID} === 0 ? '' : [${path: 'COPY_UID'}]}" />
                                             <Button id="idDel" icon="sap-icon://delete" press="onDeleteUID"  />
                                             <!-- <Button id="idDel" icon="sap-icon://delete" press="onDeleteUID" visible="{oGModel>/delFlag}" /> -->
                                         </cells>

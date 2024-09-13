@@ -31,7 +31,7 @@ sap.ui.define([
                 that.prodModel = new JSONModel();
                 that.projModel.setSizeLimit(1000);
                 that.prodModel.setSizeLimit(1000);
-                that.tabModel.setSizeLimit(10000);
+                // that.tabModel.setSizeLimit(10000);
                 // if (!this._valueHelpDialogProjectDet) {
                 //     this._valueHelpDialogProjectDet = sap.ui.xmlfragment(
                 //         "vcpapp.vcpnpicharvalue.view.MultiProjectDetails",
@@ -89,6 +89,7 @@ sap.ui.define([
             } else {
                 that.bus.publish("data", "back");
             }
+            
             },
             destroy:function(){
 
@@ -179,6 +180,7 @@ sap.ui.define([
                             
     
                                 sap.ui.core.BusyIndicator.hide();
+                                that.tabModel.setSizeLimit(that.HeaderData.length);
                                 that.tabModel.setData({ tempDetails:  that.HeaderData});
                                 that.byId("idTempDetails").setModel(that.tabModel);
     
@@ -1006,6 +1008,16 @@ sap.ui.define([
                     sap.m.MessageToast.show("No Data to generate (or) update");
                 }
 
+            },
+
+            onCheckChange:function(oEvent){
+                    var filterdata = that.HeaderData;
+                    if(oEvent.getParameters().selected === true){
+                        var filterdata = filterdata.filter(el=> el.COPY_UID !== 0);
+                    }
+
+                    that.tabModel.setData({ tempDetails:  filterdata});
+                    that.byId("idTempDetails").setModel(that.tabModel);
             },
             
         });

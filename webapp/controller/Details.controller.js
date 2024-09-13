@@ -246,7 +246,7 @@ sap.ui.define(
             );
           } else {
             this.oFlexibleColumnLayout.toBeginColumnPage(aPages[0]);
-            aPages[0].onAfterRendering();
+            // aPages[0].onAfterRendering();
           }
           // var params = that.getOwnerComponent().oComponentData.startupParameters;
           // that.oGModel = this.getOwnerComponent().getModel("oGModel");
