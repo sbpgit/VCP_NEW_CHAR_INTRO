@@ -701,7 +701,7 @@ sap.ui.define([
                     that.temUniqueIds.forEach(function(oItem){
                         newElements.push(oItem.PRODUCT_ID)
                     })
-                    var text = newElements.join(",")+"\n Temporary Unique Id's already exists for Product(s). Would you like to continue?"
+                    var text = newElements.join(",")+"\n \n Temporary Unique Id's already exists for these Product(s). Would you like to continue?"
                     MessageBox.warning(text, {
                     actions: ["Yes", MessageBox.Action.CLOSE],
                     emphasizedAction: "Yes",
