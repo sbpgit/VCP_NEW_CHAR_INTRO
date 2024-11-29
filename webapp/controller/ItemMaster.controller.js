@@ -47,6 +47,8 @@ sap.ui.define([
                 that.selectedProdID='';
                 
                 this.i18n = this.getResourceBundle();
+
+                that.byId("idCheckbox").setSelected(false);
                 var oFilters=[];
                 if (!this._valueHelpDialogProd) {
                     this._valueHelpDialogProd = sap.ui.xmlfragment(
@@ -161,6 +163,11 @@ sap.ui.define([
                                     that.byId("idTempDetails").getColumns()[9].setVisible(true);
 
                                     that.HeaderData = that.HeaderData.sort((a, b) => a.UNIQUE_ID - b.UNIQUE_ID);
+
+                                    // that.HeaderData.forEach(el => {
+                                    //     el.UNIQUE_ID_DESC = el.UNIQUE_ID.toString();
+                                    //     el.REF_UNIQUE_ID_DESC = el.REF_UNIQUE_ID.toString();
+                                    // });
                                 } else {
                                     that.byId("idTempDetails").getColumns()[1].setVisible(false);
                                     that.byId("idTempDetails").getColumns()[3].setVisible(false);
@@ -175,10 +182,13 @@ sap.ui.define([
                                     that.byId("idTempDetails").getColumns()[13].setVisible(true);
 
                                     that.HeaderData = that.HeaderData.sort((a, b) => a.TMP_UNIQUE_ID - b.TMP_UNIQUE_ID);
-
+                                    // that.HeaderData.forEach(el => {
+                                    //     el.UNIQUE_ID_DESC = el.TMP_UNIQUE_ID.toString();
+                                    //     el.REF_UNIQUE_ID_DESC = el.REF_UNIQUE_ID.toString();
+                                    // });
                                 }
                             
-    
+                                
                                 sap.ui.core.BusyIndicator.hide();
                                 that.tabModel.setSizeLimit(that.HeaderData.length);
                                 that.tabModel.setData({ tempDetails:  that.HeaderData});

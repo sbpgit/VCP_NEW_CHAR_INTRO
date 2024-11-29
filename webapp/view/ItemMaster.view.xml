@@ -30,7 +30,7 @@
                                         <HBox >
                                         <Button text="Go" class="sapUiTinyMarginTop sapUiSmallMarginBeginEnd" type="Emphasized" press="onGetData" tooltip="Get data based on filters" />
                                         <Button text="Reset" type="Transparent" press="onResetData" tooltip="Reset" class="sapUiTinyMarginTop"/>
-                                        <CheckBox text="Show Copy UID's" selected="false" select="onCheckChange" class="sapUiTinyMarginTop" />
+                                        <CheckBox id="idCheckbox" text="Show Copy UID's" selected="false" select="onCheckChange" class="sapUiTinyMarginTop" />
                                         </HBox>
                                     </VBox>
 			                    </OverflowToolbar>
