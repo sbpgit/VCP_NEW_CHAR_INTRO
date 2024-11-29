@@ -244,7 +244,8 @@ sap.ui.define([
             /**On Selection of config product in prod dialog */
             handleSelection: function (oEvent) {
                 var selectedTable = that.byId("idIconTabBarInlineMode").getSelectedKey();
-                var selectedItem = oEvent.getParameters().selectedItems[0].getDescription();
+                var selectedItem = oEvent.getParameters().selectedItems[0].getTitle();
+                that.selectedConfigProductID = oEvent.getParameters().selectedItems[0].getDescription();
                 if (selectedTable === "CVP") {
                     that.byId("idConfProd").setValue(selectedItem);
                 }
@@ -359,7 +360,7 @@ sap.ui.define([
                         }
                     }
                     else {
-                        MessageToast.show("No new characteristics for the selected product");
+                        // MessageToast.show("No new characteristics for the selected product");
                     }
                 }
                 else {
@@ -582,9 +583,11 @@ sap.ui.define([
                 var productSelected = that.byId("idConfProd").getValue();
                 if (productSelected) {
                     that.oGModel.setProperty("/selectedProduct", productSelected);
+                    that.oGModel.setProperty("/selectedConfigProductID", that.selectedConfigProductID);
                 }
                 else {
                     that.oGModel.setProperty("/selectedProduct", '');
+                    that.oGModel.setProperty("/selectedConfigProductID", '');
                 }
                 var selectedProject = that.oGModel.getProperty("/selectedProject");
                 that.oGModel.setProperty("/charvalData", that.tabData);
