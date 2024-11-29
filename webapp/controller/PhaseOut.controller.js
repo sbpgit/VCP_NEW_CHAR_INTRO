@@ -47,6 +47,7 @@ sap.ui.define([
                 that.charValModel.setSizeLimit(100000);
                 that.oGModel = that.getOwnerComponent().getModel("oGModel");
                 that.selectedConfigProductOut = that.oGModel.getProperty("/configProduct");
+                that.selectedProductIDOut = that.oGModel.getProperty("/selectedConfigProductID");
                 that.selectedProjectPhase = that.oGModel.getProperty("/projectDetails");
                 if (that.selectedProjectPhase === undefined || that.selectedProjectPhase === "" || that.selectedProjectPhase === null) {
                     if (this._valueHelpDialogProd) {
@@ -216,7 +217,7 @@ sap.ui.define([
                                     new Filter(
                                         "REF_PRODID",
                                         FilterOperator.EQ,
-                                        that.selectedConfigProductOut
+                                        that.selectedProductIDOut
                                     ),
                                 ],
                                 success: function (oData1) {
@@ -230,7 +231,7 @@ sap.ui.define([
                                                 new Filter(
                                                     "REF_PRODID",
                                                     FilterOperator.EQ,
-                                                    that.selectedConfigProductOut
+                                                    that.selectedProductIDOut
                                                 ),
                                             ],
                                             success: function (oData2) {
@@ -345,7 +346,7 @@ sap.ui.define([
                     sap.ui.getCore().byId("idLocSelect").setVisible(true);
                     sap.ui.getCore().byId("idProdSelect").setVisible(false);
                     var dimTab = that.byId("idDimenTablePhase").getItems()[1].getCells()[1].getTokens();
-                    oFilters.push(new Filter("REF_PRODID", FilterOperator.EQ, that.selectedConfigProductOut));                   
+                    oFilters.push(new Filter("REF_PRODID", FilterOperator.EQ, that.selectedProductIDOut));                   
                     // if(dimTab.length>0){
                     //     for(var i=0;i<dimTab.length;i++){
                     //         oFilters.push(new Filter("PRODUCT_ID", FilterOperator.EQ, dimTab[i].getKey()))
@@ -386,7 +387,7 @@ sap.ui.define([
                 else {
                     oFilters=[];
                     var dimTab = that.byId("idDimenTablePhase").getItems()[0].getCells()[1].getTokens();
-                    oFilters.push(new Filter("REF_PRODID", FilterOperator.EQ, that.selectedConfigProductOut));                   
+                    oFilters.push(new Filter("REF_PRODID", FilterOperator.EQ, that.selectedProductIDOut));                   
                     if(dimTab.length>0){
                         for(var i=0;i<dimTab.length;i++){
                             oFilters.push(new Filter("DEMAND_LOC", FilterOperator.EQ, dimTab[i].getKey()))
@@ -583,7 +584,7 @@ sap.ui.define([
                         for (var j = 0; j < aItems.length; j++) {
                             object = {
                                 PROJECT_ID: that.selectedProjectPhase,
-                                REF_PRODID: that.selectedConfigProductOut,
+                                REF_PRODID: that.selectedProductIDOut,
                                 CHAR_NUM: that.selectedItemsPhase[i].getModel().getProperty(that.selectedItemsPhase[i].sPath).CHAR_NAME,
                                 CHAR_VALUE: that.selectedItemsPhase[i].getModel().getProperty(that.selectedItemsPhase[i].sPath).CHAR_VALUE,
                                 CHARVAL_DESC: that.selectedItemsPhase[i].getModel().getProperty(that.selectedItemsPhase[i].sPath).CHARVAL_DESC,
@@ -772,7 +773,7 @@ sap.ui.define([
                 var selectedItem = oEvent.getParameters().selectedItems[0].getDescription();
                 var selectedItemDesc = oEvent.getParameters().selectedItems[0].getTitle();
                 that.byId("ConfigProdPhase").setValue(selectedItemDesc);
-                that.selectedConfigProductOut = selectedItem;
+                that.selectedProductIDOut = selectedItem;
                 that.selectedConfigProductOutDESC = selectedItemDesc;
                 that.selectedProdDesc = selectedItemDesc;
                 sap.ui.getCore().byId("prodSlctListOD").getBinding("items").filter([]);
@@ -866,10 +867,10 @@ sap.ui.define([
                 that.allCharacterstics = that.newChars;
                 var allChars = that.newChars.filter(a => a.CHAR_NAME === selectedName && a.CHAR_NUM === selectedNum);
                 that.charValTab = that.charValTabData.filter(a => a.PROJECT_ID === that.selectedProjectPhase
-                    && a.REF_PRODID === that.selectedConfigProductOut
+                    && a.REF_PRODID === that.selectedProductIDOut
                     && a.REF_CHAR_NAME === selectedName && a.CHAR_NUM === selectedNum);
                 that.PhaseoUtTab = that.phaseOutTabData.filter(a => a.PROJECT_ID === that.selectedProjectPhase
-                    && a.REF_PRODID === that.selectedConfigProductOut
+                    && a.REF_PRODID === that.selectedProductIDOut
                     && a.CHAR_NUM === selectedNum);
                 that.charValTab.forEach(function (oItem) {
                     object.CHAR_VALUE = oItem.CHAR_VALUE;

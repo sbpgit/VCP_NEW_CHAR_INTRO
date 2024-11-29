@@ -375,7 +375,7 @@ sap.ui.define([
                         }
                     }
                     else {
-                        MessageToast.show("No phase out characteristics for the selected product");
+                        // MessageToast.show("No phase out characteristics for the selected product");
                     }
                 }
             },
